@@ -6,6 +6,79 @@
     <title>Chapter 2: Core Concepts - Mastering Data Visualization</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/menu.css">
+    <style>
+        .interactive-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid #e9ecef;
+        }
+        
+        .option-builder {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .builder-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .control-group input,
+        .control-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        
+        .update-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            align-self: end;
+        }
+        
+        .update-btn:hover {
+            background: #357abd;
+        }
+        
+        @media (max-width: 768px) {
+            .builder-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- ECharts Guide Navigation -->
@@ -80,6 +153,34 @@
             <div class="chart-container">
                 <h4>Interactive Option Structure</h4>
                 <div id="option-structure"></div>
+            </div>
+
+            <div class="interactive-section">
+                <h4>🎯 Interactive Option Builder</h4>
+                <p>Experiment with the ECharts option structure in real-time:</p>
+                
+                <div class="option-builder">
+                    <div class="builder-controls">
+                        <div class="control-group">
+                            <label>Title:</label>
+                            <input type="text" id="title-text" value="Interactive Chart" placeholder="Chart title">
+                        </div>
+                        <div class="control-group">
+                            <label>Chart Type:</label>
+                            <select id="chart-type">
+                                <option value="bar">Bar Chart</option>
+                                <option value="line">Line Chart</option>
+                                <option value="pie">Pie Chart</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Data:</label>
+                            <input type="text" id="chart-data" value="10,20,30,40,50" placeholder="Comma-separated values">
+                        </div>
+                        <button onclick="updateInteractiveChart()" class="update-btn">Update Chart</button>
+                    </div>
+                    <div id="interactive-chart" style="height: 300px; margin-top: 20px;"></div>
+                </div>
             </div>
 
             <h3>1. Title Component</h3>
@@ -299,38 +400,151 @@ var option = {
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     
     <script>
-        // Option structure visualization
+        // Interactive Option Structure visualization
         var optionStructure = echarts.init(document.getElementById('option-structure'));
         var structureOption = {
             title: {
-                text: 'ECharts Option Structure',
-                left: 'center'
+                text: 'Interactive ECharts Option Structure',
+                subtext: 'Click on components to see their properties',
+                left: 'center',
+                textStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b}: {c} ({d}%)'
+                formatter: function(params) {
+                    var descriptions = {
+                        'Title': 'Defines chart title and subtitle<br/>Controls: text, subtext, position, styling',
+                        'Tooltip': 'Interactive information display<br/>Controls: trigger, formatter, styling',
+                        'Legend': 'Series identification<br/>Controls: data, position, orientation',
+                        'Axes': 'Coordinate system definition<br/>Controls: type, data, range, styling',
+                        'Series': 'Data visualization<br/>Controls: type, data, styling, interactions'
+                    };
+                    return '<strong>' + params.name + '</strong><br/>' + descriptions[params.name];
+                }
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                top: 'middle',
+                data: ['Title', 'Tooltip', 'Legend', 'Axes', 'Series']
             },
             series: [{
                 name: 'Components',
                 type: 'pie',
-                radius: '50%',
+                radius: ['40%', '70%'],
+                center: ['60%', '50%'],
                 data: [
-                    { value: 20, name: 'Title', itemStyle: { color: '#4a90e2' } },
-                    { value: 15, name: 'Tooltip', itemStyle: { color: '#f39c12' } },
-                    { value: 15, name: 'Legend', itemStyle: { color: '#27ae60' } },
-                    { value: 25, name: 'Axes', itemStyle: { color: '#e74c3c' } },
-                    { value: 25, name: 'Series', itemStyle: { color: '#9b59b6' } }
+                    { 
+                        value: 20, 
+                        name: 'Title', 
+                        itemStyle: { color: '#4a90e2' },
+                        emphasis: { itemStyle: { color: '#357abd' } }
+                    },
+                    { 
+                        value: 15, 
+                        name: 'Tooltip', 
+                        itemStyle: { color: '#f39c12' },
+                        emphasis: { itemStyle: { color: '#d68910' } }
+                    },
+                    { 
+                        value: 15, 
+                        name: 'Legend', 
+                        itemStyle: { color: '#27ae60' },
+                        emphasis: { itemStyle: { color: '#229954' } }
+                    },
+                    { 
+                        value: 25, 
+                        name: 'Axes', 
+                        itemStyle: { color: '#e74c3c' },
+                        emphasis: { itemStyle: { color: '#c0392b' } }
+                    },
+                    { 
+                        value: 25, 
+                        name: 'Series', 
+                        itemStyle: { color: '#9b59b6' },
+                        emphasis: { itemStyle: { color: '#8e44ad' } }
+                    }
                 ],
                 emphasis: {
                     itemStyle: {
-                        shadowBlur: 10,
+                        shadowBlur: 15,
                         shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        shadowColor: 'rgba(0, 0, 0, 0.3)'
                     }
+                },
+                label: {
+                    show: true,
+                    formatter: '{b}\n{d}%',
+                    fontSize: 12,
+                    fontWeight: 'bold'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10
                 }
             }]
         };
         optionStructure.setOption(structureOption);
+        
+        // Add click event to show detailed information
+        optionStructure.on('click', function(params) {
+            var componentInfo = {
+                'Title': {
+                    code: `title: {
+  text: 'Chart Title',
+  subtext: 'Subtitle',
+  left: 'center',
+  top: 'top'
+}`,
+                    description: 'Controls the main title and subtitle of the chart. You can position it and style the text.'
+                },
+                'Tooltip': {
+                    code: `tooltip: {
+  trigger: 'axis',
+  formatter: function(params) {
+    return params[0].name + ': ' + params[0].value;
+  }
+}`,
+                    description: 'Defines how information is displayed when users interact with chart elements.'
+                },
+                'Legend': {
+                    code: `legend: {
+  data: ['Series1', 'Series2'],
+  orient: 'horizontal',
+  left: 'center'
+}`,
+                    description: 'Helps users identify different data series in the chart.'
+                },
+                'Axes': {
+                    code: `xAxis: {
+  type: 'category',
+  data: ['A', 'B', 'C']
+},
+yAxis: {
+  type: 'value',
+  min: 0
+}`,
+                    description: 'Defines the coordinate system and data ranges for the chart.'
+                },
+                'Series': {
+                    code: `series: [{
+  name: 'Data Series',
+  type: 'bar',
+  data: [10, 20, 30]
+}]`,
+                    description: 'Contains the actual data and defines how it should be visualized.'
+                }
+            };
+            
+            if (componentInfo[params.name]) {
+                var info = componentInfo[params.name];
+                alert('Component: ' + params.name + '\n\n' + info.description + '\n\nCode Example:\n' + info.code);
+            }
+        });
 
         // Axis comparison chart
         var axisComparison = echarts.init(document.getElementById('axis-comparison'));
@@ -548,6 +762,64 @@ var option = {
         };
         stackedChart.setOption(stackedOption);
 
+        // Interactive chart builder
+        var interactiveChart = echarts.init(document.getElementById('interactive-chart'));
+        
+        function updateInteractiveChart() {
+            var titleText = document.getElementById('title-text').value;
+            var chartType = document.getElementById('chart-type').value;
+            var dataString = document.getElementById('chart-data').value;
+            
+            // Parse data
+            var data = dataString.split(',').map(function(val) {
+                return parseFloat(val.trim()) || 0;
+            });
+            
+            var option = {
+                title: {
+                    text: titleText,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: data.map(function(val, index) {
+                        return 'Item ' + (index + 1);
+                    })
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: 'Data',
+                    type: chartType,
+                    data: data,
+                    itemStyle: {
+                        color: '#4a90e2'
+                    }
+                }]
+            };
+            
+            // Special handling for pie charts
+            if (chartType === 'pie') {
+                option.xAxis = undefined;
+                option.yAxis = undefined;
+                option.series[0].data = data.map(function(val, index) {
+                    return {
+                        name: 'Item ' + (index + 1),
+                        value: val
+                    };
+                });
+            }
+            
+            interactiveChart.setOption(option, true);
+        }
+        
+        // Initialize interactive chart
+        updateInteractiveChart();
+        
         // Handle window resize
         window.addEventListener('resize', function() {
             optionStructure.resize();
@@ -557,6 +829,7 @@ var option = {
             practiceChart.resize();
             multipleSeries.resize();
             stackedChart.resize();
+            interactiveChart.resize();
         });
     </script>
     <script src="../assets/js/menu.js"></script>

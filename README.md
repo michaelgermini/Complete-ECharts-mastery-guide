@@ -14,7 +14,7 @@
 Visit the interactive guide: **[https://michaelgermini.github.io/Complete-ECharts-mastery-guide](https://michaelgermini.github.io/Complete-ECharts-mastery-guide)**
 
 ✨ **Features available online:**
-- 📚 All 8 comprehensive chapters with interactive examples
+- 📚 All 11 comprehensive chapters with interactive examples
 - 🏗️ 6 real-world dashboard projects
 - 💻 Live code editors for hands-on practice
 - 📱 Fully responsive design for all devices
@@ -84,6 +84,10 @@ Our structured learning approach ensures you build skills progressively:
 5. **[Chapter 5: Pie & Donut Charts](chapters/chapter5-pie-donut.html)** - Proportional data visualization
 6. **[Chapter 6: Scatter & Bubble Charts](chapters/chapter6-scatter-bubble.html)** - Correlation and multi-dimensional analysis
 7. **[Chapter 7: Radar & Gauge Charts](chapters/chapter7-radar-gauge.html)** - Multi-variable comparisons and performance metrics
+8. **[Chapter 8: Advanced Features](chapters/chapter8-advanced-features.html)** - Data zoom, animations, themes, and dynamic updates
+9. **[Chapter 9: Themes & Customization](chapters/chapter9-themes-customization.html)** - Custom themes, brand integration, and responsive design
+10. **[Chapter 10: Performance Optimization](chapters/chapter10-performance-optimization.html)** - Data optimization, rendering techniques, and mobile optimization
+11. **[Chapter 11: Framework Integration](chapters/chapter11-integration-frameworks.html)** - React, Vue.js, and Angular integration patterns
 
 ### 🎯 Interactive Learning Features
 - **Live Code Editors** - Practice directly in your browser

@@ -9,15 +9,16 @@
 
 ## 🚀 Live Demo
 
-**To enable the live demo:**
+**🎉 Your guide is now live!**
 
-1. Go to your repository settings on GitHub
-2. Scroll down to "Pages" section  
-3. Under "Source", select "Deploy from a branch"
-4. Choose "gh-pages" branch and "/ (root)" folder
-5. Click "Save"
+Visit the interactive guide: **[https://michaelgermini.github.io/Complete-ECharts-mastery-guide](https://michaelgermini.github.io/Complete-ECharts-mastery-guide)**
 
-Once enabled, your site will be available at: **https://michaelgermini.github.io/Complete-ECharts-mastery-guide**
+✨ **Features available online:**
+- 📚 All 8 comprehensive chapters with interactive examples
+- 🏗️ 6 real-world dashboard projects
+- 💻 Live code editors for hands-on practice
+- 📱 Fully responsive design for all devices
+- ⚡ Fast loading with CDN optimization
 
 ---
 

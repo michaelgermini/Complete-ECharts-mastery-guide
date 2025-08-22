@@ -235,6 +235,43 @@
                 <div id="axis-comparison"></div>
             </div>
 
+            <div class="interactive-section">
+                <h4>🎯 Interactive Axis Experimenter</h4>
+                <p>Experiment with different axis types and see how they affect your chart:</p>
+                
+                <div class="option-builder">
+                    <div class="builder-controls">
+                        <div class="control-group">
+                            <label>X-Axis Type:</label>
+                            <select id="x-axis-type">
+                                <option value="category">Category</option>
+                                <option value="value">Value</option>
+                                <option value="time">Time</option>
+                                <option value="log">Log</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Y-Axis Type:</label>
+                            <select id="y-axis-type">
+                                <option value="value">Value</option>
+                                <option value="category">Category</option>
+                                <option value="log">Log</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Chart Type:</label>
+                            <select id="axis-chart-type">
+                                <option value="bar">Bar Chart</option>
+                                <option value="line">Line Chart</option>
+                                <option value="scatter">Scatter Plot</option>
+                            </select>
+                        </div>
+                        <button onclick="updateAxisChart()" class="update-btn">Update Chart</button>
+                    </div>
+                    <div id="axis-experiment-chart" style="height: 350px; margin-top: 20px;"></div>
+                </div>
+            </div>
+
             <div class="code-block">
                 <pre><code>// Category Axis (X-axis for bar charts)
 xAxis: {
@@ -546,49 +583,203 @@ yAxis: {
             }
         });
 
-        // Axis comparison chart
+        // Interactive Axis Types Comparison
         var axisComparison = echarts.init(document.getElementById('axis-comparison'));
         var axisOption = {
             title: {
-                text: 'Axis Types',
-                left: 'center'
+                text: 'Interactive Axis Types Comparison',
+                subtext: 'Click on different axis types to see their properties',
+                left: 'center',
+                textStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                formatter: function(params) {
+                    var axisInfo = {
+                        'Category': 'Discrete categories (labels)<br/>Used for: Bar charts, categorical data',
+                        'Value': 'Continuous numeric values<br/>Used for: Line charts, measurements',
+                        'Time': 'Time-based data<br/>Used for: Time series, trends',
+                        'Log': 'Logarithmic scale<br/>Used for: Wide value ranges'
+                    };
+                    return '<strong>' + params[0].name + '</strong><br/>' + axisInfo[params[0].name];
+                }
             },
             legend: {
-                data: ['Category', 'Value', 'Time'],
-                top: '10%'
+                data: ['Category', 'Value', 'Time', 'Log'],
+                top: '10%',
+                selectedMode: true
+            },
+            grid: {
+                left: '10%',
+                right: '10%',
+                top: '20%',
+                bottom: '15%'
             },
             xAxis: {
                 type: 'category',
-                data: ['A', 'B', 'C', 'D', 'E']
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                name: 'Month',
+                nameLocation: 'middle',
+                nameGap: 30,
+                axisLabel: {
+                    rotate: 0
+                }
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                name: 'Value',
+                nameLocation: 'middle',
+                nameGap: 40,
+                min: 0,
+                max: 100
             },
             series: [
                 {
                     name: 'Category',
                     type: 'bar',
-                    data: [10, 20, 30, 40, 50],
-                    itemStyle: { color: '#4a90e2' }
+                    data: [25, 35, 45, 30, 55, 40],
+                    itemStyle: { 
+                        color: '#4a90e2',
+                        borderRadius: [4, 4, 0, 0]
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#357abd',
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0,0,0,0.3)'
+                        }
+                    }
                 },
                 {
                     name: 'Value',
                     type: 'line',
-                    data: [15, 25, 35, 45, 55],
-                    itemStyle: { color: '#f39c12' }
+                    data: [20, 30, 40, 25, 50, 35],
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: '#f39c12'
+                    },
+                    itemStyle: { 
+                        color: '#f39c12',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#d68910',
+                            borderColor: '#fff',
+                            borderWidth: 3
+                        }
+                    }
                 },
                 {
                     name: 'Time',
                     type: 'line',
-                    data: [5, 15, 25, 35, 45],
-                    itemStyle: { color: '#27ae60' }
+                    data: [15, 25, 35, 20, 45, 30],
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: '#27ae60',
+                        type: 'dashed'
+                    },
+                    itemStyle: { 
+                        color: '#27ae60',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#229954',
+                            borderColor: '#fff',
+                            borderWidth: 3
+                        }
+                    }
+                },
+                {
+                    name: 'Log',
+                    type: 'line',
+                    data: [10, 20, 30, 15, 40, 25],
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: '#9b59b6',
+                        type: 'dotted'
+                    },
+                    itemStyle: { 
+                        color: '#9b59b6',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#8e44ad',
+                            borderColor: '#fff',
+                            borderWidth: 3
+                        }
+                    }
                 }
             ]
         };
         axisComparison.setOption(axisOption);
+        
+        // Add click event to show axis type details
+        axisComparison.on('click', function(params) {
+            var axisTypeInfo = {
+                'Category': {
+                    code: `xAxis: {
+  type: 'category',
+  data: ['Jan', 'Feb', 'Mar'],
+  name: 'Month',
+  nameLocation: 'middle'
+}`,
+                    description: 'Category axis is used for discrete, non-numeric data like labels, names, or categories. Perfect for bar charts and categorical comparisons.',
+                    useCases: ['Bar charts', 'Column charts', 'Categorical data', 'Labels and names']
+                },
+                'Value': {
+                    code: `yAxis: {
+  type: 'value',
+  name: 'Amount',
+  min: 0,
+  max: 1000,
+  interval: 200
+}`,
+                    description: 'Value axis represents continuous numeric data. It automatically calculates the scale and tick intervals based on your data range.',
+                    useCases: ['Line charts', 'Area charts', 'Numeric measurements', 'Continuous data']
+                },
+                'Time': {
+                    code: `xAxis: {
+  type: 'time',
+  name: 'Date',
+  axisLabel: {
+    formatter: '{MM-dd}'
+  }
+}`,
+                    description: 'Time axis is specifically designed for time-series data. It automatically handles date formatting and time intervals.',
+                    useCases: ['Time series', 'Trend analysis', 'Date-based data', 'Chronological data']
+                },
+                'Log': {
+                    code: `yAxis: {
+  type: 'log',
+  name: 'Value',
+  logBase: 10
+}`,
+                    description: 'Logarithmic axis is useful when data spans several orders of magnitude. It compresses large values and expands small ones.',
+                    useCases: ['Wide value ranges', 'Scientific data', 'Exponential growth', 'Financial data']
+                }
+            };
+            
+            if (axisTypeInfo[params.name]) {
+                var info = axisTypeInfo[params.name];
+                var message = 'Axis Type: ' + params.name + '\n\n' +
+                             'Description: ' + info.description + '\n\n' +
+                             'Use Cases: ' + info.useCases.join(', ') + '\n\n' +
+                             'Code Example:\n' + info.code;
+                alert(message);
+            }
+        });
 
         // Series types overview
         var seriesTypes = echarts.init(document.getElementById('series-types'));
@@ -820,6 +1011,101 @@ yAxis: {
         // Initialize interactive chart
         updateInteractiveChart();
         
+        // Interactive axis experimenter
+        var axisExperimentChart = echarts.init(document.getElementById('axis-experiment-chart'));
+        
+        function updateAxisChart() {
+            var xAxisType = document.getElementById('x-axis-type').value;
+            var yAxisType = document.getElementById('y-axis-type').value;
+            var chartType = document.getElementById('axis-chart-type').value;
+            
+            // Sample data for different axis types
+            var sampleData = {
+                category: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                value: [10, 20, 30, 40, 50],
+                time: ['2024-01-01', '2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01'],
+                log: [1, 10, 100, 1000, 10000]
+            };
+            
+            var yData = [25, 35, 45, 30, 55];
+            
+            var option = {
+                title: {
+                    text: 'Axis Type Experiment',
+                    subtext: 'X: ' + xAxisType + ' | Y: ' + yAxisType + ' | Chart: ' + chartType,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        return params[0].name + ': ' + params[0].value;
+                    }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    top: '20%',
+                    bottom: '15%'
+                },
+                xAxis: {
+                    type: xAxisType,
+                    data: sampleData[xAxisType] || sampleData.category,
+                    name: 'X-Axis (' + xAxisType + ')',
+                    nameLocation: 'middle',
+                    nameGap: 30
+                },
+                yAxis: {
+                    type: yAxisType,
+                    name: 'Y-Axis (' + yAxisType + ')',
+                    nameLocation: 'middle',
+                    nameGap: 40
+                },
+                series: [{
+                    name: 'Data',
+                    type: chartType,
+                    data: chartType === 'scatter' ? 
+                        yData.map(function(val, index) {
+                            return [index, val];
+                        }) : yData,
+                    itemStyle: {
+                        color: '#4a90e2'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#357abd',
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0,0,0,0.3)'
+                        }
+                    }
+                }]
+            };
+            
+            // Special handling for different chart types
+            if (chartType === 'line') {
+                option.series[0].smooth = true;
+                option.series[0].lineStyle = {
+                    width: 3
+                };
+            } else if (chartType === 'bar') {
+                option.series[0].itemStyle.borderRadius = [4, 4, 0, 0];
+            }
+            
+            // Special handling for log axis
+            if (xAxisType === 'log' || yAxisType === 'log') {
+                if (xAxisType === 'log') {
+                    option.xAxis.data = sampleData.log;
+                }
+                if (yAxisType === 'log') {
+                    option.series[0].data = [1, 10, 100, 1000, 10000];
+                }
+            }
+            
+            axisExperimentChart.setOption(option, true);
+        }
+        
+        // Initialize axis experiment chart
+        updateAxisChart();
+        
         // Handle window resize
         window.addEventListener('resize', function() {
             optionStructure.resize();
@@ -830,6 +1116,7 @@ yAxis: {
             multipleSeries.resize();
             stackedChart.resize();
             interactiveChart.resize();
+            axisExperimentChart.resize();
         });
     </script>
     <script src="../assets/js/menu.js"></script>

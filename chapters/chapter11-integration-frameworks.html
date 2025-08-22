@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Framework Integration - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/menu.css">
+    <style>
+        .framework-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .framework-card:hover {
+            border-color: #4a90e2;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+        }
+        
+        .framework-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .framework-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .framework-info h3 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .framework-info p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .code-tabs {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin: 20px 0;
+        }
+        
+        .code-tab {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+        }
+        
+        .code-tab.active {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        .code-content {
+            display: none;
+        }
+        
+        .code-content.active {
+            display: block;
+        }
+        
+        .integration-demo {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .control-group input,
+        .control-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <script src="../assets/js/add-menu.js"></script>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Chapter 11: Framework Integration</h1>
+            <p>Integrate ECharts seamlessly with modern JavaScript frameworks</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Framework Integration Overview</h2>
+            
+            <p>ECharts can be integrated with any JavaScript framework or library. This chapter covers integration patterns for popular frameworks like React, Vue, Angular, and more.</p>
+
+            <div class="chart-container">
+                <h4>Framework Integration Demo</h4>
+                <div id="framework-demo"></div>
+            </div>
+
+            <h3>1. React Integration</h3>
+            <p>Integrate ECharts with React applications using hooks and components:</p>
+
+            <div class="framework-card">
+                <div class="framework-header">
+                    <div class="framework-icon" style="background: #61dafb;">⚛️</div>
+                    <div class="framework-info">
+                        <h3>React Integration</h3>
+                        <p>Use React hooks and components for seamless ECharts integration</p>
+                    </div>
+                </div>
+
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="showTab('react-basic')">Basic Component</button>
+                    <button class="code-tab" onclick="showTab('react-hooks')">Custom Hook</button>
+                    <button class="code-tab" onclick="showTab('react-advanced')">Advanced Usage</button>
+                </div>
+
+                <div id="react-basic" class="code-content active">
+                    <div class="code-block">
+                        <pre><code>// Basic React ECharts Component
+import React, { useEffect, useRef } from 'react';
+import * as echarts from 'echarts';
+
+const EChartsComponent = ({ option }) => {
+    const chartRef = useRef(null);
+    const chartInstance = useRef(null);
+
+    useEffect(() => {
+        if (chartRef.current) {
+            chartInstance.current = echarts.init(chartRef.current);
+        }
+
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.dispose();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (chartInstance.current && option) {
+            chartInstance.current.setOption(option);
+        }
+    }, [option]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (chartInstance.current) {
+                chartInstance.current.resize();
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return &lt;div ref={chartRef} style={{ width: '100%', height: '400px' }} /&gt;;
+};
+
+// Usage
+const App = () => {
+    const option = {
+        title: { text: 'React ECharts Demo' },
+        xAxis: { data: ['A', 'B', 'C', 'D'] },
+        yAxis: {},
+        series: [{
+            type: 'bar',
+            data: [10, 20, 30, 40]
+        }]
+    };
+
+    return &lt;EChartsComponent option={option} /&gt;;
+};</code></pre>
+                    </div>
+                </div>
+
+                <div id="react-hooks" class="code-content">
+                    <div class="code-block">
+                        <pre><code>// Custom React Hook for ECharts
+import { useEffect, useRef, useState } from 'react';
+import * as echarts from 'echarts';
+
+const useECharts = (option, theme = null) => {
+    const chartRef = useRef(null);
+    const chartInstance = useRef(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (chartRef.current) {
+            chartInstance.current = echarts.init(chartRef.current, theme);
+            setIsLoading(false);
+        }
+
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.dispose();
+            }
+        };
+    }, [theme]);
+
+    useEffect(() => {
+        if (chartInstance.current && option) {
+            chartInstance.current.setOption(option, true);
+        }
+    }, [option]);
+
+    const resize = () => {
+        if (chartInstance.current) {
+            chartInstance.current.resize();
+        }
+    };
+
+    const getInstance = () => chartInstance.current;
+
+    return { chartRef, isLoading, resize, getInstance };
+};
+
+// Usage with custom hook
+const ChartComponent = ({ data }) => {
+    const option = {
+        title: { text: 'Custom Hook Demo' },
+        series: [{
+            type: 'line',
+            data: data
+        }]
+    };
+
+    const { chartRef, isLoading } = useECharts(option);
+
+    if (isLoading) return &lt;div&gt;Loading chart...&lt;/div&gt;;
+
+    return &lt;div ref={chartRef} style={{ width: '100%', height: '400px' }} /&gt;;
+};</code></pre>
+                    </div>
+                </div>
+
+                <div id="react-advanced" class="code-content">
+                    <div class="code-block">
+                        <pre><code>// Advanced React Integration with Context
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import * as echarts from 'echarts';
+
+const EChartsContext = createContext();
+
+export const EChartsProvider = ({ children }) => {
+    const charts = useRef(new Map());
+
+    const registerChart = (id, chart) => {
+        charts.current.set(id, chart);
+    };
+
+    const unregisterChart = (id) => {
+        charts.current.delete(id);
+    };
+
+    const resizeAll = () => {
+        charts.current.forEach(chart => chart.resize());
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', resizeAll);
+        return () => window.removeEventListener('resize', resizeAll);
+    }, []);
+
+    return (
+        &lt;EChartsContext.Provider value={{ registerChart, unregisterChart }}&gt;
+            {children}
+        &lt;/EChartsContext.Provider&gt;
+    );
+};
+
+const useEChartsContext = () => useContext(EChartsContext);
+
+// Advanced component with context
+const AdvancedEChartsComponent = ({ id, option, theme }) => {
+    const chartRef = useRef(null);
+    const chartInstance = useRef(null);
+    const { registerChart, unregisterChart } = useEChartsContext();
+
+    useEffect(() => {
+        if (chartRef.current) {
+            chartInstance.current = echarts.init(chartRef.current, theme);
+            registerChart(id, chartInstance.current);
+        }
+
+        return () => {
+            if (chartInstance.current) {
+                unregisterChart(id);
+                chartInstance.current.dispose();
+            }
+        };
+    }, [id, theme, registerChart, unregisterChart]);
+
+    useEffect(() => {
+        if (chartInstance.current && option) {
+            chartInstance.current.setOption(option, true);
+        }
+    }, [option]);
+
+    return &lt;div ref={chartRef} style={{ width: '100%', height: '400px' }} /&gt;;
+};</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2. Vue.js Integration</h3>
+            <p>Integrate ECharts with Vue.js using components and directives:</p>
+
+            <div class="framework-card">
+                <div class="framework-header">
+                    <div class="framework-icon" style="background: #42b883;">⚡</div>
+                    <div class="framework-info">
+                        <h3>Vue.js Integration</h3>
+                        <p>Use Vue components and directives for reactive ECharts integration</p>
+                    </div>
+                </div>
+
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="showTab('vue-basic')">Basic Component</button>
+                    <button class="code-tab" onclick="showTab('vue-composition')">Composition API</button>
+                    <button class="code-tab" onclick="showTab('vue-directive')">Custom Directive</button>
+                </div>
+
+                <div id="vue-basic" class="code-content active">
+                    <div class="code-block">
+                        <pre><code>// Basic Vue.js ECharts Component
+&lt;template&gt;
+  &lt;div ref="chartRef" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import * as echarts from 'echarts';
+
+export default {
+  name: 'EChartsComponent',
+  props: {
+    option: {
+      type: Object,
+      required: true
+    },
+    theme: {
+      type: String,
+      default: null
+    }
+  },
+  data() {
+    return {
+      chart: null
+    };
+  },
+  mounted() {
+    this.initChart();
+  },
+  beforeUnmount() {
+    if (this.chart) {
+      this.chart.dispose();
+    }
+  },
+  methods: {
+    initChart() {
+      this.chart = echarts.init(this.$refs.chartRef, this.theme);
+      this.chart.setOption(this.option);
+      
+      window.addEventListener('resize', this.handleResize);
+    },
+    handleResize() {
+      if (this.chart) {
+        this.chart.resize();
+      }
+    }
+  },
+  watch: {
+    option: {
+      handler(newOption) {
+        if (this.chart) {
+          this.chart.setOption(newOption, true);
+        }
+      },
+      deep: true
+    }
+  }
+};
+&lt;/script&gt;
+
+// Usage
+&lt;template&gt;
+  &lt;EChartsComponent :option="chartOption" /&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import EChartsComponent from './EChartsComponent.vue';
+
+export default {
+  components: { EChartsComponent },
+  data() {
+    return {
+      chartOption: {
+        title: { text: 'Vue ECharts Demo' },
+        xAxis: { data: ['A', 'B', 'C', 'D'] },
+        yAxis: {},
+        series: [{
+          type: 'bar',
+          data: [10, 20, 30, 40]
+        }]
+      }
+    };
+  }
+};
+&lt;/script&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div id="vue-composition" class="code-content">
+                    <div class="code-block">
+                        <pre><code>// Vue 3 Composition API Integration
+&lt;template&gt;
+  &lt;div ref="chartRef" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import * as echarts from 'echarts';
+
+const props = defineProps({
+  option: {
+    type: Object,
+    required: true
+  },
+  theme: {
+    type: String,
+    default: null
+  }
+});
+
+const chartRef = ref(null);
+const chart = ref(null);
+
+const initChart = () => {
+  if (chartRef.value) {
+    chart.value = echarts.init(chartRef.value, props.theme);
+    chart.value.setOption(props.option);
+  }
+};
+
+const handleResize = () => {
+  if (chart.value) {
+    chart.value.resize();
+  }
+};
+
+onMounted(() => {
+  initChart();
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  if (chart.value) {
+    chart.value.dispose();
+  }
+  window.removeEventListener('resize', handleResize);
+});
+
+watch(() => props.option, (newOption) => {
+  if (chart.value) {
+    chart.value.setOption(newOption, true);
+  }
+}, { deep: true });
+
+// Expose chart instance for parent components
+defineExpose({
+  getChart: () => chart.value,
+  resize: handleResize
+});
+&lt;/script&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div id="vue-directive" class="code-content">
+                    <div class="code-block">
+                        <pre><code>// Custom Vue Directive for ECharts
+import * as echarts from 'echarts';
+
+const vECharts = {
+  mounted(el, binding) {
+    const { option, theme } = binding.value;
+    
+    el.chart = echarts.init(el, theme);
+    el.chart.setOption(option);
+    
+    const handleResize = () => {
+      if (el.chart) {
+        el.chart.resize();
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    el._resizeHandler = handleResize;
+  },
+  
+  updated(el, binding) {
+    const { option } = binding.value;
+    if (el.chart) {
+      el.chart.setOption(option, true);
+    }
+  },
+  
+  unmounted(el) {
+    if (el.chart) {
+      el.chart.dispose();
+    }
+    if (el._resizeHandler) {
+      window.removeEventListener('resize', el._resizeHandler);
+    }
+  }
+};
+
+// Register directive
+app.directive('echarts', vECharts);
+
+// Usage
+&lt;template&gt;
+  &lt;div 
+    v-echarts="{ option: chartOption, theme: 'dark' }"
+    style="width: 100%; height: 400px;"
+  &gt;&lt;/div&gt;
+&lt;/template&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>3. Angular Integration</h3>
+            <p>Integrate ECharts with Angular using services and components:</p>
+
+            <div class="framework-card">
+                <div class="framework-header">
+                    <div class="framework-icon" style="background: #dd0031;">🅰️</div>
+                    <div class="framework-info">
+                        <h3>Angular Integration</h3>
+                        <p>Use Angular services and components for type-safe ECharts integration</p>
+                    </div>
+                </div>
+
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="showTab('angular-service')">ECharts Service</button>
+                    <button class="code-tab" onclick="showTab('angular-component')">Component</button>
+                    <button class="code-tab" onclick="showTab('angular-pipe')">Custom Pipe</button>
+                </div>
+
+                <div id="angular-service" class="code-content active">
+                    <div class="code-block">
+                        <pre><code>// Angular ECharts Service
+import { Injectable, NgZone } from '@angular/core';
+import * as echarts from 'echarts';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EChartsService {
+  private charts = new Map&lt;string, echarts.ECharts&gt;();
+
+  constructor(private ngZone: NgZone) {}
+
+  initChart(element: HTMLElement, option: any, theme?: string): echarts.ECharts {
+    return this.ngZone.runOutsideAngular(() => {
+      const chart = echarts.init(element, theme);
+      chart.setOption(option);
+      return chart;
+    });
+  }
+
+  updateChart(chart: echarts.ECharts, option: any): void {
+    this.ngZone.runOutsideAngular(() => {
+      chart.setOption(option, true);
+    });
+  }
+
+  resizeChart(chart: echarts.ECharts): void {
+    this.ngZone.runOutsideAngular(() => {
+      chart.resize();
+    });
+  }
+
+  disposeChart(chart: echarts.ECharts): void {
+    this.ngZone.runOutsideAngular(() => {
+      chart.dispose();
+    });
+  }
+
+  registerChart(id: string, chart: echarts.ECharts): void {
+    this.charts.set(id, chart);
+  }
+
+  unregisterChart(id: string): void {
+    this.charts.delete(id);
+  }
+
+  resizeAll(): void {
+    this.charts.forEach(chart => this.resizeChart(chart));
+  }
+}
+
+// Usage in component
+@Component({
+  selector: 'app-chart',
+  template: '&lt;div #chartElement style="width: 100%; height: 400px;"&gt;&lt;/div&gt;'
+})
+export class ChartComponent implements OnInit, OnDestroy {
+  @ViewChild('chartElement', { static: true }) chartElement!: ElementRef;
+  
+  private chart!: echarts.ECharts;
+
+  constructor(private echartsService: EChartsService) {}
+
+  ngOnInit() {
+    const option = {
+      title: { text: 'Angular ECharts Demo' },
+      xAxis: { data: ['A', 'B', 'C', 'D'] },
+      yAxis: {},
+      series: [{
+        type: 'bar',
+        data: [10, 20, 30, 40]
+      }]
+    };
+
+    this.chart = this.echartsService.initChart(
+      this.chartElement.nativeElement, 
+      option
+    );
+
+    window.addEventListener('resize', () => {
+      this.echartsService.resizeChart(this.chart);
+    });
+  }
+
+  ngOnDestroy() {
+    this.echartsService.disposeChart(this.chart);
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="angular-component" class="code-content">
+                    <div class="code-block">
+                        <pre><code>// Angular ECharts Component
+@Component({
+  selector: 'app-echarts',
+  template: '&lt;div #chartContainer style="width: 100%; height: 400px;"&gt;&lt;/div&gt;',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class EChartsComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() option!: any;
+  @Input() theme?: string;
+  @Output() chartInit = new EventEmitter&lt;echarts.ECharts&gt;();
+
+  @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
+  
+  private chart!: echarts.ECharts;
+
+  constructor(
+    private echartsService: EChartsService,
+    private ngZone: NgZone
+  ) {}
+
+  ngOnInit() {
+    this.initChart();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['option'] && this.chart) {
+      this.echartsService.updateChart(this.chart, this.option);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.chart) {
+      this.echartsService.disposeChart(this.chart);
+    }
+  }
+
+  private initChart() {
+    this.ngZone.runOutsideAngular(() => {
+      this.chart = echarts.init(this.chartContainer.nativeElement, this.theme);
+      this.chart.setOption(this.option);
+      
+      this.chartInit.emit(this.chart);
+      
+      window.addEventListener('resize', () => {
+        this.echartsService.resizeChart(this.chart);
+      });
+    });
+  }
+}
+
+// Usage
+&lt;app-echarts 
+  [option]="chartOption" 
+  theme="dark"
+  (chartInit)="onChartInit($event)"&gt;
+&lt;/app-echarts&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div id="angular-pipe" class="code-content">
+                    <div class="code-block">
+                        <pre><code>// Angular Custom Pipe for ECharts Options
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'echartsOption'
+})
+export class EChartsOptionPipe implements PipeTransform {
+  transform(data: any[], chartType: string): any {
+    switch (chartType) {
+      case 'bar':
+        return {
+          xAxis: { data: data.map(item => item.name) },
+          yAxis: {},
+          series: [{
+            type: 'bar',
+            data: data.map(item => item.value)
+          }]
+        };
+      
+      case 'line':
+        return {
+          xAxis: { data: data.map(item => item.name) },
+          yAxis: {},
+          series: [{
+            type: 'line',
+            data: data.map(item => item.value)
+          }]
+        };
+      
+      case 'pie':
+        return {
+          series: [{
+            type: 'pie',
+            data: data.map(item => ({
+              name: item.name,
+              value: item.value
+            }))
+          }]
+        };
+      
+      default:
+        return {};
+    }
+  }
+}
+
+// Usage in template
+&lt;app-echarts [option]="data | echartsOption:'bar'"&gt;&lt;/app-echarts&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>4. Integration Demo</h3>
+            <p>Test different framework integration patterns:</p>
+
+            <div class="integration-demo">
+                <h4>🔧 Framework Integration Tester</h4>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Framework:</label>
+                        <select id="framework-selector">
+                            <option value="react">React</option>
+                            <option value="vue">Vue.js</option>
+                            <option value="angular">Angular</option>
+                            <option value="vanilla">Vanilla JS</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Chart Type:</label>
+                        <select id="integration-chart-type">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="scatter">Scatter Plot</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Theme:</label>
+                        <select id="integration-theme">
+                            <option value="default">Default</option>
+                            <option value="dark">Dark</option>
+                            <option value="vintage">Vintage</option>
+                            <option value="westeros">Westeros</option>
+                        </select>
+                    </div>
+                    <button onclick="updateIntegrationDemo()" class="nav-btn">Update Demo</button>
+                </div>
+                <div id="integration-demo-chart"></div>
+            </div>
+
+            <h3>5. Best Practices</h3>
+            <p>Follow these best practices for framework integration:</p>
+
+            <div class="tip-box">
+                <h4>🎯 Framework Integration Best Practices</h4>
+                <ul>
+                    <li><strong>Lifecycle Management:</strong> Always dispose of charts in component unmount/destroy</li>
+                    <li><strong>Performance:</strong> Use runOutsideAngular (Angular) or useCallback (React) for chart updates</li>
+                    <li><strong>Responsive Design:</strong> Handle window resize events properly</li>
+                    <li><strong>Type Safety:</strong> Use TypeScript interfaces for chart options</li>
+                    <li><strong>Error Handling:</strong> Implement proper error boundaries and try-catch blocks</li>
+                    <li><strong>Memory Management:</strong> Clear event listeners and timers</li>
+                    <li><strong>Testing:</strong> Mock ECharts for unit tests</li>
+                    <li><strong>Bundle Size:</strong> Use tree-shaking to reduce bundle size</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Framework Integration Exercise</h4>
+                <p>Practice integrating ECharts with your preferred framework:</p>
+                <ol>
+                    <li>Choose a framework (React, Vue, or Angular)</li>
+                    <li>Create a basic ECharts component</li>
+                    <li>Implement reactive data updates</li>
+                    <li>Add theme switching functionality</li>
+                    <li>Handle window resize events</li>
+                    <li>Implement proper cleanup and disposal</li>
+                    <li>Add error handling and loading states</li>
+                    <li>Test the integration with different chart types</li>
+                </ol>
+            </div>
+
+            <div class="navigation">
+                <a href="chapter10-performance-optimization.html" class="nav-btn">← Previous: Performance Optimization</a>
+                <a href="chapter12-real-world-applications.html" class="nav-btn">Next: Real-World Applications →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Framework demo chart
+        var frameworkDemo = echarts.init(document.getElementById('framework-demo'));
+        var frameworkOption = {
+            title: {
+                text: 'Framework Integration Overview',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['React', 'Vue.js', 'Angular', 'Vanilla JS'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Setup Time', 'Bundle Size', 'Performance', 'Developer Experience']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'React',
+                    type: 'bar',
+                    data: [8, 7, 9, 9],
+                    itemStyle: { color: '#61dafb' }
+                },
+                {
+                    name: 'Vue.js',
+                    type: 'bar',
+                    data: [7, 8, 8, 8],
+                    itemStyle: { color: '#42b883' }
+                },
+                {
+                    name: 'Angular',
+                    type: 'bar',
+                    data: [6, 6, 9, 7],
+                    itemStyle: { color: '#dd0031' }
+                },
+                {
+                    name: 'Vanilla JS',
+                    type: 'bar',
+                    data: [9, 10, 10, 6],
+                    itemStyle: { color: '#f7df1e' }
+                }
+            ]
+        };
+        frameworkDemo.setOption(frameworkOption);
+
+        // Integration demo chart
+        var integrationDemoChart = echarts.init(document.getElementById('integration-demo-chart'));
+        var integrationOption = {
+            title: {
+                text: 'Framework Integration Demo',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {},
+            series: [{
+                name: 'Data',
+                type: 'bar',
+                data: [120, 200, 150, 80, 70, 110],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        integrationDemoChart.setOption(integrationOption);
+
+        // Tab switching function
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.code-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.code-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Update integration demo function
+        function updateIntegrationDemo() {
+            var framework = document.getElementById('framework-selector').value;
+            var chartType = document.getElementById('integration-chart-type').value;
+            var theme = document.getElementById('integration-theme').value;
+
+            // Dispose and reinitialize with new theme
+            integrationDemoChart.dispose();
+            integrationDemoChart = echarts.init(document.getElementById('integration-demo-chart'), theme);
+
+            // Update chart type and data
+            var newOption = {
+                title: {
+                    text: framework.charAt(0).toUpperCase() + framework.slice(1) + ' Integration Demo',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: chartType === 'pie' ? 'item' : 'axis'
+                },
+                xAxis: chartType !== 'pie' ? {
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+                } : undefined,
+                yAxis: chartType !== 'pie' ? {} : undefined,
+                series: [{
+                    name: 'Data',
+                    type: chartType,
+                    data: chartType === 'pie' ? [
+                        { value: 120, name: 'Jan' },
+                        { value: 200, name: 'Feb' },
+                        { value: 150, name: 'Mar' },
+                        { value: 80, name: 'Apr' },
+                        { value: 70, name: 'May' },
+                        { value: 110, name: 'Jun' }
+                    ] : [120, 200, 150, 80, 70, 110],
+                    itemStyle: { color: '#4a90e2' }
+                }]
+            };
+
+            integrationDemoChart.setOption(newOption);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            frameworkDemo.resize();
+            integrationDemoChart.resize();
+        });
+    </script>
+</body>
+</html>

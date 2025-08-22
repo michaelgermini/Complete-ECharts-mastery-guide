@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Performance Optimization - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/menu.css">
+    <style>
+        .performance-metrics {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .performance-controls {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            margin: 15px 0;
+        }
+        
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .performance-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .performance-tip {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <script src="../assets/js/add-menu.js"></script>
+
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Chapter 10: Performance Optimization</h1>
+            <p>Optimize your ECharts visualizations for speed and efficiency</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Performance Optimization Strategies</h2>
+            
+            <p>As your data grows and your applications become more complex, performance optimization becomes crucial. This chapter covers techniques to ensure your ECharts visualizations remain fast and responsive.</p>
+
+            <div class="performance-metrics">
+                <h4>📊 Performance Metrics</h4>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="render-time">0ms</div>
+                        <div class="metric-label">Render Time</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="data-points">0</div>
+                        <div class="metric-label">Data Points</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="memory-usage">0MB</div>
+                        <div class="metric-label">Memory Usage</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="fps">60</div>
+                        <div class="metric-label">FPS</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>1. Data Optimization</h3>
+            <p>Optimize your data structure and size for better performance:</p>
+
+            <div class="performance-controls">
+                <h4>🔧 Data Performance Tester</h4>
+                <div class="control-group">
+                    <label>Data Points:</label>
+                    <input type="range" id="data-points-slider" min="100" max="10000" value="1000" step="100">
+                    <span id="data-points-display">1000 points</span>
+                </div>
+                <div class="control-group">
+                    <label>Chart Type:</label>
+                    <select id="performance-chart-type">
+                        <option value="line">Line Chart</option>
+                        <option value="scatter">Scatter Plot</option>
+                        <option value="bar">Bar Chart</option>
+                        <option value="area">Area Chart</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Optimization Level:</label>
+                    <select id="optimization-level">
+                        <option value="none">None</option>
+                        <option value="basic">Basic</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="extreme">Extreme</option>
+                    </select>
+                </div>
+                <button onclick="updatePerformanceChart()" class="nav-btn">Update Performance Test</button>
+            </div>
+
+            <div class="chart-container">
+                <h4>Performance Test Chart</h4>
+                <div id="performance-test-chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Data optimization techniques
+// 1. Sampling for large datasets
+function sampleData(data, sampleSize) {
+    if (data.length <= sampleSize) return data;
+    
+    var step = Math.floor(data.length / sampleSize);
+    var sampled = [];
+    
+    for (var i = 0; i < data.length; i += step) {
+        sampled.push(data[i]);
+    }
+    
+    return sampled;
+}
+
+// 2. Data compression
+function compressData(data) {
+    return data.map(function(point, index) {
+        if (index === 0) return point;
+        
+        // Only include significant changes
+        var prev = data[index - 1];
+        var change = Math.abs(point - prev) / prev;
+        
+        return change > 0.01 ? point : null;
+    }).filter(function(point) {
+        return point !== null;
+    });
+}
+
+// 3. Progressive rendering
+var chart = echarts.init(document.getElementById('chart'));
+var option = {
+    progressive: 2000,        // Render 2000 points per frame
+    progressiveThreshold: 3000, // Start progressive rendering at 3000 points
+    series: [{
+        type: 'line',
+        data: largeDataset,
+        large: true,          // Enable large data mode
+        largeThreshold: 2000  // Threshold for large data mode
+    }]
+};</code></pre>
+            </div>
+
+            <h3>2. Rendering Optimization</h3>
+            <p>Optimize rendering performance with advanced techniques:</p>
+
+            <div class="chart-container">
+                <h4>Rendering Performance Comparison</h4>
+                <div id="rendering-comparison"></div>
+            </div>
+
+            <div class="performance-warning">
+                <h4>⚠️ Performance Warnings</h4>
+                <ul>
+                    <li><strong>Large Datasets:</strong> Avoid rendering more than 10,000 points without optimization</li>
+                    <li><strong>Complex Animations:</strong> Limit simultaneous animations to prevent frame drops</li>
+                    <li><strong>Real-time Updates:</strong> Use throttling for frequent data updates</li>
+                    <li><strong>Memory Leaks:</strong> Always dispose of charts when removing from DOM</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Rendering optimization techniques
+// 1. Canvas vs SVG rendering
+var chart = echarts.init(document.getElementById('chart'), null, {
+    renderer: 'canvas'  // Use canvas for better performance with large datasets
+});
+
+// 2. Animation optimization
+var option = {
+    animation: true,
+    animationDuration: 1000,
+    animationEasing: 'cubicOut',
+    animationThreshold: 2000,  // Disable animation for large datasets
+    
+    series: [{
+        type: 'line',
+        data: data,
+        animation: false,  // Disable animation for this series
+        progressive: 2000,
+        progressiveThreshold: 3000
+    }]
+};
+
+// 3. Throttled updates
+function throttledUpdate(newData) {
+    if (updateTimeout) return;
+    
+    updateTimeout = setTimeout(function() {
+        chart.setOption({
+            series: [{
+                data: newData
+            }]
+        });
+        updateTimeout = null;
+    }, 100);  // Update at most every 100ms
+}</code></pre>
+            </div>
+
+            <h3>3. Memory Management</h3>
+            <p>Proper memory management is crucial for long-running applications:</p>
+
+            <div class="performance-tip">
+                <h4>💡 Memory Management Tips</h4>
+                <ul>
+                    <li><strong>Dispose Charts:</strong> Always call <code>chart.dispose()</code> when removing charts</li>
+                    <li><strong>Clear Intervals:</strong> Clear any <code>setInterval</code> or <code>setTimeout</code> timers</li>
+                    <li><strong>Remove Event Listeners:</strong> Clean up custom event listeners</li>
+                    <li><strong>Data Cleanup:</strong> Clear large datasets when not needed</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Memory management best practices
+// 1. Proper chart disposal
+function cleanupChart() {
+    if (chart) {
+        chart.dispose();
+        chart = null;
+    }
+    
+    // Clear any timers
+    if (updateTimer) {
+        clearInterval(updateTimer);
+        updateTimer = null;
+    }
+    
+    // Remove event listeners
+    window.removeEventListener('resize', handleResize);
+}
+
+// 2. Lazy loading for multiple charts
+function loadChartsOnDemand() {
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                var chartId = entry.target.id;
+                loadChart(chartId);
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.chart-container').forEach(function(el) {
+        observer.observe(el);
+    });
+}
+
+// 3. Data streaming for real-time charts
+function setupDataStreaming() {
+    var maxDataPoints = 1000;
+    var data = [];
+    
+    function addDataPoint(newPoint) {
+        data.push(newPoint);
+        
+        if (data.length > maxDataPoints) {
+            data.shift();  // Remove oldest point
+        }
+        
+        chart.setOption({
+            series: [{
+                data: data
+            }]
+        });
+    }
+}</code></pre>
+            </div>
+
+            <h3>4. Mobile Optimization</h3>
+            <p>Optimize charts for mobile devices with limited resources:</p>
+
+            <div class="chart-container">
+                <h4>Mobile Performance Test</h4>
+                <div id="mobile-performance"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Mobile optimization techniques
+// 1. Responsive design
+function createMobileOptimizedChart() {
+    var isMobile = window.innerWidth < 768;
+    
+    var option = {
+        title: {
+            textStyle: {
+                fontSize: isMobile ? 14 : 18
+            }
+        },
+        legend: {
+            orient: isMobile ? 'vertical' : 'horizontal',
+            top: isMobile ? '10%' : '5%'
+        },
+        grid: {
+            left: isMobile ? '5%' : '10%',
+            right: isMobile ? '5%' : '10%',
+            top: isMobile ? '20%' : '15%'
+        },
+        series: [{
+            type: 'line',
+            data: data,
+            // Reduce visual complexity on mobile
+            lineStyle: {
+                width: isMobile ? 2 : 3
+            },
+            symbolSize: isMobile ? 4 : 6,
+            // Disable animations on mobile for better performance
+            animation: !isMobile
+        }]
+    };
+}
+
+// 2. Touch optimization
+var chart = echarts.init(document.getElementById('chart'));
+chart.on('touchstart', function(params) {
+    // Handle touch events efficiently
+    console.log('Touch started:', params);
+});
+
+// 3. Reduced data for mobile
+function getMobileData(fullData) {
+    if (window.innerWidth < 768) {
+        return sampleData(fullData, Math.floor(fullData.length / 2));
+    }
+    return fullData;
+}</code></pre>
+            </div>
+
+            <h3>5. Performance Monitoring</h3>
+            <p>Monitor and track performance metrics in real-time:</p>
+
+            <div class="performance-metrics">
+                <h4>📈 Real-time Performance Monitor</h4>
+                <div id="performance-monitor"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Performance monitoring
+class ChartPerformanceMonitor {
+    constructor(chart) {
+        this.chart = chart;
+        this.metrics = {
+            renderTime: 0,
+            dataPoints: 0,
+            memoryUsage: 0,
+            fps: 60
+        };
+        this.startMonitoring();
+    }
+    
+    startMonitoring() {
+        // Monitor render time
+        this.chart.on('rendered', () => {
+            this.metrics.renderTime = performance.now() - this.renderStart;
+        });
+        
+        // Monitor FPS
+        this.monitorFPS();
+        
+        // Monitor memory usage
+        this.monitorMemory();
+    }
+    
+    monitorFPS() {
+        let frameCount = 0;
+        let lastTime = performance.now();
+        
+        const countFPS = () => {
+            frameCount++;
+            const currentTime = performance.now();
+            
+            if (currentTime - lastTime >= 1000) {
+                this.metrics.fps = frameCount;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            requestAnimationFrame(countFPS);
+        };
+        
+        requestAnimationFrame(countFPS);
+    }
+    
+    monitorMemory() {
+        if (performance.memory) {
+            setInterval(() => {
+                this.metrics.memoryUsage = 
+                    Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+            }, 1000);
+        }
+    }
+    
+    getMetrics() {
+        return this.metrics;
+    }
+}
+
+// Usage
+var monitor = new ChartPerformanceMonitor(chart);
+setInterval(() => {
+    var metrics = monitor.getMetrics();
+    updateMetricsDisplay(metrics);
+}, 1000);</code></pre>
+            </div>
+
+            <h3>6. Best Practices Summary</h3>
+            <p>Follow these best practices for optimal performance:</p>
+
+            <div class="tip-box">
+                <h4>🚀 Performance Best Practices</h4>
+                <ul>
+                    <li><strong>Data Sampling:</strong> Use sampling for datasets larger than 5,000 points</li>
+                    <li><strong>Progressive Rendering:</strong> Enable for large datasets</li>
+                    <li><strong>Canvas Renderer:</strong> Use canvas for better performance with large datasets</li>
+                    <li><strong>Animation Control:</strong> Disable animations for large datasets</li>
+                    <li><strong>Memory Cleanup:</strong> Always dispose of charts and clear timers</li>
+                    <li><strong>Mobile Optimization:</strong> Reduce data points and visual complexity on mobile</li>
+                    <li><strong>Throttled Updates:</strong> Limit update frequency for real-time data</li>
+                    <li><strong>Lazy Loading:</strong> Load charts only when needed</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Performance Optimization Exercise</h4>
+                <p>Practice optimizing a chart with 10,000 data points:</p>
+                <ol>
+                    <li>Create a chart with 10,000 data points</li>
+                    <li>Measure initial render time and memory usage</li>
+                    <li>Apply data sampling to reduce to 1,000 points</li>
+                    <li>Enable progressive rendering</li>
+                    <li>Disable animations</li>
+                    <li>Compare performance metrics</li>
+                    <li>Implement real-time updates with throttling</li>
+                </ol>
+            </div>
+
+            <div class="navigation">
+                <a href="chapter9-themes-customization.html" class="nav-btn">← Previous: Themes & Customization</a>
+                <a href="chapter11-integration-frameworks.html" class="nav-btn">Next: Framework Integration →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Performance test chart
+        var performanceTestChart = echarts.init(document.getElementById('performance-test-chart'));
+        var performanceOption = {
+            title: {
+                text: 'Performance Test Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Data',
+                type: 'line',
+                data: [],
+                smooth: true
+            }]
+        };
+        performanceTestChart.setOption(performanceOption);
+
+        // Rendering comparison chart
+        var renderingComparison = echarts.init(document.getElementById('rendering-comparison'));
+        var renderingOption = {
+            title: {
+                text: 'Rendering Performance Comparison',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Standard', 'Optimized', 'Progressive'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['1K', '5K', '10K', '20K', '50K']
+            },
+            yAxis: {
+                name: 'Render Time (ms)'
+            },
+            series: [
+                {
+                    name: 'Standard',
+                    type: 'line',
+                    data: [50, 200, 500, 1200, 3000],
+                    itemStyle: { color: '#e74c3c' }
+                },
+                {
+                    name: 'Optimized',
+                    type: 'line',
+                    data: [30, 100, 200, 400, 800],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Progressive',
+                    type: 'line',
+                    data: [20, 50, 80, 150, 300],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        renderingComparison.setOption(renderingOption);
+
+        // Mobile performance chart
+        var mobilePerformance = echarts.init(document.getElementById('mobile-performance'));
+        var mobileOption = {
+            title: {
+                text: 'Mobile Performance Test',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Desktop', 'Mobile'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['1K', '2K', '5K', '10K']
+            },
+            yAxis: {
+                name: 'FPS'
+            },
+            series: [
+                {
+                    name: 'Desktop',
+                    type: 'bar',
+                    data: [60, 60, 45, 25],
+                    itemStyle: { color: '#3498db' }
+                },
+                {
+                    name: 'Mobile',
+                    type: 'bar',
+                    data: [60, 45, 25, 10],
+                    itemStyle: { color: '#e74c3c' }
+                }
+            ]
+        };
+        mobilePerformance.setOption(mobileOption);
+
+        // Performance monitor chart
+        var performanceMonitor = echarts.init(document.getElementById('performance-monitor'));
+        var monitorOption = {
+            title: {
+                text: 'Real-time Performance Monitor',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Render Time', 'Memory Usage', 'FPS'],
+                top: '10%'
+            },
+            xAxis: {
+                type: 'time',
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Time (ms)',
+                    position: 'left'
+                },
+                {
+                    type: 'value',
+                    name: 'Memory (MB)',
+                    position: 'right'
+                }
+            ],
+            series: [
+                {
+                    name: 'Render Time',
+                    type: 'line',
+                    data: [],
+                    itemStyle: { color: '#e74c3c' }
+                },
+                {
+                    name: 'Memory Usage',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'FPS',
+                    type: 'line',
+                    data: [],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        performanceMonitor.setOption(monitorOption);
+
+        // Performance monitoring variables
+        var renderStart = 0;
+        var performanceData = {
+            renderTime: [],
+            memoryUsage: [],
+            fps: []
+        };
+
+        // Update performance chart function
+        function updatePerformanceChart() {
+            var dataPoints = parseInt(document.getElementById('data-points-slider').value);
+            var chartType = document.getElementById('performance-chart-type').value;
+            var optimization = document.getElementById('optimization-level').value;
+
+            // Generate test data
+            var data = [];
+            var xData = [];
+            
+            for (var i = 0; i < dataPoints; i++) {
+                xData.push('Point ' + i);
+                data.push(Math.random() * 100);
+            }
+
+            // Apply optimizations
+            var optimizedData = data;
+            var optimizedXData = xData;
+
+            if (optimization === 'basic') {
+                // Sample every 10th point
+                optimizedData = data.filter((_, index) => index % 10 === 0);
+                optimizedXData = xData.filter((_, index) => index % 10 === 0);
+            } else if (optimization === 'advanced') {
+                // Sample every 50th point
+                optimizedData = data.filter((_, index) => index % 50 === 0);
+                optimizedXData = xData.filter((_, index) => index % 50 === 0);
+            } else if (optimization === 'extreme') {
+                // Sample every 100th point
+                optimizedData = data.filter((_, index) => index % 100 === 0);
+                optimizedXData = xData.filter((_, index) => index % 100 === 0);
+            }
+
+            // Measure render time
+            renderStart = performance.now();
+
+            var newOption = {
+                xAxis: {
+                    data: optimizedXData
+                },
+                series: [{
+                    type: chartType,
+                    data: optimizedData,
+                    progressive: optimization !== 'none' ? 2000 : 0,
+                    progressiveThreshold: optimization !== 'none' ? 3000 : 0,
+                    large: optimization !== 'none',
+                    largeThreshold: optimization !== 'none' ? 2000 : 0,
+                    animation: optimization === 'none'
+                }]
+            };
+
+            performanceTestChart.setOption(newOption);
+
+            // Update metrics
+            setTimeout(() => {
+                var renderTime = performance.now() - renderStart;
+                document.getElementById('render-time').textContent = Math.round(renderTime) + 'ms';
+                document.getElementById('data-points').textContent = optimizedData.length;
+                
+                // Simulate memory usage
+                var memoryUsage = Math.round((optimizedData.length * 8) / 1024); // Rough estimate
+                document.getElementById('memory-usage').textContent = memoryUsage + 'KB';
+            }, 100);
+        }
+
+        // Update data points display
+        document.getElementById('data-points-slider').addEventListener('input', function() {
+            document.getElementById('data-points-display').textContent = this.value + ' points';
+        });
+
+        // Simulate performance monitoring
+        function simulatePerformanceMonitoring() {
+            var now = new Date();
+            
+            // Simulate render time (20-100ms)
+            var renderTime = 20 + Math.random() * 80;
+            performanceData.renderTime.push([now, renderTime]);
+            
+            // Simulate memory usage (10-50MB)
+            var memoryUsage = 10 + Math.random() * 40;
+            performanceData.memoryUsage.push([now, memoryUsage]);
+            
+            // Simulate FPS (30-60)
+            var fps = 30 + Math.random() * 30;
+            performanceData.fps.push([now, fps]);
+
+            // Keep only last 20 data points
+            if (performanceData.renderTime.length > 20) {
+                performanceData.renderTime.shift();
+                performanceData.memoryUsage.shift();
+                performanceData.fps.shift();
+            }
+
+            // Update monitor chart
+            performanceMonitor.setOption({
+                series: [
+                    {
+                        name: 'Render Time',
+                        data: performanceData.renderTime
+                    },
+                    {
+                        name: 'Memory Usage',
+                        data: performanceData.memoryUsage
+                    },
+                    {
+                        name: 'FPS',
+                        data: performanceData.fps
+                    }
+                ]
+            });
+        }
+
+        // Start performance monitoring simulation
+        setInterval(simulatePerformanceMonitoring, 1000);
+
+        // Initialize performance test
+        updatePerformanceChart();
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            performanceTestChart.resize();
+            renderingComparison.resize();
+            mobilePerformance.resize();
+            performanceMonitor.resize();
+        });
+    </script>
+</body>
+</html>

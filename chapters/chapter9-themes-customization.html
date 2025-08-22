@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: Themes & Customization - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/menu.css">
+    <style>
+        .theme-preview {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-preview:hover {
+            border-color: #4a90e2;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+        }
+        
+        .theme-preview.active {
+            border-color: #4a90e2;
+            background: #f8f9fa;
+        }
+        
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .color-palette {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .customization-controls {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            margin: 15px 0;
+        }
+        
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <script src="../assets/js/add-menu.js"></script>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Chapter 9: Themes & Customization</h1>
+            <p>Master the art of creating beautiful, branded visualizations</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Understanding ECharts Themes</h2>
+            
+            <p>ECharts themes allow you to create consistent, branded visualizations that match your application's design. Themes define colors, fonts, and styling that can be applied across all your charts.</p>
+
+            <div class="chart-container">
+                <h4>Built-in Themes Comparison</h4>
+                <div id="theme-comparison"></div>
+            </div>
+
+            <h3>1. Built-in Themes</h3>
+            <p>ECharts comes with several pre-built themes that you can use immediately:</p>
+
+            <div class="theme-grid">
+                <div class="theme-preview" onclick="applyTheme('default')">
+                    <h4>Default Theme</h4>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background: #5470c6"></div>
+                        <div class="color-swatch" style="background: #91cc75"></div>
+                        <div class="color-swatch" style="background: #fac858"></div>
+                        <div class="color-swatch" style="background: #ee6666"></div>
+                        <div class="color-swatch" style="background: #73c0de"></div>
+                    </div>
+                    <p>Clean, professional look with balanced colors</p>
+                </div>
+
+                <div class="theme-preview" onclick="applyTheme('dark')">
+                    <h4>Dark Theme</h4>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background: #4992ff"></div>
+                        <div class="color-swatch" style="background: #7cffb2"></div>
+                        <div class="color-swatch" style="background: #fddd60"></div>
+                        <div class="color-swatch" style="background: #ff6e76"></div>
+                        <div class="color-swatch" style="background: #58d9f9"></div>
+                    </div>
+                    <p>Modern dark theme for contemporary applications</p>
+                </div>
+
+                <div class="theme-preview" onclick="applyTheme('vintage')">
+                    <h4>Vintage Theme</h4>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background: #d87c7c"></div>
+                        <div class="color-swatch" style="background: #919e8b"></div>
+                        <div class="color-swatch" style="background: #d7ab82"></div>
+                        <div class="color-swatch" style="background: #6e7074"></div>
+                        <div class="color-swatch" style="background: #61a0a8"></div>
+                    </div>
+                    <p>Classic, elegant theme with muted colors</p>
+                </div>
+
+                <div class="theme-preview" onclick="applyTheme('westeros')">
+                    <h4>Westeros Theme</h4>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background: #516b91"></div>
+                        <div class="color-swatch" style="background: #59c4e6"></div>
+                        <div class="color-swatch" style="background: #edafda"></div>
+                        <div class="color-swatch" style="background: #93b7e3"></div>
+                        <div class="color-swatch" style="background: #a5e7f0"></div>
+                    </div>
+                    <p>Cool, sophisticated theme with blue tones</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Using built-in themes
+var chart = echarts.init(document.getElementById('chart'), 'dark');
+
+// Or apply theme to existing chart
+chart.setOption(option, 'vintage');</code></pre>
+            </div>
+
+            <h3>2. Custom Theme Creation</h3>
+            <p>Create your own themes to match your brand identity:</p>
+
+            <div class="customization-controls">
+                <h4>🎨 Custom Theme Builder</h4>
+                <div class="control-group">
+                    <label>Primary Color:</label>
+                    <input type="color" id="primary-color" value="#4a90e2">
+                </div>
+                <div class="control-group">
+                    <label>Secondary Color:</label>
+                    <input type="color" id="secondary-color" value="#f39c12">
+                </div>
+                <div class="control-group">
+                    <label>Background Color:</label>
+                    <input type="color" id="bg-color" value="#ffffff">
+                </div>
+                <div class="control-group">
+                    <label>Text Color:</label>
+                    <input type="color" id="text-color" value="#333333">
+                </div>
+                <button onclick="applyCustomTheme()" class="nav-btn">Apply Custom Theme</button>
+            </div>
+
+            <div class="chart-container">
+                <h4>Custom Theme Preview</h4>
+                <div id="custom-theme-chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Custom theme definition
+var customTheme = {
+    color: ['#4a90e2', '#f39c12', '#27ae60', '#e74c3c', '#9b59b6'],
+    backgroundColor: '#ffffff',
+    textStyle: {
+        color: '#333333'
+    },
+    title: {
+        textStyle: {
+            color: '#333333'
+        }
+    },
+    line: {
+        itemStyle: {
+            borderWidth: 2
+        }
+    },
+    bar: {
+        itemStyle: {
+            borderRadius: [4, 4, 0, 0]
+        }
+    }
+};
+
+// Register and use custom theme
+echarts.registerTheme('myTheme', customTheme);
+var chart = echarts.init(document.getElementById('chart'), 'myTheme');</code></pre>
+            </div>
+
+            <h3>3. Advanced Customization</h3>
+            <p>Fine-tune every aspect of your charts with detailed styling options:</p>
+
+            <div class="chart-container">
+                <h4>Advanced Styling Examples</h4>
+                <div id="advanced-styling"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Advanced styling options
+var option = {
+    title: {
+        text: 'Custom Styled Chart',
+        textStyle: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: '#2c3e50'
+        },
+        subtext: 'With custom styling',
+        subtextStyle: {
+            fontSize: 14,
+            color: '#7f8c8d'
+        }
+    },
+    tooltip: {
+        backgroundColor: 'rgba(44, 62, 80, 0.9)',
+        borderColor: '#34495e',
+        borderWidth: 1,
+        textStyle: {
+            color: '#ecf0f1'
+        }
+    },
+    legend: {
+        textStyle: {
+            color: '#2c3e50',
+            fontSize: 12
+        }
+    },
+    xAxis: {
+        axisLine: {
+            lineStyle: {
+                color: '#bdc3c7'
+            }
+        },
+        axisLabel: {
+            color: '#7f8c8d'
+        }
+    },
+    yAxis: {
+        axisLine: {
+            lineStyle: {
+                color: '#bdc3c7'
+            }
+        },
+        axisLabel: {
+            color: '#7f8c8d'
+        }
+    },
+    series: [{
+        name: 'Data',
+        type: 'bar',
+        data: [120, 200, 150, 80, 70, 110],
+        itemStyle: {
+            color: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [{
+                    offset: 0, color: '#3498db'
+                }, {
+                    offset: 1, color: '#2980b9'
+                }]
+            },
+            borderRadius: [6, 6, 0, 0],
+            shadowBlur: 10,
+            shadowColor: 'rgba(0,0,0,0.3)'
+        },
+        emphasis: {
+            itemStyle: {
+                color: {
+                    type: 'linear',
+                    x: 0, y: 0, x2: 0, y2: 1,
+                    colorStops: [{
+                        offset: 0, color: '#e74c3c'
+                    }, {
+                        offset: 1, color: '#c0392b'
+                    }]
+                }
+            }
+        }
+    }]
+};</code></pre>
+            </div>
+
+            <h3>4. Responsive Design</h3>
+            <p>Create themes that adapt to different screen sizes and orientations:</p>
+
+            <div class="chart-container">
+                <h4>Responsive Theme Example</h4>
+                <div id="responsive-theme"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Responsive theme configuration
+function createResponsiveTheme() {
+    var isMobile = window.innerWidth < 768;
+    
+    return {
+        title: {
+            textStyle: {
+                fontSize: isMobile ? 16 : 24
+            }
+        },
+        legend: {
+            orient: isMobile ? 'vertical' : 'horizontal',
+            top: isMobile ? '10%' : '5%'
+        },
+        grid: {
+            left: isMobile ? '5%' : '10%',
+            right: isMobile ? '5%' : '10%',
+            top: isMobile ? '25%' : '20%'
+        }
+    };
+}
+
+// Apply responsive theme
+window.addEventListener('resize', function() {
+    var responsiveOption = createResponsiveTheme();
+    chart.setOption(responsiveOption);
+});</code></pre>
+            </div>
+
+            <h3>5. Brand Integration</h3>
+            <p>Integrate your brand colors and styling into ECharts themes:</p>
+
+            <div class="tip-box">
+                <h4>🎯 Brand Integration Tips</h4>
+                <ul>
+                    <li><strong>Color Palette:</strong> Use your brand's primary and secondary colors</li>
+                    <li><strong>Typography:</strong> Match your application's font family and sizes</li>
+                    <li><strong>Spacing:</strong> Maintain consistent margins and padding</li>
+                    <li><strong>Shadows:</strong> Use your design system's shadow styles</li>
+                    <li><strong>Border Radius:</strong> Apply your brand's corner radius values</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Practice Exercise</h4>
+                <p>Create a custom theme for your brand:</p>
+                <ol>
+                    <li>Define your brand's color palette (primary, secondary, accent colors)</li>
+                    <li>Create a custom theme object with your colors</li>
+                    <li>Apply the theme to a chart</li>
+                    <li>Test the theme across different chart types</li>
+                    <li>Make it responsive for mobile devices</li>
+                </ol>
+            </div>
+
+            <div class="navigation">
+                <a href="chapter8-advanced-features.html" class="nav-btn">← Previous: Advanced Features</a>
+                <a href="chapter10-performance-optimization.html" class="nav-btn">Next: Performance Optimization →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Theme comparison chart
+        var themeComparison = echarts.init(document.getElementById('theme-comparison'));
+        var themeOption = {
+            title: {
+                text: 'Theme Comparison',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Default', 'Dark', 'Vintage', 'Westeros'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Default',
+                    type: 'bar',
+                    data: [120, 200, 150, 80, 70, 110],
+                    itemStyle: { color: '#5470c6' }
+                },
+                {
+                    name: 'Dark',
+                    type: 'bar',
+                    data: [100, 180, 130, 90, 80, 100],
+                    itemStyle: { color: '#4992ff' }
+                },
+                {
+                    name: 'Vintage',
+                    type: 'bar',
+                    data: [110, 190, 140, 85, 75, 105],
+                    itemStyle: { color: '#d87c7c' }
+                },
+                {
+                    name: 'Westeros',
+                    type: 'bar',
+                    data: [95, 170, 125, 95, 85, 95],
+                    itemStyle: { color: '#516b91' }
+                }
+            ]
+        };
+        themeComparison.setOption(themeOption);
+
+        // Custom theme chart
+        var customThemeChart = echarts.init(document.getElementById('custom-theme-chart'));
+        var customOption = {
+            title: {
+                text: 'Custom Theme Preview',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Profit'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [120, 200, 150, 80],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Profit',
+                    type: 'line',
+                    data: [20, 40, 30, 15],
+                    itemStyle: { color: '#f39c12' }
+                }
+            ]
+        };
+        customThemeChart.setOption(customOption);
+
+        // Advanced styling chart
+        var advancedStyling = echarts.init(document.getElementById('advanced-styling'));
+        var advancedOption = {
+            title: {
+                text: 'Advanced Styling Example',
+                textStyle: {
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: '#2c3e50'
+                },
+                subtext: 'With custom gradients and effects',
+                subtextStyle: {
+                    fontSize: 14,
+                    color: '#7f8c8d'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(44, 62, 80, 0.9)',
+                borderColor: '#34495e',
+                textStyle: {
+                    color: '#ecf0f1'
+                }
+            },
+            legend: {
+                data: ['Revenue', 'Costs'],
+                top: '15%',
+                textStyle: {
+                    color: '#2c3e50'
+                }
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#bdc3c7'
+                    }
+                },
+                axisLabel: {
+                    color: '#7f8c8d'
+                }
+            },
+            yAxis: {
+                axisLine: {
+                    lineStyle: {
+                        color: '#bdc3c7'
+                    }
+                },
+                axisLabel: {
+                    color: '#7f8c8d'
+                }
+            },
+            series: [
+                {
+                    name: 'Revenue',
+                    type: 'bar',
+                    data: [120, 200, 150, 80, 70, 110],
+                    itemStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [{
+                                offset: 0, color: '#3498db'
+                            }, {
+                                offset: 1, color: '#2980b9'
+                            }]
+                        },
+                        borderRadius: [6, 6, 0, 0],
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0,0,0,0.3)'
+                    }
+                },
+                {
+                    name: 'Costs',
+                    type: 'line',
+                    data: [80, 150, 100, 60, 50, 80],
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: '#e74c3c'
+                    },
+                    itemStyle: {
+                        color: '#e74c3c',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }
+                }
+            ]
+        };
+        advancedStyling.setOption(advancedOption);
+
+        // Responsive theme chart
+        var responsiveTheme = echarts.init(document.getElementById('responsive-theme'));
+        var responsiveOption = {
+            title: {
+                text: 'Responsive Design',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Desktop', 'Mobile', 'Tablet'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Desktop',
+                    type: 'bar',
+                    data: [120, 200, 150, 80],
+                    itemStyle: { color: '#3498db' }
+                },
+                {
+                    name: 'Mobile',
+                    type: 'bar',
+                    data: [80, 150, 100, 60],
+                    itemStyle: { color: '#e74c3c' }
+                },
+                {
+                    name: 'Tablet',
+                    type: 'bar',
+                    data: [100, 180, 130, 70],
+                    itemStyle: { color: '#f39c12' }
+                }
+            ]
+        };
+        responsiveTheme.setOption(responsiveOption);
+
+        // Theme application functions
+        function applyTheme(themeName) {
+            // Remove active class from all themes
+            document.querySelectorAll('.theme-preview').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            
+            // Add active class to clicked theme
+            event.target.closest('.theme-preview').classList.add('active');
+            
+            // Apply theme to charts
+            var charts = [themeComparison, customThemeChart, advancedStyling, responsiveTheme];
+            charts.forEach(function(chart) {
+                if (chart) {
+                    chart.dispose();
+                    chart = echarts.init(chart.getDom(), themeName);
+                    chart.setOption(chart.getOption());
+                }
+            });
+        }
+
+        function applyCustomTheme() {
+            var primaryColor = document.getElementById('primary-color').value;
+            var secondaryColor = document.getElementById('secondary-color').value;
+            var bgColor = document.getElementById('bg-color').value;
+            var textColor = document.getElementById('text-color').value;
+
+            // Create custom theme
+            var customTheme = {
+                color: [primaryColor, secondaryColor, '#27ae60', '#e74c3c', '#9b59b6'],
+                backgroundColor: bgColor,
+                textStyle: {
+                    color: textColor
+                }
+            };
+
+            // Apply to custom theme chart
+            customThemeChart.dispose();
+            customThemeChart = echarts.init(document.getElementById('custom-theme-chart'));
+            
+            var updatedOption = {
+                ...customOption,
+                title: {
+                    ...customOption.title,
+                    textStyle: {
+                        color: textColor
+                    }
+                },
+                series: [
+                    {
+                        ...customOption.series[0],
+                        itemStyle: { color: primaryColor }
+                    },
+                    {
+                        ...customOption.series[1],
+                        itemStyle: { color: secondaryColor }
+                    }
+                ]
+            };
+            
+            customThemeChart.setOption(updatedOption);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            themeComparison.resize();
+            customThemeChart.resize();
+            advancedStyling.resize();
+            responsiveTheme.resize();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Analytics Dashboard - ECharts Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>🛒 E-Commerce Analytics Dashboard</h1>
+                <p>Comprehensive analytics for online retail performance</p>
+            </div>
+            <div class="header-actions">
+                <button class="nav-btn" onclick="refreshData()">🔄 Refresh</button>
+                <button class="nav-btn" onclick="exportData()">📊 Export</button>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="total-revenue">$124,567</div>
+                    <div class="kpi-label">Total Revenue</div>
+                    <div class="kpi-change positive">+12.5%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📦</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="total-orders">1,847</div>
+                    <div class="kpi-label">Total Orders</div>
+                    <div class="kpi-change positive">+8.3%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">👥</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="unique-customers">892</div>
+                    <div class="kpi-label">Unique Customers</div>
+                    <div class="kpi-change positive">+15.2%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">🛒</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="avg-order-value">$67.45</div>
+                    <div class="kpi-label">Avg Order Value</div>
+                    <div class="kpi-change positive">+3.8%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Revenue Trend -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📈 Revenue Trend</h3>
+                    <div class="chart-controls">
+                        <select id="revenue-period" onchange="updateRevenueChart()">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="revenue-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Product Performance -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🏆 Top Products</h3>
+                    <div class="chart-controls">
+                        <select id="product-metric" onchange="updateProductChart()">
+                            <option value="revenue">Revenue</option>
+                            <option value="orders" selected>Orders</option>
+                            <option value="quantity">Quantity</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="product-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Customer Segments -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>👥 Customer Segments</h3>
+                    <div class="chart-controls">
+                        <button class="nav-btn small" onclick="updateCustomerChart()">Refresh</button>
+                    </div>
+                </div>
+                <div id="customer-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Sales by Category -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📊 Sales by Category</h3>
+                    <div class="chart-controls">
+                        <select id="category-view" onchange="updateCategoryChart()">
+                            <option value="pie">Pie Chart</option>
+                            <option value="bar">Bar Chart</option>
+                            <option value="treemap">Treemap</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="category-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Conversion Funnel -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🔄 Conversion Funnel</h3>
+                    <div class="chart-controls">
+                        <button class="nav-btn small" onclick="updateFunnelChart()">Update</button>
+                    </div>
+                </div>
+                <div id="funnel-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Geographic Sales -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🌍 Geographic Sales</h3>
+                    <div class="chart-controls">
+                        <select id="geo-metric" onchange="updateGeoChart()">
+                            <option value="revenue">Revenue</option>
+                            <option value="orders">Orders</option>
+                            <option value="customers">Customers</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="geo-chart" class="chart-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        let revenueChart, productChart, customerChart, categoryChart, funnelChart, geoChart;
+
+        // Initialize all charts
+        function initCharts() {
+            revenueChart = echarts.init(document.getElementById('revenue-chart'));
+            productChart = echarts.init(document.getElementById('product-chart'));
+            customerChart = echarts.init(document.getElementById('customer-chart'));
+            categoryChart = echarts.init(document.getElementById('category-chart'));
+            funnelChart = echarts.init(document.getElementById('funnel-chart'));
+            geoChart = echarts.init(document.getElementById('geo-chart'));
+
+            // Set initial options
+            updateRevenueChart();
+            updateProductChart();
+            updateCustomerChart();
+            updateCategoryChart();
+            updateFunnelChart();
+            updateGeoChart();
+        }
+
+        // Revenue Trend Chart
+        function updateRevenueChart() {
+            const period = document.getElementById('revenue-period').value;
+            const days = parseInt(period);
+            
+            const dates = [];
+            const revenue = [];
+            const orders = [];
+            
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                
+                // Generate realistic data
+                const baseRevenue = 3000 + Math.random() * 2000;
+                const baseOrders = 50 + Math.random() * 30;
+                
+                revenue.push(Math.round(baseRevenue));
+                orders.push(Math.round(baseOrders));
+            }
+
+            const option = {
+                title: {
+                    text: `Revenue Trend - Last ${days} Days`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['Revenue', 'Orders'],
+                    bottom: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Revenue ($)',
+                        position: 'left'
+                    },
+                    {
+                        type: 'value',
+                        name: 'Orders',
+                        position: 'right'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Revenue',
+                        type: 'line',
+                        data: revenue,
+                        smooth: true,
+                        itemStyle: { color: '#4a90e2' },
+                        areaStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0, y: 0, x2: 0, y2: 1,
+                                colorStops: [
+                                    { offset: 0, color: 'rgba(74, 144, 226, 0.3)' },
+                                    { offset: 1, color: 'rgba(74, 144, 226, 0.1)' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: 'Orders',
+                        type: 'bar',
+                        yAxisIndex: 1,
+                        data: orders,
+                        itemStyle: { color: '#f39c12' }
+                    }
+                ]
+            };
+
+            revenueChart.setOption(option);
+        }
+
+        // Product Performance Chart
+        function updateProductChart() {
+            const metric = document.getElementById('product-metric').value;
+            
+            const products = ['Laptop Pro', 'Smartphone X', 'Wireless Headphones', 'Gaming Console', 'Smart Watch', 'Tablet Air', 'Bluetooth Speaker', 'Camera DSLR'];
+            const data = [];
+            
+            products.forEach(product => {
+                let value;
+                switch(metric) {
+                    case 'revenue':
+                        value = Math.round(5000 + Math.random() * 15000);
+                        break;
+                    case 'orders':
+                        value = Math.round(50 + Math.random() * 200);
+                        break;
+                    case 'quantity':
+                        value = Math.round(100 + Math.random() * 500);
+                        break;
+                }
+                data.push({ name: product, value: value });
+            });
+
+            data.sort((a, b) => b.value - a.value);
+
+            const option = {
+                title: {
+                    text: `Top Products by ${metric.charAt(0).toUpperCase() + metric.slice(1)}`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: data.map(item => item.name),
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    type: 'bar',
+                    data: data.map(item => item.value),
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#4a90e2', '#f39c12', '#27ae60', '#e74c3c', '#9b59b6', '#1abc9c', '#34495e', '#e67e22'];
+                            return colors[params.dataIndex % colors.length];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top'
+                    }
+                }]
+            };
+
+            productChart.setOption(option);
+        }
+
+        // Customer Segments Chart
+        function updateCustomerChart() {
+            const segments = [
+                { name: 'New Customers', value: 45, color: '#4a90e2' },
+                { name: 'Returning Customers', value: 35, color: '#f39c12' },
+                { name: 'VIP Customers', value: 15, color: '#27ae60' },
+                { name: 'Inactive Customers', value: 5, color: '#e74c3c' }
+            ];
+
+            const option = {
+                title: {
+                    text: 'Customer Segments Distribution',
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c}% ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: segments.map(s => s.name)
+                },
+                series: [{
+                    name: 'Customer Segments',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: segments
+                }]
+            };
+
+            customerChart.setOption(option);
+        }
+
+        // Sales by Category Chart
+        function updateCategoryChart() {
+            const view = document.getElementById('category-view').value;
+            const categories = [
+                { name: 'Electronics', value: 35 },
+                { name: 'Clothing', value: 25 },
+                { name: 'Home & Garden', value: 20 },
+                { name: 'Sports', value: 12 },
+                { name: 'Books', value: 8 }
+            ];
+
+            let option;
+            if (view === 'pie') {
+                option = {
+                    title: {
+                        text: 'Sales by Category',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b}: {c}% ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: categories.map(c => c.name)
+                    },
+                    series: [{
+                        name: 'Categories',
+                        type: 'pie',
+                        radius: '50%',
+                        data: categories,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }]
+                };
+            } else if (view === 'bar') {
+                option = {
+                    title: {
+                        text: 'Sales by Category',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: categories.map(c => c.name)
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}%'
+                        }
+                    },
+                    series: [{
+                        type: 'bar',
+                        data: categories.map(c => c.value),
+                        itemStyle: {
+                            color: function(params) {
+                                const colors = ['#4a90e2', '#f39c12', '#27ae60', '#e74c3c', '#9b59b6'];
+                                return colors[params.dataIndex % colors.length];
+                            }
+                        }
+                    }]
+                };
+            } else if (view === 'treemap') {
+                option = {
+                    title: {
+                        text: 'Sales by Category',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        formatter: '{b}: {c}%'
+                    },
+                    series: [{
+                        type: 'treemap',
+                        data: categories.map(c => ({
+                            name: c.name,
+                            value: c.value
+                        })),
+                        breadcrumb: { show: false }
+                    }]
+                };
+            }
+
+            categoryChart.setOption(option);
+        }
+
+        // Conversion Funnel Chart
+        function updateFunnelChart() {
+            const funnelData = [
+                { value: 10000, name: 'Website Visitors' },
+                { value: 8000, name: 'Product Views' },
+                { value: 6000, name: 'Add to Cart' },
+                { value: 4000, name: 'Checkout Started' },
+                { value: 3000, name: 'Payment Info' },
+                { value: 2500, name: 'Orders Completed' }
+            ];
+
+            const option = {
+                title: {
+                    text: 'E-Commerce Conversion Funnel',
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c}'
+                },
+                series: [{
+                    name: 'Conversion Funnel',
+                    type: 'funnel',
+                    left: '10%',
+                    top: 60,
+                    width: '80%',
+                    height: '80%',
+                    min: 0,
+                    max: 10000,
+                    minSize: '0%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: {
+                        show: true,
+                        position: 'inside'
+                    },
+                    labelLine: {
+                        length: 10,
+                        lineStyle: {
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            fontSize: 20
+                        }
+                    },
+                    data: funnelData
+                }]
+            };
+
+            funnelChart.setOption(option);
+        }
+
+        // Geographic Sales Chart
+        function updateGeoChart() {
+            const metric = document.getElementById('geo-metric').value;
+            
+            const geoData = [
+                { name: 'California', value: 25 },
+                { name: 'Texas', value: 18 },
+                { name: 'New York', value: 15 },
+                { name: 'Florida', value: 12 },
+                { name: 'Illinois', value: 8 },
+                { name: 'Pennsylvania', value: 7 },
+                { name: 'Ohio', value: 6 },
+                { name: 'Georgia', value: 5 },
+                { name: 'Michigan', value: 4 }
+            ];
+
+            const option = {
+                title: {
+                    text: `Geographic ${metric.charAt(0).toUpperCase() + metric.slice(1)} Distribution`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}%'
+                },
+                visualMap: {
+                    min: 0,
+                    max: 25,
+                    left: 'left',
+                    top: 'bottom',
+                    text: ['High', 'Low'],
+                    calculable: true,
+                    inRange: {
+                        color: ['#e0f3f8', '#4a90e2']
+                    }
+                },
+                series: [{
+                    name: metric,
+                    type: 'map',
+                    map: 'USA',
+                    roam: true,
+                    emphasis: {
+                        label: {
+                            show: true
+                        }
+                    },
+                    data: geoData
+                }]
+            };
+
+            geoChart.setOption(option);
+        }
+
+        // Refresh data function
+        function refreshData() {
+            // Update KPI values with new random data
+            document.getElementById('total-revenue').textContent = '$' + Math.round(100000 + Math.random() * 50000).toLocaleString();
+            document.getElementById('total-orders').textContent = Math.round(1500 + Math.random() * 500).toLocaleString();
+            document.getElementById('unique-customers').textContent = Math.round(800 + Math.random() * 200).toLocaleString();
+            document.getElementById('avg-order-value').textContent = '$' + (60 + Math.random() * 20).toFixed(2);
+
+            // Update all charts
+            updateRevenueChart();
+            updateProductChart();
+            updateCustomerChart();
+            updateCategoryChart();
+            updateFunnelChart();
+            updateGeoChart();
+        }
+
+        // Export data function
+        function exportData() {
+            alert('Export functionality would generate a CSV/Excel file with all dashboard data.');
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            revenueChart && revenueChart.resize();
+            productChart && productChart.resize();
+            customerChart && customerChart.resize();
+            categoryChart && categoryChart.resize();
+            funnelChart && funnelChart.resize();
+            geoChart && geoChart.resize();
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>

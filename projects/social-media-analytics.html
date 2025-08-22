@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Analytics Dashboard - ECharts Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>📱 Social Media Analytics Dashboard</h1>
+                <p>Comprehensive social media performance tracking and insights</p>
+            </div>
+            <div class="header-actions">
+                <button class="nav-btn" onclick="refreshData()">🔄 Refresh</button>
+                <button class="nav-btn" onclick="exportReport()">📊 Export Report</button>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">👥</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="total-followers">2.4M</div>
+                    <div class="kpi-label">Total Followers</div>
+                    <div class="kpi-change positive">+5.2%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">👁️</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="total-reach">8.7M</div>
+                    <div class="kpi-label">Total Reach</div>
+                    <div class="kpi-change positive">+12.8%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💬</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="total-engagement">156K</div>
+                    <div class="kpi-label">Total Engagement</div>
+                    <div class="kpi-change positive">+8.7%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📈</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="engagement-rate">6.5%</div>
+                    <div class="kpi-label">Engagement Rate</div>
+                    <div class="kpi-change positive">+2.1%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Platform Performance -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📊 Platform Performance</h3>
+                    <div class="chart-controls">
+                        <select id="platform-metric" onchange="updatePlatformChart()">
+                            <option value="followers">Followers</option>
+                            <option value="reach">Reach</option>
+                            <option value="engagement" selected>Engagement</option>
+                            <option value="posts">Posts</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="platform-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Content Performance -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🎯 Top Performing Content</h3>
+                    <div class="chart-controls">
+                        <select id="content-type" onchange="updateContentChart()">
+                            <option value="all">All Content</option>
+                            <option value="images">Images</option>
+                            <option value="videos">Videos</option>
+                            <option value="stories">Stories</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="content-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Engagement Trend -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📈 Engagement Trend</h3>
+                    <div class="chart-controls">
+                        <select id="engagement-period" onchange="updateEngagementChart()">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="engagement-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Audience Demographics -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>👥 Audience Demographics</h3>
+                    <div class="chart-controls">
+                        <select id="demo-metric" onchange="updateDemographicsChart()">
+                            <option value="age">Age Groups</option>
+                            <option value="gender">Gender</option>
+                            <option value="location">Location</option>
+                            <option value="interests">Interests</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="demographics-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Best Posting Times -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>⏰ Best Posting Times</h3>
+                    <div class="chart-controls">
+                        <button class="nav-btn small" onclick="updatePostingTimesChart()">Update</button>
+                    </div>
+                </div>
+                <div id="posting-times-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Hashtag Performance -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🏷️ Hashtag Performance</h3>
+                    <div class="chart-controls">
+                        <select id="hashtag-metric" onchange="updateHashtagChart()">
+                            <option value="reach">Reach</option>
+                            <option value="engagement">Engagement</option>
+                            <option value="mentions">Mentions</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="hashtag-chart" class="chart-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        let platformChart, contentChart, engagementChart, demographicsChart, postingTimesChart, hashtagChart;
+
+        // Initialize all charts
+        function initCharts() {
+            platformChart = echarts.init(document.getElementById('platform-chart'));
+            contentChart = echarts.init(document.getElementById('content-chart'));
+            engagementChart = echarts.init(document.getElementById('engagement-chart'));
+            demographicsChart = echarts.init(document.getElementById('demographics-chart'));
+            postingTimesChart = echarts.init(document.getElementById('posting-times-chart'));
+            hashtagChart = echarts.init(document.getElementById('hashtag-chart'));
+
+            // Set initial options
+            updatePlatformChart();
+            updateContentChart();
+            updateEngagementChart();
+            updateDemographicsChart();
+            updatePostingTimesChart();
+            updateHashtagChart();
+        }
+
+        // Platform Performance Chart
+        function updatePlatformChart() {
+            const metric = document.getElementById('platform-metric').value;
+            
+            const platforms = ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'TikTok', 'YouTube'];
+            const data = [];
+            
+            platforms.forEach(platform => {
+                let value;
+                switch(metric) {
+                    case 'followers':
+                        value = Math.round(100000 + Math.random() * 900000);
+                        break;
+                    case 'reach':
+                        value = Math.round(500000 + Math.random() * 2000000);
+                        break;
+                    case 'engagement':
+                        value = Math.round(5000 + Math.random() * 50000);
+                        break;
+                    case 'posts':
+                        value = Math.round(50 + Math.random() * 200);
+                        break;
+                }
+                data.push({ name: platform, value: value });
+            });
+
+            const option = {
+                title: {
+                    text: `Platform Performance by ${metric.charAt(0).toUpperCase() + metric.slice(1)}`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: data.map(item => item.name),
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    type: 'bar',
+                    data: data.map(item => item.value),
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#E4405F', '#1877F2', '#1DA1F2', '#0A66C2', '#000000', '#FF0000'];
+                            return colors[params.dataIndex % colors.length];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: function(params) {
+                            if (metric === 'followers' || metric === 'reach') {
+                                return (params.value / 1000).toFixed(1) + 'K';
+                            }
+                            return params.value;
+                        }
+                    }
+                }]
+            };
+
+            platformChart.setOption(option);
+        }
+
+        // Content Performance Chart
+        function updateContentChart() {
+            const contentType = document.getElementById('content-type').value;
+            
+            const contentItems = [
+                'Product Launch Video', 'Behind the Scenes', 'Customer Testimonial', 
+                'Infographic Post', 'Live Q&A Session', 'Team Spotlight', 
+                'Industry News', 'User Generated Content', 'Tutorial Video'
+            ];
+            
+            const data = [];
+            contentItems.forEach(item => {
+                const engagement = Math.round(1000 + Math.random() * 10000);
+                const reach = Math.round(5000 + Math.random() * 50000);
+                const likes = Math.round(500 + Math.random() * 5000);
+                const comments = Math.round(50 + Math.random() * 500);
+                
+                data.push({
+                    name: item,
+                    engagement: engagement,
+                    reach: reach,
+                    likes: likes,
+                    comments: comments
+                });
+            });
+
+            data.sort((a, b) => b.engagement - a.engagement);
+
+            const option = {
+                title: {
+                    text: 'Top Performing Content',
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                legend: {
+                    data: ['Engagement', 'Reach', 'Likes', 'Comments'],
+                    bottom: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: data.slice(0, 8).map(item => item.name),
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: 'Engagement',
+                        type: 'bar',
+                        data: data.slice(0, 8).map(item => item.engagement),
+                        itemStyle: { color: '#4a90e2' }
+                    },
+                    {
+                        name: 'Reach',
+                        type: 'bar',
+                        data: data.slice(0, 8).map(item => item.reach),
+                        itemStyle: { color: '#f39c12' }
+                    },
+                    {
+                        name: 'Likes',
+                        type: 'bar',
+                        data: data.slice(0, 8).map(item => item.likes),
+                        itemStyle: { color: '#27ae60' }
+                    },
+                    {
+                        name: 'Comments',
+                        type: 'bar',
+                        data: data.slice(0, 8).map(item => item.comments),
+                        itemStyle: { color: '#e74c3c' }
+                    }
+                ]
+            };
+
+            contentChart.setOption(option);
+        }
+
+        // Engagement Trend Chart
+        function updateEngagementChart() {
+            const period = document.getElementById('engagement-period').value;
+            const days = parseInt(period);
+            
+            const dates = [];
+            const engagement = [];
+            const reach = [];
+            const followers = [];
+            
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                
+                // Generate realistic data
+                const baseEngagement = 5000 + Math.random() * 3000;
+                const baseReach = 20000 + Math.random() * 15000;
+                const baseFollowers = 2400000 + Math.random() * 100000;
+                
+                engagement.push(Math.round(baseEngagement));
+                reach.push(Math.round(baseReach));
+                followers.push(Math.round(baseFollowers));
+            }
+
+            const option = {
+                title: {
+                    text: `Engagement Trend - Last ${days} Days`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['Engagement', 'Reach', 'Followers'],
+                    bottom: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Engagement/Reach',
+                        position: 'left'
+                    },
+                    {
+                        type: 'value',
+                        name: 'Followers',
+                        position: 'right',
+                        axisLabel: {
+                            formatter: function(value) {
+                                return (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Engagement',
+                        type: 'line',
+                        data: engagement,
+                        smooth: true,
+                        itemStyle: { color: '#4a90e2' }
+                    },
+                    {
+                        name: 'Reach',
+                        type: 'line',
+                        data: reach,
+                        smooth: true,
+                        itemStyle: { color: '#f39c12' }
+                    },
+                    {
+                        name: 'Followers',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: followers,
+                        smooth: true,
+                        itemStyle: { color: '#27ae60' }
+                    }
+                ]
+            };
+
+            engagementChart.setOption(option);
+        }
+
+        // Audience Demographics Chart
+        function updateDemographicsChart() {
+            const metric = document.getElementById('demo-metric').value;
+            
+            let data, option;
+            
+            if (metric === 'age') {
+                data = [
+                    { name: '18-24', value: 25 },
+                    { name: '25-34', value: 35 },
+                    { name: '35-44', value: 20 },
+                    { name: '45-54', value: 12 },
+                    { name: '55+', value: 8 }
+                ];
+                
+                option = {
+                    title: {
+                        text: 'Audience Age Distribution',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b}: {c}% ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: data.map(d => d.name)
+                    },
+                    series: [{
+                        name: 'Age Groups',
+                        type: 'pie',
+                        radius: '50%',
+                        data: data,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }]
+                };
+            } else if (metric === 'gender') {
+                data = [
+                    { name: 'Female', value: 58 },
+                    { name: 'Male', value: 42 }
+                ];
+                
+                option = {
+                    title: {
+                        text: 'Audience Gender Distribution',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b}: {c}% ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: data.map(d => d.name)
+                    },
+                    series: [{
+                        name: 'Gender',
+                        type: 'pie',
+                        radius: '50%',
+                        data: data,
+                        itemStyle: {
+                            color: function(params) {
+                                return params.dataIndex === 0 ? '#E91E63' : '#2196F3';
+                            }
+                        }
+                    }]
+                };
+            } else if (metric === 'location') {
+                data = [
+                    { name: 'United States', value: 35 },
+                    { name: 'United Kingdom', value: 15 },
+                    { name: 'Canada', value: 12 },
+                    { name: 'Australia', value: 10 },
+                    { name: 'Germany', value: 8 },
+                    { name: 'France', value: 7 },
+                    { name: 'Others', value: 13 }
+                ];
+                
+                option = {
+                    title: {
+                        text: 'Audience Geographic Distribution',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.map(d => d.name)
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLabel: { formatter: '{value}%' }
+                    },
+                    series: [{
+                        type: 'bar',
+                        data: data.map(d => d.value),
+                        itemStyle: { color: '#4a90e2' }
+                    }]
+                };
+            } else if (metric === 'interests') {
+                data = [
+                    { name: 'Technology', value: 30 },
+                    { name: 'Fashion', value: 25 },
+                    { name: 'Travel', value: 20 },
+                    { name: 'Food', value: 15 },
+                    { name: 'Fitness', value: 10 }
+                ];
+                
+                option = {
+                    title: {
+                        text: 'Audience Interests',
+                        left: 'center',
+                        textStyle: { fontSize: 14, fontWeight: 'normal' }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b}: {c}% ({d}%)'
+                    },
+                    series: [{
+                        name: 'Interests',
+                        type: 'treemap',
+                        data: data.map(d => ({
+                            name: d.name,
+                            value: d.value
+                        })),
+                        breadcrumb: { show: false }
+                    }]
+                };
+            }
+
+            demographicsChart.setOption(option);
+        }
+
+        // Best Posting Times Chart
+        function updatePostingTimesChart() {
+            const hours = ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', 
+                          '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'];
+            
+            const engagement = [];
+            const reach = [];
+            
+            hours.forEach((hour, index) => {
+                // Generate realistic posting time data
+                let baseEngagement, baseReach;
+                
+                if (index >= 6 && index <= 9) { // Morning peak
+                    baseEngagement = 8000 + Math.random() * 4000;
+                    baseReach = 30000 + Math.random() * 20000;
+                } else if (index >= 12 && index <= 14) { // Lunch peak
+                    baseEngagement = 10000 + Math.random() * 5000;
+                    baseReach = 40000 + Math.random() * 25000;
+                } else if (index >= 18 && index <= 21) { // Evening peak
+                    baseEngagement = 12000 + Math.random() * 6000;
+                    baseReach = 50000 + Math.random() * 30000;
+                } else { // Off-peak
+                    baseEngagement = 2000 + Math.random() * 3000;
+                    baseReach = 10000 + Math.random() * 15000;
+                }
+                
+                engagement.push(Math.round(baseEngagement));
+                reach.push(Math.round(baseReach));
+            });
+
+            const option = {
+                title: {
+                    text: 'Best Posting Times by Hour',
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['Engagement', 'Reach'],
+                    bottom: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: hours,
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: 'Engagement',
+                        type: 'line',
+                        data: engagement,
+                        smooth: true,
+                        itemStyle: { color: '#4a90e2' },
+                        areaStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0, y: 0, x2: 0, y2: 1,
+                                colorStops: [
+                                    { offset: 0, color: 'rgba(74, 144, 226, 0.3)' },
+                                    { offset: 1, color: 'rgba(74, 144, 226, 0.1)' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: 'Reach',
+                        type: 'line',
+                        data: reach,
+                        smooth: true,
+                        itemStyle: { color: '#f39c12' }
+                    }
+                ]
+            };
+
+            postingTimesChart.setOption(option);
+        }
+
+        // Hashtag Performance Chart
+        function updateHashtagChart() {
+            const metric = document.getElementById('hashtag-metric').value;
+            
+            const hashtags = ['#TechNews', '#Innovation', '#Startup', '#DigitalMarketing', '#AI', '#Sustainability', '#RemoteWork', '#FutureOfWork'];
+            const data = [];
+            
+            hashtags.forEach(hashtag => {
+                let value;
+                switch(metric) {
+                    case 'reach':
+                        value = Math.round(50000 + Math.random() * 200000);
+                        break;
+                    case 'engagement':
+                        value = Math.round(1000 + Math.random() * 10000);
+                        break;
+                    case 'mentions':
+                        value = Math.round(100 + Math.random() * 1000);
+                        break;
+                }
+                data.push({ name: hashtag, value: value });
+            });
+
+            data.sort((a, b) => b.value - a.value);
+
+            const option = {
+                title: {
+                    text: `Hashtag Performance by ${metric.charAt(0).toUpperCase() + metric.slice(1)}`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: data.map(item => item.name),
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    type: 'bar',
+                    data: data.map(item => item.value),
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#4a90e2', '#f39c12', '#27ae60', '#e74c3c', '#9b59b6', '#1abc9c', '#34495e', '#e67e22'];
+                            return colors[params.dataIndex % colors.length];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: function(params) {
+                            if (metric === 'reach') {
+                                return (params.value / 1000).toFixed(1) + 'K';
+                            }
+                            return params.value;
+                        }
+                    }
+                }]
+            };
+
+            hashtagChart.setOption(option);
+        }
+
+        // Refresh data function
+        function refreshData() {
+            // Update KPI values with new random data
+            document.getElementById('total-followers').textContent = (2.4 + Math.random() * 0.5).toFixed(1) + 'M';
+            document.getElementById('total-reach').textContent = (8.7 + Math.random() * 2).toFixed(1) + 'M';
+            document.getElementById('total-engagement').textContent = (156 + Math.random() * 50).toFixed(0) + 'K';
+            document.getElementById('engagement-rate').textContent = (6.5 + Math.random() * 2).toFixed(1) + '%';
+
+            // Update all charts
+            updatePlatformChart();
+            updateContentChart();
+            updateEngagementChart();
+            updateDemographicsChart();
+            updatePostingTimesChart();
+            updateHashtagChart();
+        }
+
+        // Export report function
+        function exportReport() {
+            alert('Export functionality would generate a comprehensive PDF report with all social media analytics data.');
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            platformChart && platformChart.resize();
+            contentChart && contentChart.resize();
+            engagementChart && engagementChart.resize();
+            demographicsChart && demographicsChart.resize();
+            postingTimesChart && postingTimesChart.resize();
+            hashtagChart && hashtagChart.resize();
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>

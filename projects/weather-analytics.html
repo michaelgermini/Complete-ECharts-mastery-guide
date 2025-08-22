@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Analytics Dashboard - ECharts Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>🌤️ Weather Analytics Dashboard</h1>
+                <p>Comprehensive weather data analysis and forecasting</p>
+            </div>
+            <div class="header-actions">
+                <button class="nav-btn" onclick="refreshData()">🔄 Refresh</button>
+                <button class="nav-btn" onclick="exportReport()">📊 Export</button>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">🌡️</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="current-temp">24°C</div>
+                    <div class="kpi-label">Current Temperature</div>
+                    <div class="kpi-change positive">+2°C</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💧</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="humidity">65%</div>
+                    <div class="kpi-label">Humidity</div>
+                    <div class="kpi-change negative">-5%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💨</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="wind-speed">12 km/h</div>
+                    <div class="kpi-label">Wind Speed</div>
+                    <div class="kpi-change positive">+3 km/h</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">👁️</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="visibility">15 km</div>
+                    <div class="kpi-label">Visibility</div>
+                    <div class="kpi-change positive">+2 km</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Temperature Trend -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🌡️ Temperature Trend</h3>
+                    <div class="chart-controls">
+                        <select id="temp-period" onchange="updateTempChart()">
+                            <option value="24">Last 24 Hours</option>
+                            <option value="168" selected>Last 7 Days</option>
+                            <option value="720">Last 30 Days</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="temp-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Weather Conditions -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🌦️ Weather Conditions</h3>
+                    <div class="chart-controls">
+                        <select id="weather-metric" onchange="updateWeatherChart()">
+                            <option value="conditions">Conditions</option>
+                            <option value="precipitation">Precipitation</option>
+                            <option value="pressure">Pressure</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="weather-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Wind Analysis -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>💨 Wind Analysis</h3>
+                    <div class="chart-controls">
+                        <select id="wind-type" onchange="updateWindChart()">
+                            <option value="speed">Wind Speed</option>
+                            <option value="direction">Wind Direction</option>
+                            <option value="gusts">Wind Gusts</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="wind-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Precipitation -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🌧️ Precipitation</h3>
+                    <div class="chart-controls">
+                        <select id="precip-type" onchange="updatePrecipChart()">
+                            <option value="rainfall">Rainfall</option>
+                            <option value="snowfall">Snowfall</option>
+                            <option value="probability">Probability</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="precip-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Air Quality -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🌬️ Air Quality</h3>
+                    <div class="chart-controls">
+                        <button class="nav-btn small" onclick="updateAirQualityChart()">Update</button>
+                    </div>
+                </div>
+                <div id="air-quality-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Forecast -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🔮 7-Day Forecast</h3>
+                    <div class="chart-controls">
+                        <select id="forecast-metric" onchange="updateForecastChart()">
+                            <option value="temperature">Temperature</option>
+                            <option value="precipitation">Precipitation</option>
+                            <option value="humidity">Humidity</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="forecast-chart" class="chart-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tempChart, weatherChart, windChart, precipChart, airQualityChart, forecastChart;
+
+        function initCharts() {
+            tempChart = echarts.init(document.getElementById('temp-chart'));
+            weatherChart = echarts.init(document.getElementById('weather-chart'));
+            windChart = echarts.init(document.getElementById('wind-chart'));
+            precipChart = echarts.init(document.getElementById('precip-chart'));
+            airQualityChart = echarts.init(document.getElementById('air-quality-chart'));
+            forecastChart = echarts.init(document.getElementById('forecast-chart'));
+
+            updateTempChart();
+            updateWeatherChart();
+            updateWindChart();
+            updatePrecipChart();
+            updateAirQualityChart();
+            updateForecastChart();
+        }
+
+        function updateTempChart() {
+            const period = document.getElementById('temp-period').value;
+            const hours = parseInt(period);
+            
+            const times = [];
+            const temperatures = [];
+            
+            for (let i = hours - 1; i >= 0; i--) {
+                const time = new Date();
+                time.setHours(time.getHours() - i);
+                
+                if (hours <= 24) {
+                    times.push(time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
+                } else {
+                    times.push(time.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                }
+                
+                const baseTemp = 20 + Math.sin(i * 0.1) * 10 + Math.random() * 5;
+                temperatures.push(Math.round(baseTemp));
+            }
+
+            const option = {
+                title: {
+                    text: `Temperature Trend - Last ${hours <= 24 ? hours + ' Hours' : Math.round(hours/24) + ' Days'}`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: { trigger: 'axis' },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: times, axisLabel: { rotate: 45 } },
+                yAxis: { type: 'value', name: 'Temperature (°C)' },
+                series: [{
+                    type: 'line',
+                    data: temperatures,
+                    smooth: true,
+                    itemStyle: { color: '#e74c3c' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(231, 76, 60, 0.3)' },
+                                { offset: 1, color: 'rgba(231, 76, 60, 0.1)' }
+                            ]
+                        }
+                    }
+                }]
+            };
+
+            tempChart.setOption(option);
+        }
+
+        function updateWeatherChart() {
+            const metric = document.getElementById('weather-metric').value;
+            
+            if (metric === 'conditions') {
+                const conditions = ['Sunny', 'Cloudy', 'Rainy', 'Snowy', 'Foggy'];
+                const hours = conditions.map(() => Math.round(10 + Math.random() * 50));
+
+                const option = {
+                    title: { text: 'Weather Conditions', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'item' },
+                    legend: { orient: 'vertical', left: 'left', data: conditions },
+                    series: [{
+                        name: 'Conditions',
+                        type: 'pie',
+                        radius: '50%',
+                        data: conditions.map((condition, index) => ({ name: condition, value: hours[index] }))
+                    }]
+                };
+
+                weatherChart.setOption(option);
+            } else if (metric === 'precipitation') {
+                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                const precipitation = days.map(() => Math.round(Math.random() * 50));
+
+                const option = {
+                    title: { text: 'Weekly Precipitation', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'axis' },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: days },
+                    yAxis: { type: 'value', name: 'mm' },
+                    series: [{
+                        type: 'bar',
+                        data: precipitation,
+                        itemStyle: { color: '#3498db' }
+                    }]
+                };
+
+                weatherChart.setOption(option);
+            }
+        }
+
+        function updateWindChart() {
+            const type = document.getElementById('wind-type').value;
+            
+            if (type === 'speed') {
+                const hours = [];
+                const windSpeed = [];
+                
+                for (let i = 0; i < 24; i++) {
+                    hours.push(i + ':00');
+                    const baseSpeed = 8 + Math.sin(i * 0.4) * 8 + Math.random() * 5;
+                    windSpeed.push(Math.round(baseSpeed));
+                }
+
+                const option = {
+                    title: { text: 'Wind Speed (24h)', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'axis' },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: hours, axisLabel: { rotate: 45 } },
+                    yAxis: { type: 'value', name: 'km/h' },
+                    series: [{
+                        type: 'line',
+                        data: windSpeed,
+                        smooth: true,
+                        itemStyle: { color: '#3498db' }
+                    }]
+                };
+
+                windChart.setOption(option);
+            }
+        }
+
+        function updatePrecipChart() {
+            const type = document.getElementById('precip-type').value;
+            
+            if (type === 'rainfall') {
+                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                const rainfall = days.map(() => Math.round(Math.random() * 30));
+
+                const option = {
+                    title: { text: 'Weekly Rainfall', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'axis' },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: days },
+                    yAxis: { type: 'value', name: 'mm' },
+                    series: [{
+                        type: 'bar',
+                        data: rainfall,
+                        itemStyle: { color: '#3498db' }
+                    }]
+                };
+
+                precipChart.setOption(option);
+            }
+        }
+
+        function updateAirQualityChart() {
+            const hours = [];
+            const aqi = [];
+            
+            for (let i = 0; i < 24; i++) {
+                hours.push(i + ':00');
+                const baseAQI = 30 + Math.sin(i * 0.4) * 20 + Math.random() * 15;
+                aqi.push(Math.round(baseAQI));
+            }
+
+            const option = {
+                title: { text: 'Air Quality Index (24h)', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                tooltip: { trigger: 'axis' },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: hours, axisLabel: { rotate: 45 } },
+                yAxis: { type: 'value', name: 'AQI' },
+                series: [{
+                    type: 'line',
+                    data: aqi,
+                    smooth: true,
+                    itemStyle: { color: '#27ae60' }
+                }]
+            };
+
+            airQualityChart.setOption(option);
+        }
+
+        function updateForecastChart() {
+            const metric = document.getElementById('forecast-metric').value;
+            const days = ['Today', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            
+            if (metric === 'temperature') {
+                const high = days.map(() => Math.round(20 + Math.random() * 15));
+                const low = high.map(h => Math.round(h - 8 - Math.random() * 5));
+
+                const option = {
+                    title: { text: '7-Day Temperature Forecast', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'axis' },
+                    legend: { data: ['High', 'Low'], bottom: 10 },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: days },
+                    yAxis: { type: 'value', name: '°C' },
+                    series: [
+                        { name: 'High', type: 'line', data: high, smooth: true, itemStyle: { color: '#e74c3c' } },
+                        { name: 'Low', type: 'line', data: low, smooth: true, itemStyle: { color: '#3498db' } }
+                    ]
+                };
+
+                forecastChart.setOption(option);
+            }
+        }
+
+        function refreshData() {
+            document.getElementById('current-temp').textContent = Math.round(15 + Math.random() * 20) + '°C';
+            document.getElementById('humidity').textContent = Math.round(40 + Math.random() * 40) + '%';
+            document.getElementById('wind-speed').textContent = Math.round(5 + Math.random() * 20) + ' km/h';
+            document.getElementById('visibility').textContent = Math.round(10 + Math.random() * 10) + ' km';
+
+            updateTempChart();
+            updateWeatherChart();
+            updateWindChart();
+            updatePrecipChart();
+            updateAirQualityChart();
+            updateForecastChart();
+        }
+
+        function exportReport() {
+            alert('Export functionality would generate a comprehensive weather report.');
+        }
+
+        window.addEventListener('resize', function() {
+            tempChart && tempChart.resize();
+            weatherChart && weatherChart.resize();
+            windChart && windChart.resize();
+            precipChart && precipChart.resize();
+            airQualityChart && airQualityChart.resize();
+            forecastChart && forecastChart.resize();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>

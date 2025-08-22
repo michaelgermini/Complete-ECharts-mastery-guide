@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Analytics Dashboard - ECharts Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>🚚 Logistics Analytics Dashboard</h1>
+                <p>Comprehensive supply chain and delivery performance tracking</p>
+            </div>
+            <div class="header-actions">
+                <button class="nav-btn" onclick="refreshData()">🔄 Refresh</button>
+                <button class="nav-btn" onclick="exportReport()">📊 Export</button>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">📦</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="total-shipments">1,247</div>
+                    <div class="kpi-label">Total Shipments</div>
+                    <div class="kpi-change positive">+8.5%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">⏱️</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="avg-delivery-time">2.3 days</div>
+                    <div class="kpi-label">Avg Delivery Time</div>
+                    <div class="kpi-change positive">-0.4 days</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="on-time-delivery">94.2%</div>
+                    <div class="kpi-label">On-Time Delivery</div>
+                    <div class="kpi-change positive">+2.1%</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="shipping-cost">$12.45</div>
+                    <div class="kpi-label">Avg Shipping Cost</div>
+                    <div class="kpi-change negative">+$0.85</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Shipment Trends -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📈 Shipment Trends</h3>
+                    <div class="chart-controls">
+                        <select id="trend-period" onchange="updateTrendChart()">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="trend-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Delivery Performance -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🎯 Delivery Performance</h3>
+                    <div class="chart-controls">
+                        <select id="performance-metric" onchange="updatePerformanceChart()">
+                            <option value="status">Delivery Status</option>
+                            <option value="time">Delivery Time</option>
+                            <option value="cost">Shipping Cost</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="performance-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Route Analysis -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🗺️ Route Analysis</h3>
+                    <div class="chart-controls">
+                        <select id="route-metric" onchange="updateRouteChart()">
+                            <option value="volume">Shipment Volume</option>
+                            <option value="time">Delivery Time</option>
+                            <option value="cost">Route Cost</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="route-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Warehouse Performance -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🏭 Warehouse Performance</h3>
+                    <div class="chart-controls">
+                        <select id="warehouse-metric" onchange="updateWarehouseChart()">
+                            <option value="throughput">Throughput</option>
+                            <option value="efficiency">Efficiency</option>
+                            <option value="capacity">Capacity</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="warehouse-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Vehicle Fleet -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🚛 Vehicle Fleet</h3>
+                    <div class="chart-controls">
+                        <button class="nav-btn small" onclick="updateFleetChart()">Update</button>
+                    </div>
+                </div>
+                <div id="fleet-chart" class="chart-container"></div>
+            </div>
+
+            <!-- Customer Satisfaction -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>😊 Customer Satisfaction</h3>
+                    <div class="chart-controls">
+                        <select id="satisfaction-metric" onchange="updateSatisfactionChart()">
+                            <option value="rating">Rating</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="complaints">Complaints</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="satisfaction-chart" class="chart-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let trendChart, performanceChart, routeChart, warehouseChart, fleetChart, satisfactionChart;
+
+        function initCharts() {
+            trendChart = echarts.init(document.getElementById('trend-chart'));
+            performanceChart = echarts.init(document.getElementById('performance-chart'));
+            routeChart = echarts.init(document.getElementById('route-chart'));
+            warehouseChart = echarts.init(document.getElementById('warehouse-chart'));
+            fleetChart = echarts.init(document.getElementById('fleet-chart'));
+            satisfactionChart = echarts.init(document.getElementById('satisfaction-chart'));
+
+            updateTrendChart();
+            updatePerformanceChart();
+            updateRouteChart();
+            updateWarehouseChart();
+            updateFleetChart();
+            updateSatisfactionChart();
+        }
+
+        function updateTrendChart() {
+            const period = document.getElementById('trend-period').value;
+            const days = parseInt(period);
+            
+            const dates = [];
+            const shipments = [];
+            const deliveries = [];
+            const returns = [];
+            
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                
+                const baseShipments = 40 + Math.sin(i * 0.2) * 15 + Math.random() * 10;
+                const baseDeliveries = baseShipments * 0.95 + Math.random() * 5;
+                const baseReturns = baseShipments * 0.05 + Math.random() * 3;
+                
+                shipments.push(Math.round(baseShipments));
+                deliveries.push(Math.round(baseDeliveries));
+                returns.push(Math.round(baseReturns));
+            }
+
+            const option = {
+                title: {
+                    text: `Shipment Trends - Last ${days} Days`,
+                    left: 'center',
+                    textStyle: { fontSize: 14, fontWeight: 'normal' }
+                },
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Shipments', 'Deliveries', 'Returns'], bottom: 10 },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: dates, axisLabel: { rotate: 45 } },
+                yAxis: { type: 'value' },
+                series: [
+                    {
+                        name: 'Shipments',
+                        type: 'line',
+                        data: shipments,
+                        smooth: true,
+                        itemStyle: { color: '#4a90e2' }
+                    },
+                    {
+                        name: 'Deliveries',
+                        type: 'line',
+                        data: deliveries,
+                        smooth: true,
+                        itemStyle: { color: '#27ae60' }
+                    },
+                    {
+                        name: 'Returns',
+                        type: 'line',
+                        data: returns,
+                        smooth: true,
+                        itemStyle: { color: '#e74c3c' }
+                    }
+                ]
+            };
+
+            trendChart.setOption(option);
+        }
+
+        function updatePerformanceChart() {
+            const metric = document.getElementById('performance-metric').value;
+            
+            if (metric === 'status') {
+                const statuses = ['Delivered', 'In Transit', 'Out for Delivery', 'Pending', 'Failed'];
+                const counts = statuses.map(() => Math.round(50 + Math.random() * 200));
+
+                const option = {
+                    title: { text: 'Delivery Status Distribution', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'item' },
+                    legend: { orient: 'vertical', left: 'left', data: statuses },
+                    series: [{
+                        name: 'Status',
+                        type: 'pie',
+                        radius: '50%',
+                        data: statuses.map((status, index) => ({ name: status, value: counts[index] }))
+                    }]
+                };
+
+                performanceChart.setOption(option);
+            } else if (metric === 'time') {
+                const timeRanges = ['Same Day', '1-2 Days', '3-5 Days', '6-10 Days', '10+ Days'];
+                const percentages = timeRanges.map(() => Math.round(10 + Math.random() * 30));
+
+                const option = {
+                    title: { text: 'Delivery Time Distribution', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'axis' },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: timeRanges },
+                    yAxis: { type: 'value', name: 'Percentage' },
+                    series: [{
+                        type: 'bar',
+                        data: percentages,
+                        itemStyle: { color: '#f39c12' }
+                    }]
+                };
+
+                performanceChart.setOption(option);
+            }
+        }
+
+        function updateRouteChart() {
+            const metric = document.getElementById('route-metric').value;
+            
+            const routes = ['Route A', 'Route B', 'Route C', 'Route D', 'Route E', 'Route F'];
+            const data = [];
+            
+            routes.forEach(route => {
+                let value;
+                switch(metric) {
+                    case 'volume':
+                        value = Math.round(100 + Math.random() * 200);
+                        break;
+                    case 'time':
+                        value = Math.round(1 + Math.random() * 4);
+                        break;
+                    case 'cost':
+                        value = Math.round(10 + Math.random() * 20);
+                        break;
+                }
+                data.push({ name: route, value: value });
+            });
+
+            const option = {
+                title: { text: `Route ${metric.charAt(0).toUpperCase() + metric.slice(1)} Analysis`, left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                tooltip: { trigger: 'axis' },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: data.map(item => item.name), axisLabel: { rotate: 45 } },
+                yAxis: { type: 'value' },
+                series: [{
+                    type: 'bar',
+                    data: data.map(item => item.value),
+                    itemStyle: { color: '#9b59b6' }
+                }]
+            };
+
+            routeChart.setOption(option);
+        }
+
+        function updateWarehouseChart() {
+            const metric = document.getElementById('warehouse-metric').value;
+            
+            const warehouses = ['Warehouse A', 'Warehouse B', 'Warehouse C', 'Warehouse D'];
+            const data = [];
+            
+            warehouses.forEach(warehouse => {
+                let value;
+                switch(metric) {
+                    case 'throughput':
+                        value = Math.round(500 + Math.random() * 1000);
+                        break;
+                    case 'efficiency':
+                        value = Math.round(80 + Math.random() * 20);
+                        break;
+                    case 'capacity':
+                        value = Math.round(70 + Math.random() * 30);
+                        break;
+                }
+                data.push({ name: warehouse, value: value });
+            });
+
+            const option = {
+                title: { text: `Warehouse ${metric.charAt(0).toUpperCase() + metric.slice(1)}`, left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                tooltip: { trigger: 'axis' },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: data.map(item => item.name) },
+                yAxis: { type: 'value' },
+                series: [{
+                    type: 'bar',
+                    data: data.map(item => item.value),
+                    itemStyle: { color: '#1abc9c' }
+                }]
+            };
+
+            warehouseChart.setOption(option);
+        }
+
+        function updateFleetChart() {
+            const vehicleTypes = ['Trucks', 'Vans', 'Motorcycles', 'Bicycles'];
+            const active = vehicleTypes.map(() => Math.round(10 + Math.random() * 20));
+            const maintenance = vehicleTypes.map(() => Math.round(1 + Math.random() * 5));
+            const idle = vehicleTypes.map(() => Math.round(2 + Math.random() * 8));
+
+            const option = {
+                title: { text: 'Vehicle Fleet Status', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Active', 'Maintenance', 'Idle'], bottom: 10 },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: vehicleTypes },
+                yAxis: { type: 'value' },
+                series: [
+                    { name: 'Active', type: 'bar', data: active, itemStyle: { color: '#27ae60' } },
+                    { name: 'Maintenance', type: 'bar', data: maintenance, itemStyle: { color: '#f39c12' } },
+                    { name: 'Idle', type: 'bar', data: idle, itemStyle: { color: '#e74c3c' } }
+                ]
+            };
+
+            fleetChart.setOption(option);
+        }
+
+        function updateSatisfactionChart() {
+            const metric = document.getElementById('satisfaction-metric').value;
+            
+            if (metric === 'rating') {
+                const ratings = ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'];
+                const counts = ratings.map(() => Math.round(50 + Math.random() * 200));
+
+                const option = {
+                    title: { text: 'Customer Rating Distribution', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'axis' },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: ratings },
+                    yAxis: { type: 'value' },
+                    series: [{
+                        type: 'bar',
+                        data: counts,
+                        itemStyle: { color: '#3498db' }
+                    }]
+                };
+
+                satisfactionChart.setOption(option);
+            } else if (metric === 'feedback') {
+                const feedbackTypes = ['Positive', 'Neutral', 'Negative'];
+                const percentages = feedbackTypes.map(() => Math.round(20 + Math.random() * 50));
+
+                const option = {
+                    title: { text: 'Customer Feedback', left: 'center', textStyle: { fontSize: 14, fontWeight: 'normal' } },
+                    tooltip: { trigger: 'item' },
+                    legend: { orient: 'vertical', left: 'left', data: feedbackTypes },
+                    series: [{
+                        name: 'Feedback',
+                        type: 'pie',
+                        radius: '50%',
+                        data: feedbackTypes.map((type, index) => ({ name: type, value: percentages[index] }))
+                    }]
+                };
+
+                satisfactionChart.setOption(option);
+            }
+        }
+
+        function refreshData() {
+            document.getElementById('total-shipments').textContent = Math.round(1000 + Math.random() * 500);
+            document.getElementById('avg-delivery-time').textContent = (1.5 + Math.random() * 2).toFixed(1) + ' days';
+            document.getElementById('on-time-delivery').textContent = (90 + Math.random() * 10).toFixed(1) + '%';
+            document.getElementById('shipping-cost').textContent = '$' + (10 + Math.random() * 10).toFixed(2);
+
+            updateTrendChart();
+            updatePerformanceChart();
+            updateRouteChart();
+            updateWarehouseChart();
+            updateFleetChart();
+            updateSatisfactionChart();
+        }
+
+        function exportReport() {
+            alert('Export functionality would generate a comprehensive logistics report.');
+        }
+
+        window.addEventListener('resize', function() {
+            trendChart && trendChart.resize();
+            performanceChart && performanceChart.resize();
+            routeChart && routeChart.resize();
+            warehouseChart && warehouseChart.resize();
+            fleetChart && fleetChart.resize();
+            satisfactionChart && satisfactionChart.resize();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>

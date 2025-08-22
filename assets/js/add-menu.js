@@ -39,14 +39,18 @@ function addEChartsMenu() {
                 </li>
                 <li class="echarts-dropdown">
                     <a href="#">🏗️ Projects</a>
-                    <div class="echarts-dropdown-content">
-                        <a href="${basePath}projects/business-dashboard.html">Business Analytics</a>
-                        <a href="${basePath}projects/iot-monitoring.html">IoT Monitoring</a>
-                        <a href="${basePath}projects/sales-analytics.html">Sales Analytics</a>
-                        <a href="${basePath}projects/financial-dashboard.html">Financial Dashboard</a>
-                        <a href="${basePath}projects/healthcare-analytics.html">Healthcare Analytics</a>
-                        <a href="${basePath}projects/energy-monitoring.html">Energy Monitoring</a>
-                    </div>
+                                               <div class="echarts-dropdown-content">
+                               <a href="${basePath}projects/business-dashboard.html">Business Analytics</a>
+                               <a href="${basePath}projects/iot-monitoring.html">IoT Monitoring</a>
+                               <a href="${basePath}projects/sales-analytics.html">Sales Analytics</a>
+                               <a href="${basePath}projects/financial-dashboard.html">Financial Dashboard</a>
+                               <a href="${basePath}projects/healthcare-analytics.html">Healthcare Analytics</a>
+                               <a href="${basePath}projects/energy-monitoring.html">Energy Monitoring</a>
+                               <a href="${basePath}projects/ecommerce-analytics.html">E-Commerce Analytics</a>
+                               <a href="${basePath}projects/social-media-analytics.html">Social Media Analytics</a>
+                               <a href="${basePath}projects/weather-analytics.html">Weather Analytics</a>
+                               <a href="${basePath}projects/logistics-analytics.html">Logistics Analytics</a>
+                           </div>
                 </li>
                 <li><a href="${basePath}README.md">Documentation</a></li>
                 <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
@@ -66,12 +70,16 @@ function addEChartsMenu() {
             <li><a href="${basePath}chapters/chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a></li>
             <li><a href="${basePath}chapters/chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a></li>
             <li><a href="${basePath}chapters/chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a></li>
-            <li><a href="${basePath}projects/business-dashboard.html">Business Analytics</a></li>
-            <li><a href="${basePath}projects/iot-monitoring.html">IoT Monitoring</a></li>
-            <li><a href="${basePath}projects/sales-analytics.html">Sales Analytics</a></li>
-            <li><a href="${basePath}projects/financial-dashboard.html">Financial Dashboard</a></li>
-            <li><a href="${basePath}projects/healthcare-analytics.html">Healthcare Analytics</a></li>
-            <li><a href="${basePath}projects/energy-monitoring.html">Energy Monitoring</a></li>
+                               <li><a href="${basePath}projects/business-dashboard.html">Business Analytics</a></li>
+                   <li><a href="${basePath}projects/iot-monitoring.html">IoT Monitoring</a></li>
+                   <li><a href="${basePath}projects/sales-analytics.html">Sales Analytics</a></li>
+                   <li><a href="${basePath}projects/financial-dashboard.html">Financial Dashboard</a></li>
+                   <li><a href="${basePath}projects/healthcare-analytics.html">Healthcare Analytics</a></li>
+                   <li><a href="${basePath}projects/energy-monitoring.html">Energy Monitoring</a></li>
+                   <li><a href="${basePath}projects/ecommerce-analytics.html">E-Commerce Analytics</a></li>
+                   <li><a href="${basePath}projects/social-media-analytics.html">Social Media Analytics</a></li>
+                   <li><a href="${basePath}projects/weather-analytics.html">Weather Analytics</a></li>
+                   <li><a href="${basePath}projects/logistics-analytics.html">Logistics Analytics</a></li>
             <li><a href="${basePath}README.md">Documentation</a></li>
             <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
         </ul>

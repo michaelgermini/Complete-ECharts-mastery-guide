@@ -15,7 +15,7 @@ Visit the interactive guide: **[https://michaelgermini.github.io/Complete-EChart
 
 ✨ **Features available online:**
 - 📚 All 11 comprehensive chapters with interactive examples
-- 🏗️ 6 real-world dashboard projects
+- 🏗️ 10 real-world dashboard projects
 - 💻 Live code editors for hands-on practice
 - 📱 Fully responsive design for all devices
 - ⚡ Fast loading with CDN optimization

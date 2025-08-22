@@ -1,0 +1,66 @@
+name: Validate and Test
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Validate HTML
+      run: |
+        npm install -g html-validate
+        html-validate "**/*.html"
+        
+    - name: Validate CSS
+      run: |
+        npm install -g stylelint
+        stylelint "**/*.css"
+        
+    - name: Check for broken links
+      run: |
+        npm install -g broken-link-checker
+        blc http://localhost:8000 -ro
+        
+    - name: Test charts functionality
+      run: |
+        npm install -g http-server
+        http-server -p 8000 &
+        sleep 5
+        npm run test:charts
+        
+  accessibility:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run accessibility tests
+      run: |
+        npm install -g axe-core
+        npm run test:accessibility

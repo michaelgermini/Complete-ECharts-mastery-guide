@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Scatter & Bubble Charts - Mastering ECharts</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="chapter-header">
+            <h1>Chapter 6: Scatter & Bubble Charts</h1>
+            <p class="chapter-subtitle">Visualizing correlations and multi-dimensional data relationships</p>
+            <div class="chapter-navigation">
+                <a href="chapter5-pie-donut.html" class="nav-btn prev">← Chapter 5: Pie & Donut Charts</a>
+                <a href="../projects/business-dashboard.html" class="nav-btn next">Projects →</a>
+            </div>
+        </header>
+
+        <div class="chapter-content">
+            <section class="content-section">
+                <h2>Introduction to Scatter Plots</h2>
+                <p>Scatter plots are perfect for showing relationships between two variables and identifying patterns, correlations, and outliers in your data. They're essential for data analysis and scientific visualization.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 When to Use Scatter Plots</h3>
+                    <ul>
+                        <li>Show correlation between two variables</li>
+                        <li>Identify patterns and trends</li>
+                        <li>Detect outliers and clusters</li>
+                        <li>Compare multiple groups or categories</li>
+                        <li>Analyze scientific or statistical data</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Basic Scatter Plot</h2>
+                <p>Let's start with a simple scatter plot showing the relationship between height and weight:</p>
+                
+                <div class="chart-container">
+                    <div id="basic-scatter" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var basicScatter = echarts.init(document.getElementById('basic-scatter'));
+var basicOption = {
+    title: {
+        text: 'Height vs Weight Relationship',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return 'Height: ' + params.value[0] + 'cm<br/>Weight: ' + params.value[1] + 'kg';
+        }
+    },
+    xAxis: {
+        type: 'value',
+        name: 'Height (cm)',
+        nameLocation: 'middle',
+        nameGap: 30
+    },
+    yAxis: {
+        type: 'value',
+        name: 'Weight (kg)',
+        nameLocation: 'middle',
+        nameGap: 40
+    },
+    series: [{
+        name: 'Individuals',
+        type: 'scatter',
+        data: [
+            [160, 55], [165, 60], [170, 65], [175, 70], [180, 75],
+            [162, 58], [168, 62], [172, 68], [178, 72], [182, 78],
+            [158, 52], [166, 61], [171, 66], [176, 71], [181, 76]
+        ],
+        itemStyle: {
+            color: '#4a90e2'
+        }
+    }]
+};
+basicScatter.setOption(basicOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Multiple Series Scatter Plot</h2>
+                <p>Compare different groups or categories in the same scatter plot:</p>
+                
+                <div class="chart-container">
+                    <div id="multiple-scatter" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var multipleScatter = echarts.init(document.getElementById('multiple-scatter'));
+var multipleOption = {
+    title: {
+        text: 'Sales vs Marketing Spend by Region',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return params.seriesName + '<br/>Marketing: $' + params.value[0] + 'K<br/>Sales: $' + params.value[1] + 'K';
+        }
+    },
+    legend: {
+        data: ['North', 'South', 'East', 'West'],
+        top: '10%'
+    },
+    xAxis: {
+        type: 'value',
+        name: 'Marketing Spend ($K)',
+        nameLocation: 'middle',
+        nameGap: 30
+    },
+    yAxis: {
+        type: 'value',
+        name: 'Sales Revenue ($K)',
+        nameLocation: 'middle',
+        nameGap: 40
+    },
+    series: [
+        {
+            name: 'North',
+            type: 'scatter',
+            data: [[20, 120], [25, 150], [30, 180], [35, 200], [40, 220]],
+            itemStyle: { color: '#4a90e2' }
+        },
+        {
+            name: 'South',
+            type: 'scatter',
+            data: [[15, 100], [22, 130], [28, 160], [32, 180], [38, 210]],
+            itemStyle: { color: '#f39c12' }
+        },
+        {
+            name: 'East',
+            type: 'scatter',
+            data: [[18, 110], [24, 140], [29, 170], [34, 190], [39, 215]],
+            itemStyle: { color: '#27ae60' }
+        },
+        {
+            name: 'West',
+            type: 'scatter',
+            data: [[12, 90], [20, 125], [26, 155], [31, 175], [36, 205]],
+            itemStyle: { color: '#e74c3c' }
+        }
+    ]
+};
+multipleScatter.setOption(multipleOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Bubble Chart</h2>
+            </section>
+
+            <section class="content-section">
+                <h2>Bubble Chart</h2>
+                <p>Bubble charts add a third dimension to scatter plots, where the size of each bubble represents an additional variable:</p>
+                
+                <div class="chart-container">
+                    <div id="bubble-chart" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var bubbleChart = echarts.init(document.getElementById('bubble-chart'));
+var bubbleOption = {
+    title: {
+        text: 'Country Analysis: GDP vs Life Expectancy vs Population',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return params.data[3] + '<br/>GDP: $' + params.data[0] + 'K<br/>Life Expectancy: ' + params.data[1] + ' years<br/>Population: ' + params.data[2] + 'M';
+        }
+    },
+    xAxis: {
+        type: 'value',
+        name: 'GDP per Capita ($K)',
+        nameLocation: 'middle',
+        nameGap: 30
+    },
+    yAxis: {
+        type: 'value',
+        name: 'Life Expectancy (years)',
+        nameLocation: 'middle',
+        nameGap: 40
+    },
+    series: [{
+        name: 'Countries',
+        type: 'scatter',
+        symbolSize: function(data) {
+            return Math.sqrt(data[2]) * 2; // Scale population size
+        },
+        data: [
+            [45, 82, 330, 'USA'],
+            [40, 81, 67, 'UK'],
+            [35, 79, 83, 'Germany'],
+            [30, 78, 127, 'Japan'],
+            [25, 76, 144, 'Russia'],
+            [20, 74, 1380, 'China'],
+            [15, 72, 1350, 'India'],
+            [10, 70, 210, 'Brazil'],
+            [5, 68, 95, 'Nigeria'],
+            [3, 65, 45, 'Kenya']
+        ],
+        itemStyle: {
+            color: function(params) {
+                var colors = ['#4a90e2', '#f39c12', '#27ae60', '#e74c3c', '#9b59b6'];
+                return colors[params.dataIndex % colors.length];
+            }
+        }
+    }]
+};
+bubbleChart.setOption(bubbleOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Correlation Analysis</h2>
+                <p>Show correlation patterns with trend lines and confidence intervals:</p>
+                
+                <div class="chart-container">
+                    <div id="correlation-scatter" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var correlationScatter = echarts.init(document.getElementById('correlation-scatter'));
+var correlationOption = {
+    title: {
+        text: 'Study Hours vs Exam Scores with Trend Line',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            if (params.seriesName === 'Students') {
+                return 'Hours: ' + params.value[0] + '<br/>Score: ' + params.value[1] + '%';
+            }
+            return params.seriesName;
+        }
+    },
+    legend: {
+        data: ['Students', 'Trend Line'],
+        top: '10%'
+    },
+    xAxis: {
+        type: 'value',
+        name: 'Study Hours',
+        nameLocation: 'middle',
+        nameGap: 30
+    },
+    yAxis: {
+        type: 'value',
+        name: 'Exam Score (%)',
+        nameLocation: 'middle',
+        nameGap: 40
+    },
+    series: [
+        {
+            name: 'Students',
+            type: 'scatter',
+            data: [
+                [2, 65], [4, 70], [6, 75], [8, 80], [10, 85],
+                [3, 68], [5, 72], [7, 78], [9, 82], [11, 87],
+                [1, 60], [4, 71], [6, 76], [8, 81], [10, 86]
+            ],
+            itemStyle: { color: '#4a90e2' }
+        },
+        {
+            name: 'Trend Line',
+            type: 'line',
+            smooth: true,
+            data: [[0, 62], [12, 90]],
+            lineStyle: {
+                color: '#f39c12',
+                width: 2,
+                type: 'dashed'
+            },
+            symbol: 'none'
+        }
+    ]
+};
+correlationScatter.setOption(correlationOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Multi-Dimensional Bubble Chart</h2>
+                <p>Advanced bubble chart with multiple dimensions and categories:</p>
+                
+                <div class="chart-container">
+                    <div id="multi-bubble" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var multiBubble = echarts.init(document.getElementById('multi-bubble'));
+var multiOption = {
+    title: {
+        text: 'Product Performance Analysis',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return params.data[4] + '<br/>Revenue: $' + params.data[0] + 'M<br/>Profit: ' + params.data[1] + '%<br/>Market Share: ' + params.data[2] + '%<br/>Customer Rating: ' + params.data[3] + '/5';
+        }
+    },
+    legend: {
+        data: ['Electronics', 'Clothing', 'Books', 'Food'],
+        top: '10%'
+    },
+    xAxis: {
+        type: 'value',
+        name: 'Revenue ($M)',
+        nameLocation: 'middle',
+        nameGap: 30
+    },
+    yAxis: {
+        type: 'value',
+        name: 'Profit Margin (%)',
+        nameLocation: 'middle',
+        nameGap: 40
+    },
+    series: [
+        {
+            name: 'Electronics',
+            type: 'scatter',
+            symbolSize: function(data) {
+                return data[2] * 3; // Market share
+            },
+            data: [
+                [50, 25, 15, 4.2, 'Smartphones'],
+                [30, 20, 10, 4.0, 'Laptops'],
+                [20, 30, 8, 4.5, 'Tablets']
+            ],
+            itemStyle: { color: '#4a90e2' }
+        },
+        {
+            name: 'Clothing',
+            type: 'scatter',
+            symbolSize: function(data) {
+                return data[2] * 3;
+            },
+            data: [
+                [40, 35, 12, 3.8, 'T-Shirts'],
+                [25, 40, 6, 4.1, 'Jeans'],
+                [15, 45, 4, 4.3, 'Shoes']
+            ],
+            itemStyle: { color: '#f39c12' }
+        },
+        {
+            name: 'Books',
+            type: 'scatter',
+            symbolSize: function(data) {
+                return data[2] * 3;
+            },
+            data: [
+                [10, 50, 3, 4.6, 'Fiction'],
+                [8, 45, 2, 4.4, 'Non-Fiction'],
+                [5, 55, 1, 4.7, 'Textbooks']
+            ],
+            itemStyle: { color: '#27ae60' }
+        },
+        {
+            name: 'Food',
+            type: 'scatter',
+            symbolSize: function(data) {
+                return data[2] * 3;
+            },
+            data: [
+                [35, 15, 20, 3.5, 'Restaurants'],
+                [20, 25, 8, 4.0, 'Fast Food'],
+                [15, 20, 5, 3.9, 'Catering']
+            ],
+            itemStyle: { color: '#e74c3c' }
+        }
+    ]
+};
+multiBubble.setOption(multiOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Interactive Scatter Plot</h2>
+                <p>Advanced scatter plot with zoom, pan, and data brushing capabilities:</p>
+                
+                <div class="chart-container">
+                    <div id="interactive-scatter" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var interactiveScatter = echarts.init(document.getElementById('interactive-scatter'));
+var interactiveOption = {
+    title: {
+        text: 'Interactive Data Analysis',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return 'X: ' + params.value[0] + '<br/>Y: ' + params.value[1] + '<br/>Category: ' + params.data[2];
+        }
+    },
+    legend: {
+        data: ['Group A', 'Group B', 'Group C'],
+        top: '10%'
+    },
+    dataZoom: [
+        {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+            start: 0,
+            end: 100
+        },
+        {
+            type: 'slider',
+            show: true,
+            yAxisIndex: [0],
+            left: '93%',
+            start: 0,
+            end: 100
+        }
+    ],
+    xAxis: {
+        type: 'value',
+        name: 'X Value',
+        nameLocation: 'middle',
+        nameGap: 30
+    },
+    yAxis: {
+        type: 'value',
+        name: 'Y Value',
+        nameLocation: 'middle',
+        nameGap: 40
+    },
+    series: [
+        {
+            name: 'Group A',
+            type: 'scatter',
+            data: generateRandomData(50, 'A'),
+            itemStyle: { color: '#4a90e2' }
+        },
+        {
+            name: 'Group B',
+            type: 'scatter',
+            data: generateRandomData(50, 'B'),
+            itemStyle: { color: '#f39c12' }
+        },
+        {
+            name: 'Group C',
+            type: 'scatter',
+            data: generateRandomData(50, 'C'),
+            itemStyle: { color: '#27ae60' }
+        }
+    ]
+};
+
+function generateRandomData(count, group) {
+    var data = [];
+    for (var i = 0; i < count; i++) {
+        var x = Math.random() * 100;
+        var y = Math.random() * 100;
+        data.push([x, y, group]);
+    }
+    return data;
+}
+
+interactiveScatter.setOption(interactiveOption);
+
+// Add click event
+interactiveScatter.on('click', function(params) {
+    console.log('Clicked on:', params.data);
+});</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Practice Exercise</h2>
+                <div class="exercise-box">
+                    <h3>🎯 Your Turn!</h3>
+                    <p>Create a scatter plot showing the relationship between temperature and ice cream sales. Include at least 10 data points and add a trend line.</p>
+                    
+                    <div class="chart-container">
+                        <div id="practice-scatter" style="width: 100%; height: 400px;"></div>
+                    </div>
+                    
+                    <div class="code-editor">
+                        <h4>Your Code:</h4>
+                        <textarea id="practice-code" rows="15" placeholder="// Write your ECharts option here
+var option = {
+    // Your configuration
+};"></textarea>
+                        <button onclick="runPracticeCode()" class="run-btn">Run Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Key Takeaways</h2>
+                <div class="key-points">
+                    <div class="point">
+                        <h3>📊 Chart Types</h3>
+                        <ul>
+                            <li>Basic scatter plots for two variables</li>
+                            <li>Multiple series for group comparison</li>
+                            <li>Bubble charts for three dimensions</li>
+                            <li>Correlation analysis with trend lines</li>
+                        </ul>
+                    </div>
+                    <div class="point">
+                        <h3>🎨 Styling Options</h3>
+                        <ul>
+                            <li>Custom colors and symbols</li>
+                            <li>Dynamic bubble sizing</li>
+                            <li>Interactive tooltips</li>
+                            <li>Zoom and pan capabilities</li>
+                        </ul>
+                    </div>
+                    <div class="point">
+                        <h3>⚡ Interactive Features</h3>
+                        <ul>
+                            <li>Data zooming and filtering</li>
+                            <li>Click events and selection</li>
+                            <li>Hover effects and highlighting</li>
+                            <li>Legend interactions</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chapter-navigation">
+                <a href="chapter5-pie-donut.html" class="nav-btn prev">← Chapter 5: Pie & Donut Charts</a>
+                <a href="../projects/business-dashboard.html" class="nav-btn next">Projects →</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script>
+        // Basic Scatter Plot
+        var basicScatter = echarts.init(document.getElementById('basic-scatter'));
+        var basicOption = {
+            title: {
+                text: 'Height vs Weight Relationship',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return 'Height: ' + params.value[0] + 'cm<br/>Weight: ' + params.value[1] + 'kg';
+                }
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Height (cm)',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Weight (kg)',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [{
+                name: 'Individuals',
+                type: 'scatter',
+                data: [
+                    [160, 55], [165, 60], [170, 65], [175, 70], [180, 75],
+                    [162, 58], [168, 62], [172, 68], [178, 72], [182, 78],
+                    [158, 52], [166, 61], [171, 66], [176, 71], [181, 76]
+                ],
+                itemStyle: {
+                    color: '#4a90e2'
+                }
+            }]
+        };
+        basicScatter.setOption(basicOption);
+
+        // Multiple Series Scatter Plot
+        var multipleScatter = echarts.init(document.getElementById('multiple-scatter'));
+        var multipleOption = {
+            title: {
+                text: 'Sales vs Marketing Spend by Region',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return params.seriesName + '<br/>Marketing: $' + params.value[0] + 'K<br/>Sales: $' + params.value[1] + 'K';
+                }
+            },
+            legend: {
+                data: ['North', 'South', 'East', 'West'],
+                top: '10%'
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Marketing Spend ($K)',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Sales Revenue ($K)',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [
+                {
+                    name: 'North',
+                    type: 'scatter',
+                    data: [[20, 120], [25, 150], [30, 180], [35, 200], [40, 220]],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'South',
+                    type: 'scatter',
+                    data: [[15, 100], [22, 130], [28, 160], [32, 180], [38, 210]],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'East',
+                    type: 'scatter',
+                    data: [[18, 110], [24, 140], [29, 170], [34, 190], [39, 215]],
+                    itemStyle: { color: '#27ae60' }
+                },
+                {
+                    name: 'West',
+                    type: 'scatter',
+                    data: [[12, 90], [20, 125], [26, 155], [31, 175], [36, 205]],
+                    itemStyle: { color: '#e74c3c' }
+                }
+            ]
+        };
+        multipleScatter.setOption(multipleOption);
+
+        // Bubble Chart
+        var bubbleChart = echarts.init(document.getElementById('bubble-chart'));
+        var bubbleOption = {
+            title: {
+                text: 'Country Analysis: GDP vs Life Expectancy vs Population',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return params.data[3] + '<br/>GDP: $' + params.data[0] + 'K<br/>Life Expectancy: ' + params.data[1] + ' years<br/>Population: ' + params.data[2] + 'M';
+                }
+            },
+            xAxis: {
+                type: 'value',
+                name: 'GDP per Capita ($K)',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Life Expectancy (years)',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [{
+                name: 'Countries',
+                type: 'scatter',
+                symbolSize: function(data) {
+                    return Math.sqrt(data[2]) * 2;
+                },
+                data: [
+                    [45, 82, 330, 'USA'],
+                    [40, 81, 67, 'UK'],
+                    [35, 79, 83, 'Germany'],
+                    [30, 78, 127, 'Japan'],
+                    [25, 76, 144, 'Russia'],
+                    [20, 74, 1380, 'China'],
+                    [15, 72, 1350, 'India'],
+                    [10, 70, 210, 'Brazil'],
+                    [5, 68, 95, 'Nigeria'],
+                    [3, 65, 45, 'Kenya']
+                ],
+                itemStyle: {
+                    color: function(params) {
+                        var colors = ['#4a90e2', '#f39c12', '#27ae60', '#e74c3c', '#9b59b6'];
+                        return colors[params.dataIndex % colors.length];
+                    }
+                }
+            }]
+        };
+        bubbleChart.setOption(bubbleOption);
+
+        // Correlation Analysis
+        var correlationScatter = echarts.init(document.getElementById('correlation-scatter'));
+        var correlationOption = {
+            title: {
+                text: 'Study Hours vs Exam Scores with Trend Line',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.seriesName === 'Students') {
+                        return 'Hours: ' + params.value[0] + '<br/>Score: ' + params.value[1] + '%';
+                    }
+                    return params.seriesName;
+                }
+            },
+            legend: {
+                data: ['Students', 'Trend Line'],
+                top: '10%'
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Study Hours',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Exam Score (%)',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [
+                {
+                    name: 'Students',
+                    type: 'scatter',
+                    data: [
+                        [2, 65], [4, 70], [6, 75], [8, 80], [10, 85],
+                        [3, 68], [5, 72], [7, 78], [9, 82], [11, 87],
+                        [1, 60], [4, 71], [6, 76], [8, 81], [10, 86]
+                    ],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Trend Line',
+                    type: 'line',
+                    smooth: true,
+                    data: [[0, 62], [12, 90]],
+                    lineStyle: {
+                        color: '#f39c12',
+                        width: 2,
+                        type: 'dashed'
+                    },
+                    symbol: 'none'
+                }
+            ]
+        };
+        correlationScatter.setOption(correlationOption);
+
+        // Multi-Dimensional Bubble Chart
+        var multiBubble = echarts.init(document.getElementById('multi-bubble'));
+        var multiOption = {
+            title: {
+                text: 'Product Performance Analysis',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return params.data[4] + '<br/>Revenue: $' + params.data[0] + 'M<br/>Profit: ' + params.data[1] + '%<br/>Market Share: ' + params.data[2] + '%<br/>Customer Rating: ' + params.data[3] + '/5';
+                }
+            },
+            legend: {
+                data: ['Electronics', 'Clothing', 'Books', 'Food'],
+                top: '10%'
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Revenue ($M)',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Profit Margin (%)',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [
+                {
+                    name: 'Electronics',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 3;
+                    },
+                    data: [
+                        [50, 25, 15, 4.2, 'Smartphones'],
+                        [30, 20, 10, 4.0, 'Laptops'],
+                        [20, 30, 8, 4.5, 'Tablets']
+                    ],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Clothing',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 3;
+                    },
+                    data: [
+                        [40, 35, 12, 3.8, 'T-Shirts'],
+                        [25, 40, 6, 4.1, 'Jeans'],
+                        [15, 45, 4, 4.3, 'Shoes']
+                    ],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Books',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 3;
+                    },
+                    data: [
+                        [10, 50, 3, 4.6, 'Fiction'],
+                        [8, 45, 2, 4.4, 'Non-Fiction'],
+                        [5, 55, 1, 4.7, 'Textbooks']
+                    ],
+                    itemStyle: { color: '#27ae60' }
+                },
+                {
+                    name: 'Food',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 3;
+                    },
+                    data: [
+                        [35, 15, 20, 3.5, 'Restaurants'],
+                        [20, 25, 8, 4.0, 'Fast Food'],
+                        [15, 20, 5, 3.9, 'Catering']
+                    ],
+                    itemStyle: { color: '#e74c3c' }
+                }
+            ]
+        };
+        multiBubble.setOption(multiOption);
+
+        // Interactive Scatter Plot
+        var interactiveScatter = echarts.init(document.getElementById('interactive-scatter'));
+        
+        function generateRandomData(count, group) {
+            var data = [];
+            for (var i = 0; i < count; i++) {
+                var x = Math.random() * 100;
+                var y = Math.random() * 100;
+                data.push([x, y, group]);
+            }
+            return data;
+        }
+
+        var interactiveOption = {
+            title: {
+                text: 'Interactive Data Analysis',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return 'X: ' + params.value[0] + '<br/>Y: ' + params.value[1] + '<br/>Category: ' + params.data[2];
+                }
+            },
+            legend: {
+                data: ['Group A', 'Group B', 'Group C'],
+                top: '10%'
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    show: true,
+                    xAxisIndex: [0],
+                    start: 0,
+                    end: 100
+                },
+                {
+                    type: 'slider',
+                    show: true,
+                    yAxisIndex: [0],
+                    left: '93%',
+                    start: 0,
+                    end: 100
+                }
+            ],
+            xAxis: {
+                type: 'value',
+                name: 'X Value',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Y Value',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [
+                {
+                    name: 'Group A',
+                    type: 'scatter',
+                    data: generateRandomData(50, 'A'),
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Group B',
+                    type: 'scatter',
+                    data: generateRandomData(50, 'B'),
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Group C',
+                    type: 'scatter',
+                    data: generateRandomData(50, 'C'),
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        interactiveScatter.setOption(interactiveOption);
+
+        // Add click event
+        interactiveScatter.on('click', function(params) {
+            console.log('Clicked on:', params.data);
+        });
+
+        // Practice Chart
+        var practiceChart = echarts.init(document.getElementById('practice-scatter'));
+        var practiceOption = {
+            title: {
+                text: 'Temperature vs Ice Cream Sales',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return 'Temperature: ' + params.value[0] + '°C<br/>Sales: ' + params.value[1] + ' units';
+                }
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Temperature (°C)',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Ice Cream Sales (units)',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
+            series: [{
+                name: 'Sales Data',
+                type: 'scatter',
+                data: [
+                    [20, 50], [25, 80], [30, 120], [35, 180], [40, 250]
+                ],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        practiceChart.setOption(practiceOption);
+
+        // Practice code runner
+        function runPracticeCode() {
+            var code = document.getElementById('practice-code').value;
+            try {
+                // Clear previous chart
+                practiceChart.clear();
+                
+                // Execute the code
+                eval(code);
+                
+                // Apply the option
+                practiceChart.setOption(option);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            basicScatter.resize();
+            multipleScatter.resize();
+            bubbleChart.resize();
+            correlationScatter.resize();
+            multiBubble.resize();
+            interactiveScatter.resize();
+            practiceChart.resize();
+        });
+    </script>
+</body>
+</html>

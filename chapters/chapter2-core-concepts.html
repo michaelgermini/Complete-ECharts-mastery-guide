@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Core Concepts - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Chapter 2: Core Concepts</h1>
+            <p>Understanding the building blocks of ECharts visualizations</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Anatomy of an ECharts Option</h2>
+            
+            <p>Every ECharts visualization is defined by an <strong>option object</strong>. Understanding this structure is crucial for creating effective charts. Let's break down each component:</p>
+
+            <div class="chart-container">
+                <h4>Interactive Option Structure</h4>
+                <div id="option-structure"></div>
+            </div>
+
+            <h3>1. Title Component</h3>
+            <p>The title component defines the main heading and subtitle of your chart:</p>
+
+            <div class="code-block">
+                <pre><code>title: {
+  text: 'Sales Overview',           // Main title
+  subtext: 'Q1 2024',              // Subtitle
+  left: 'center',                  // Position: 'left', 'center', 'right'
+  top: 'top',                      // Position: 'top', 'middle', 'bottom'
+  textStyle: {                     // Title styling
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333'
+  }
+}</code></pre>
+            </div>
+
+            <h3>2. Tooltip Component</h3>
+            <p>Tooltips provide interactive information when users hover over chart elements:</p>
+
+            <div class="code-block">
+                <pre><code>tooltip: {
+  trigger: 'axis',                 // 'item', 'axis', 'none'
+  axisPointer: {                   // Axis indicator
+    type: 'shadow'                 // 'line', 'shadow', 'cross'
+  },
+  formatter: function(params) {    // Custom tooltip content
+    return params[0].name + ': ' + params[0].value;
+  }
+}</code></pre>
+            </div>
+
+            <h3>3. Legend Component</h3>
+            <p>Legends help users identify different data series:</p>
+
+            <div class="code-block">
+                <pre><code>legend: {
+  data: ['Sales', 'Profit', 'Cost'],  // Series names
+  orient: 'horizontal',               // 'horizontal', 'vertical'
+  left: 'center',                     // Position
+  top: 'bottom'                       // Position
+}</code></pre>
+            </div>
+
+            <h3>4. Axis Components</h3>
+            <p>Axes define the coordinate system for your data:</p>
+
+            <div class="chart-container">
+                <h4>Axis Types Comparison</h4>
+                <div id="axis-comparison"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Category Axis (X-axis for bar charts)
+xAxis: {
+  type: 'category',                // 'category', 'value', 'time', 'log'
+  data: ['Jan', 'Feb', 'Mar'],     // Category labels
+  name: 'Month',                   // Axis name
+  nameLocation: 'middle',          // Name position
+  nameGap: 30                      // Distance from axis
+}
+
+// Value Axis (Y-axis for bar charts)
+yAxis: {
+  type: 'value',                   // Numeric values
+  name: 'Amount ($)',              // Axis name
+  min: 0,                          // Minimum value
+  max: 1000,                       // Maximum value
+  interval: 200                    // Tick interval
+}</code></pre>
+            </div>
+
+            <h3>5. Series Component</h3>
+            <p>The series component contains your actual data and defines the chart type:</p>
+
+            <div class="chart-container">
+                <h4>Series Types Overview</h4>
+                <div id="series-types"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>series: [{
+  name: 'Sales',                   // Series name
+  type: 'bar',                     // Chart type
+  data: [120, 200, 150, 80],      // Data values
+  itemStyle: {                     // Item styling
+    color: '#4a90e2'
+  },
+  emphasis: {                      // Hover effects
+    itemStyle: {
+      color: '#357abd'
+    }
+  }
+}]</code></pre>
+            </div>
+
+            <h3>6. Data Formats</h3>
+            <p>ECharts supports multiple data formats. Here are the most common:</p>
+
+            <div class="chart-container">
+                <h4>Data Format Examples</h4>
+                <div id="data-formats"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Simple array
+data: [120, 200, 150, 80]
+
+// Array of objects
+data: [
+  { value: 120, name: 'Jan' },
+  { value: 200, name: 'Feb' },
+  { value: 150, name: 'Mar' }
+]
+
+// 2D array for scatter plots
+data: [[120, 200], [180, 300], [250, 400]]
+
+// Object with multiple series
+data: {
+  '2023': [120, 200, 150],
+  '2024': [180, 250, 200]
+}</code></pre>
+            </div>
+
+            <h3>7. Chart Container & Initialization</h3>
+            <p>Proper initialization is crucial for ECharts to work correctly:</p>
+
+            <div class="code-block">
+                <pre><code>// HTML container with fixed dimensions
+&lt;div id="main" style="width:600px;height:400px;"&gt;&lt;/div&gt;
+
+// JavaScript initialization
+var chart = echarts.init(document.getElementById('main'));
+
+// Apply options
+chart.setOption(option);
+
+// Handle window resize
+window.addEventListener('resize', function() {
+  chart.resize();
+});</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <h4>🚨 Critical Requirements</h4>
+                <ul>
+                    <li><strong>Container must exist:</strong> The DOM element must be present before calling <code>echarts.init()</code></li>
+                    <li><strong>Fixed dimensions:</strong> Container must have explicit width and height</li>
+                    <li><strong>Single initialization:</strong> Call <code>init()</code> only once per container</li>
+                    <li><strong>Resize handling:</strong> Always handle window resize for responsive charts</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Mini-Exercise</h4>
+                <p>Practice with the interactive chart below:</p>
+                <ol>
+                    <li>Add a <strong>legend</strong> to show both series</li>
+                    <li>Add a second series called <code>"Expenses"</code> with values <code>[100, 200, 150, 80]</code></li>
+                    <li>Change the <strong>tooltip trigger</strong> to <code>'item'</code></li>
+                    <li>Customize the <strong>title position</strong> to <code>'left'</code></li>
+                </ol>
+            </div>
+
+            <div class="chart-container">
+                <h4>Practice Chart - Modify the Code Below</h4>
+                <div id="practice-chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Current configuration - try modifying this!
+var option = {
+  title: {
+    text: 'Sales vs Expenses',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  xAxis: {
+    data: ['Q1', 'Q2', 'Q3', 'Q4']
+  },
+  yAxis: {},
+  series: [{
+    name: 'Sales',
+    type: 'bar',
+    data: [120, 200, 150, 80]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>8. Common Patterns</h3>
+            <p>Here are some common patterns you'll use frequently:</p>
+
+            <div class="chart-grid">
+                <div class="chart-item">
+                    <h4>Multiple Series</h4>
+                    <div id="multiple-series" class="chart"></div>
+                </div>
+                <div class="chart-item">
+                    <h4>Stacked Chart</h4>
+                    <div id="stacked-chart" class="chart"></div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <a href="chapter1-introduction.html" class="nav-btn">← Previous: Introduction</a>
+                <a href="chapter3-line-area.html" class="nav-btn">Next: Line & Area Charts →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Option structure visualization
+        var optionStructure = echarts.init(document.getElementById('option-structure'));
+        var structureOption = {
+            title: {
+                text: 'ECharts Option Structure',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            series: [{
+                name: 'Components',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    { value: 20, name: 'Title', itemStyle: { color: '#4a90e2' } },
+                    { value: 15, name: 'Tooltip', itemStyle: { color: '#f39c12' } },
+                    { value: 15, name: 'Legend', itemStyle: { color: '#27ae60' } },
+                    { value: 25, name: 'Axes', itemStyle: { color: '#e74c3c' } },
+                    { value: 25, name: 'Series', itemStyle: { color: '#9b59b6' } }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        optionStructure.setOption(structureOption);
+
+        // Axis comparison chart
+        var axisComparison = echarts.init(document.getElementById('axis-comparison'));
+        var axisOption = {
+            title: {
+                text: 'Axis Types',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Category', 'Value', 'Time'],
+                top: '10%'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['A', 'B', 'C', 'D', 'E']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: 'Category',
+                    type: 'bar',
+                    data: [10, 20, 30, 40, 50],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Value',
+                    type: 'line',
+                    data: [15, 25, 35, 45, 55],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Time',
+                    type: 'line',
+                    data: [5, 15, 25, 35, 45],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        axisComparison.setOption(axisOption);
+
+        // Series types overview
+        var seriesTypes = echarts.init(document.getElementById('series-types'));
+        var seriesOption = {
+            title: {
+                text: 'Common Series Types',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [{
+                type: 'pie',
+                radius: ['30%', '70%'],
+                center: ['50%', '60%'],
+                data: [
+                    { value: 25, name: 'Bar/Column', itemStyle: { color: '#4a90e2' } },
+                    { value: 20, name: 'Line/Area', itemStyle: { color: '#f39c12' } },
+                    { value: 15, name: 'Pie/Donut', itemStyle: { color: '#27ae60' } },
+                    { value: 15, name: 'Scatter', itemStyle: { color: '#e74c3c' } },
+                    { value: 10, name: 'Radar', itemStyle: { color: '#9b59b6' } },
+                    { value: 15, name: 'Others', itemStyle: { color: '#34495e' } }
+                ]
+            }]
+        };
+        seriesTypes.setOption(seriesOption);
+
+        // Data formats example
+        var dataFormats = echarts.init(document.getElementById('data-formats'));
+        var formatsOption = {
+            title: {
+                text: 'Data Format Examples',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Simple Array', 'Object Array', '2D Array'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Simple Array',
+                    type: 'bar',
+                    data: [120, 200, 150, 80],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Object Array',
+                    type: 'line',
+                    data: [
+                        { value: 100, name: 'Jan' },
+                        { value: 180, name: 'Feb' },
+                        { value: 130, name: 'Mar' },
+                        { value: 90, name: 'Apr' }
+                    ],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: '2D Array',
+                    type: 'scatter',
+                    data: [[120, 100], [200, 180], [150, 130], [80, 90]],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        dataFormats.setOption(formatsOption);
+
+        // Practice chart
+        var practiceChart = echarts.init(document.getElementById('practice-chart'));
+        var practiceOption = {
+            title: {
+                text: 'Sales vs Expenses',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4']
+            },
+            yAxis: {},
+            series: [{
+                name: 'Sales',
+                type: 'bar',
+                data: [120, 200, 150, 80],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        practiceChart.setOption(practiceOption);
+
+        // Multiple series example
+        var multipleSeries = echarts.init(document.getElementById('multiple-series'));
+        var multipleOption = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Profit', 'Cost'],
+                top: '5%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [120, 200, 150, 80],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Profit',
+                    type: 'bar',
+                    data: [20, 40, 30, 15],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Cost',
+                    type: 'line',
+                    data: [100, 160, 120, 65],
+                    itemStyle: { color: '#e74c3c' }
+                }
+            ]
+        };
+        multipleSeries.setOption(multipleOption);
+
+        // Stacked chart example
+        var stackedChart = echarts.init(document.getElementById('stacked-chart'));
+        var stackedOption = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Product A', 'Product B', 'Product C'],
+                top: '5%'
+            },
+            xAxis: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4']
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Product A',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [120, 132, 101, 134],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Product B',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [220, 182, 191, 234],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Product C',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [150, 232, 201, 154],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        stackedChart.setOption(stackedOption);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            optionStructure.resize();
+            axisComparison.resize();
+            seriesTypes.resize();
+            dataFormats.resize();
+            practiceChart.resize();
+            multipleSeries.resize();
+            stackedChart.resize();
+        });
+    </script>
+</body>
+</html>

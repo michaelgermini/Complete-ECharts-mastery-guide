@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Monitoring Dashboard - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .iot-dashboard {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .dashboard-subtitle {
+            text-align: center;
+            margin: 10px 0 0 0;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        
+        .status-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .status-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .status-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .status-online { color: #4ade80; }
+        .status-warning { color: #fbbf24; }
+        .status-error { color: #f87171; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chart-title {
+            margin: 0 0 20px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .alerts-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .alert-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #f87171;
+        }
+        
+        .alert-item.warning {
+            border-left-color: #fbbf24;
+        }
+        
+        .alert-item.info {
+            border-left-color: #60a5fa;
+        }
+        
+        .alert-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .alert-message {
+            font-weight: 500;
+        }
+        
+        .control-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .control-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-button.active {
+            background: #4ade80;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            
+            .status-indicators {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="iot-dashboard">
+    <div class="container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">🏭 IoT Monitoring Dashboard</h1>
+            <p class="dashboard-subtitle">Real-time sensor monitoring and system control</p>
+        </header>
+
+        <!-- Status Indicators -->
+        <div class="status-indicators">
+            <div class="status-card">
+                <div class="status-value status-online" id="online-devices">24</div>
+                <div class="status-label">Devices Online</div>
+            </div>
+            <div class="status-card">
+                <div class="status-value status-warning" id="temperature">42°C</div>
+                <div class="status-label">Average Temperature</div>
+            </div>
+            <div class="status-card">
+                <div class="status-value status-online" id="humidity">65%</div>
+                <div class="status-label">Average Humidity</div>
+            </div>
+            <div class="status-card">
+                <div class="status-value status-error" id="alerts">3</div>
+                <div class="status-label">Active Alerts</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Temperature Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title">Temperature Monitoring</h3>
+                <div id="temperature-chart" style="width: 100%; height: 300px;"></div>
+            </div>
+
+            <!-- Humidity Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title">Humidity Monitoring</h3>
+                <div id="humidity-chart" style="width: 100%; height: 300px;"></div>
+            </div>
+
+            <!-- Device Status -->
+            <div class="chart-container">
+                <h3 class="chart-title">Device Status Overview</h3>
+                <div id="device-status-chart" style="width: 100%; height: 300px;"></div>
+            </div>
+
+            <!-- Power Consumption -->
+            <div class="chart-container">
+                <h3 class="chart-title">Power Consumption</h3>
+                <div id="power-chart" style="width: 100%; height: 300px;"></div>
+            </div>
+
+            <!-- Alerts Panel -->
+            <div class="alerts-panel">
+                <h3 class="chart-title">System Alerts</h3>
+                <div id="alerts-list">
+                    <div class="alert-item error">
+                        <div class="alert-time">2 minutes ago</div>
+                        <div class="alert-message">High temperature detected on Sensor 7 (45°C)</div>
+                    </div>
+                    <div class="alert-item warning">
+                        <div class="alert-time">5 minutes ago</div>
+                        <div class="alert-message">Low battery on Device 12 (15% remaining)</div>
+                    </div>
+                    <div class="alert-item info">
+                        <div class="alert-time">8 minutes ago</div>
+                        <div class="alert-message">Maintenance scheduled for tomorrow 10:00 AM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <h3 class="chart-title">System Controls</h3>
+                <div style="text-align: center;">
+                    <button class="control-button active" onclick="toggleSystem('cooling')">Cooling System</button>
+                    <button class="control-button active" onclick="toggleSystem('ventilation')">Ventilation</button>
+                    <button class="control-button" onclick="toggleSystem('emergency')">Emergency Mode</button>
+                    <button class="control-button" onclick="toggleSystem('maintenance')">Maintenance Mode</button>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="control-button" onclick="refreshData()">Refresh Data</button>
+                    <button class="control-button" onclick="exportReport()">Export Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script>
+        // Initialize charts
+        var temperatureChart = echarts.init(document.getElementById('temperature-chart'));
+        var humidityChart = echarts.init(document.getElementById('humidity-chart'));
+        var deviceStatusChart = echarts.init(document.getElementById('device-status-chart'));
+        var powerChart = echarts.init(document.getElementById('power-chart'));
+
+        // Temperature Chart
+        var temperatureOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Sensor 1', 'Sensor 2', 'Sensor 3'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Temperature (°C)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Sensor 1',
+                    type: 'line',
+                    smooth: true,
+                    data: [25, 28, 32, 38, 42, 39, 35],
+                    itemStyle: { color: '#4ade80' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(74, 222, 128, 0.3)' },
+                                { offset: 1, color: 'rgba(74, 222, 128, 0.1)' }
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Sensor 2',
+                    type: 'line',
+                    smooth: true,
+                    data: [26, 29, 33, 39, 43, 40, 36],
+                    itemStyle: { color: '#60a5fa' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(96, 165, 250, 0.3)' },
+                                { offset: 1, color: 'rgba(96, 165, 250, 0.1)' }
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Sensor 3',
+                    type: 'line',
+                    smooth: true,
+                    data: [24, 27, 31, 37, 41, 38, 34],
+                    itemStyle: { color: '#fbbf24' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(251, 191, 36, 0.3)' },
+                                { offset: 1, color: 'rgba(251, 191, 36, 0.1)' }
+                            ]
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Humidity Chart
+        var humidityOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Zone A', 'Zone B', 'Zone C'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Humidity (%)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Zone A',
+                    type: 'bar',
+                    data: [60, 62, 65, 68, 70, 67, 64],
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Zone B',
+                    type: 'bar',
+                    data: [58, 60, 63, 66, 68, 65, 62],
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'Zone C',
+                    type: 'bar',
+                    data: [62, 64, 67, 70, 72, 69, 66],
+                    itemStyle: { color: '#fbbf24' }
+                }
+            ]
+        };
+
+        // Device Status Chart
+        var deviceStatusOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Device Status',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['60%', '50%'],
+                    data: [
+                        { value: 18, name: 'Online', itemStyle: { color: '#4ade80' } },
+                        { value: 4, name: 'Warning', itemStyle: { color: '#fbbf24' } },
+                        { value: 2, name: 'Offline', itemStyle: { color: '#f87171' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Power Consumption Chart
+        var powerOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' }
+            },
+            legend: {
+                data: ['Power Usage', 'Efficiency'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Power (kW)',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                },
+                {
+                    type: 'value',
+                    name: 'Efficiency (%)',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' },
+                    max: 100
+                }
+            ],
+            series: [
+                {
+                    name: 'Power Usage',
+                    type: 'bar',
+                    data: [120, 132, 101, 134, 90, 230, 210],
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'Efficiency',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [85, 87, 82, 89, 91, 78, 83],
+                    itemStyle: { color: '#4ade80' },
+                    lineStyle: { width: 3 }
+                }
+            ]
+        };
+
+        // Set chart options
+        temperatureChart.setOption(temperatureOption);
+        humidityChart.setOption(humidityOption);
+        deviceStatusChart.setOption(deviceStatusOption);
+        powerChart.setOption(powerOption);
+
+        // Control functions
+        function toggleSystem(system) {
+            const button = event.target;
+            if (button.classList.contains('active')) {
+                button.classList.remove('active');
+                button.style.background = 'rgba(255, 255, 255, 0.2)';
+                console.log(`${system} system turned OFF`);
+            } else {
+                button.classList.add('active');
+                button.style.background = '#4ade80';
+                console.log(`${system} system turned ON`);
+            }
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            const newTemp = Math.floor(Math.random() * 20) + 30;
+            const newHumidity = Math.floor(Math.random() * 20) + 55;
+            
+            document.getElementById('temperature').textContent = newTemp + '°C';
+            document.getElementById('humidity').textContent = newHumidity + '%';
+            
+            console.log('Data refreshed');
+        }
+
+        function exportReport() {
+            console.log('Exporting system report...');
+            alert('System report exported successfully!');
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            // Update temperature
+            const currentTemp = parseInt(document.getElementById('temperature').textContent);
+            const newTemp = currentTemp + (Math.random() - 0.5) * 2;
+            document.getElementById('temperature').textContent = Math.round(newTemp) + '°C';
+            
+            // Update humidity
+            const currentHumidity = parseInt(document.getElementById('humidity').textContent);
+            const newHumidity = currentHumidity + (Math.random() - 0.5) * 3;
+            document.getElementById('humidity').textContent = Math.round(newHumidity) + '%';
+            
+            // Update alerts count
+            const currentAlerts = parseInt(document.getElementById('alerts').textContent);
+            if (Math.random() > 0.95) {
+                document.getElementById('alerts').textContent = currentAlerts + 1;
+            }
+        }, 5000);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            temperatureChart.resize();
+            humidityChart.resize();
+            deviceStatusChart.resize();
+            powerChart.resize();
+        });
+    </script>
+</body>
+</html>

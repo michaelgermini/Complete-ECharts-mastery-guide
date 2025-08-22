@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Analytics Dashboard - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .healthcare-dashboard {
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 50%, #bbe1fa 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .dashboard-subtitle {
+            text-align: center;
+            margin: 10px 0 0 0;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        
+        .hospital-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .stat-trend {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .trend-positive { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
+        .trend-negative { background: rgba(239, 68, 68, 0.3); color: #f87171; }
+        .trend-neutral { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+        
+        .department-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .department-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .department-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .department-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .department-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .status-available { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
+        .status-busy { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+        .status-full { background: rgba(239, 68, 68, 0.3); color: #f87171; }
+        
+        .department-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .metric {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chart-title {
+            margin: 0 0 20px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .filters-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .filters-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        .filter-select option {
+            background: #0f4c75;
+            color: white;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: #4ade80;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            
+            .hospital-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .department-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body class="healthcare-dashboard">
+    <div class="container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">🏥 Healthcare Analytics Dashboard</h1>
+            <p class="dashboard-subtitle">Comprehensive patient care and hospital performance monitoring</p>
+        </header>
+
+        <!-- Hospital Statistics -->
+        <div class="hospital-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-patients">1,247</div>
+                <div class="stat-label">Total Patients</div>
+                <div class="stat-trend trend-positive" id="patients-trend">+12% vs last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-stay">4.2</div>
+                <div class="stat-label">Average Length of Stay (days)</div>
+                <div class="stat-trend trend-negative" id="stay-trend">+0.3 days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="satisfaction">94.2%</div>
+                <div class="stat-label">Patient Satisfaction</div>
+                <div class="stat-trend trend-positive" id="satisfaction-trend">+2.1%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="readmission">8.5%</div>
+                <div class="stat-label">Readmission Rate</div>
+                <div class="stat-trend trend-positive" id="readmission-trend">-1.2%</div>
+            </div>
+        </div>
+
+        <!-- Department Overview -->
+        <div class="department-overview">
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-name">Emergency Department</div>
+                    <div class="department-status status-busy">Busy</div>
+                </div>
+                <div class="department-metrics">
+                    <div class="metric">
+                        <div class="metric-value">45</div>
+                        <div class="metric-label">Current Patients</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">2.3h</div>
+                        <div class="metric-label">Avg Wait Time</div>
+                    </div>
+                </div>
+            </div>
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-name">Intensive Care Unit</div>
+                    <div class="department-status status-available">Available</div>
+                </div>
+                <div class="department-metrics">
+                    <div class="metric">
+                        <div class="metric-value">18</div>
+                        <div class="metric-label">Occupied Beds</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Occupancy Rate</div>
+                    </div>
+                </div>
+            </div>
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-name">Operating Rooms</div>
+                    <div class="department-status status-full">Full</div>
+                </div>
+                <div class="department-metrics">
+                    <div class="metric">
+                        <div class="metric-value">8</div>
+                        <div class="metric-label">Active Surgeries</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">95%</div>
+                        <div class="metric-label">Utilization</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Panel -->
+        <div class="filters-panel">
+            <div class="filters-group">
+                <label>Department:</label>
+                <select class="filter-select" id="department-filter">
+                    <option value="all" selected>All Departments</option>
+                    <option value="emergency">Emergency</option>
+                    <option value="icu">ICU</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="orthopedics">Orthopedics</option>
+                    <option value="pediatrics">Pediatrics</option>
+                </select>
+                
+                <label>Time Period:</label>
+                <select class="filter-select" id="time-filter">
+                    <option value="24h">Last 24 Hours</option>
+                    <option value="7d">Last 7 Days</option>
+                    <option value="30d" selected>Last 30 Days</option>
+                    <option value="90d">Last 90 Days</option>
+                </select>
+                
+                <label>Patient Type:</label>
+                <select class="filter-select" id="patient-filter">
+                    <option value="all" selected>All Patients</option>
+                    <option value="inpatient">Inpatient</option>
+                    <option value="outpatient">Outpatient</option>
+                    <option value="emergency">Emergency</option>
+                </select>
+                
+                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+                <button class="filter-btn" onclick="resetFilters()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Patient Demographics -->
+            <div class="chart-container">
+                <h3 class="chart-title">Patient Demographics</h3>
+                <div id="demographics-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Admission Trends -->
+            <div class="chart-container">
+                <h3 class="chart-title">Daily Admission Trends</h3>
+                <div id="admissions-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Treatment Outcomes -->
+            <div class="chart-container">
+                <h3 class="chart-title">Treatment Outcomes by Department</h3>
+                <div id="outcomes-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Resource Utilization -->
+            <div class="chart-container">
+                <h3 class="chart-title">Resource Utilization</h3>
+                <div id="utilization-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Patient Flow -->
+            <div class="chart-container">
+                <h3 class="chart-title">Patient Flow Analysis</h3>
+                <div id="flow-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Quality Metrics -->
+            <div class="chart-container">
+                <h3 class="chart-title">Quality Metrics Dashboard</h3>
+                <div id="quality-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script>
+        // Initialize charts
+        var demographicsChart = echarts.init(document.getElementById('demographics-chart'));
+        var admissionsChart = echarts.init(document.getElementById('admissions-chart'));
+        var outcomesChart = echarts.init(document.getElementById('outcomes-chart'));
+        var utilizationChart = echarts.init(document.getElementById('utilization-chart'));
+        var flowChart = echarts.init(document.getElementById('flow-chart'));
+        var qualityChart = echarts.init(document.getElementById('quality-chart'));
+
+        // Patient Demographics Chart
+        var demographicsOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Age Groups',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['60%', '50%'],
+                    data: [
+                        { value: 235, name: '0-18 years', itemStyle: { color: '#4ade80' } },
+                        { value: 456, name: '19-35 years', itemStyle: { color: '#60a5fa' } },
+                        { value: 389, name: '36-50 years', itemStyle: { color: '#fbbf24' } },
+                        { value: 167, name: '51+ years', itemStyle: { color: '#f87171' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Admission Trends Chart
+        var admissionsOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Emergency', 'Scheduled', 'Transfers'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Number of Admissions',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Emergency',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [45, 52, 38, 61, 48, 55, 42],
+                    itemStyle: { color: '#f87171' }
+                },
+                {
+                    name: 'Scheduled',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [28, 35, 42, 38, 45, 32, 25],
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Transfers',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [12, 15, 8, 14, 18, 10, 12],
+                    itemStyle: { color: '#60a5fa' }
+                }
+            ]
+        };
+
+        // Treatment Outcomes Chart
+        var outcomesOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' }
+            },
+            legend: {
+                data: ['Successful', 'Complications', 'Readmissions'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Emergency', 'ICU', 'Cardiology', 'Orthopedics', 'Pediatrics'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Percentage (%)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Successful',
+                    type: 'bar',
+                    data: [92, 88, 95, 89, 96],
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Complications',
+                    type: 'bar',
+                    data: [6, 10, 4, 8, 3],
+                    itemStyle: { color: '#fbbf24' }
+                },
+                {
+                    name: 'Readmissions',
+                    type: 'bar',
+                    data: [2, 2, 1, 3, 1],
+                    itemStyle: { color: '#f87171' }
+                }
+            ]
+        };
+
+        // Resource Utilization Chart
+        var utilizationOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item'
+            },
+            radar: {
+                indicator: [
+                    { name: 'Bed Occupancy', max: 100 },
+                    { name: 'Staff Utilization', max: 100 },
+                    { name: 'Equipment Usage', max: 100 },
+                    { name: 'Operating Room', max: 100 },
+                    { name: 'Emergency Capacity', max: 100 },
+                    { name: 'ICU Capacity', max: 100 }
+                ],
+                axisName: {
+                    color: 'white'
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: false
+                }
+            },
+            series: [
+                {
+                    name: 'Utilization',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [85, 78, 92, 95, 88, 82],
+                            name: 'Current Utilization',
+                            itemStyle: { color: '#4ade80' },
+                            areaStyle: {
+                                color: 'rgba(74, 222, 128, 0.3)'
+                            }
+                        },
+                        {
+                            value: [75, 70, 80, 85, 75, 70],
+                            name: 'Target Utilization',
+                            itemStyle: { color: '#60a5fa' },
+                            areaStyle: {
+                                color: 'rgba(96, 165, 250, 0.3)'
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Patient Flow Chart
+        var flowOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} patients'
+            },
+            series: [
+                {
+                    name: 'Patient Flow',
+                    type: 'funnel',
+                    left: '10%',
+                    top: 60,
+                    width: '80%',
+                    height: '80%',
+                    min: 0,
+                    max: 1000,
+                    minSize: '0%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        color: 'white'
+                    },
+                    labelLine: {
+                        length: 10,
+                        lineStyle: {
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            fontSize: 20
+                        }
+                    },
+                    data: [
+                        { value: 1000, name: 'Emergency Admissions', itemStyle: { color: '#f87171' } },
+                        { value: 800, name: 'Triage Assessment', itemStyle: { color: '#fbbf24' } },
+                        { value: 600, name: 'Treatment Initiated', itemStyle: { color: '#60a5fa' } },
+                        { value: 400, name: 'Stabilized', itemStyle: { color: '#4ade80' } },
+                        { value: 200, name: 'Discharged', itemStyle: { color: '#a78bfa' } }
+                    ]
+                }
+            ]
+        };
+
+        // Quality Metrics Chart
+        var qualityOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Current Month', 'Previous Month', 'Target'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Satisfaction', 'Safety Score', 'Efficiency', 'Quality', 'Compliance'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Score (%)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Current Month',
+                    type: 'bar',
+                    data: [94, 96, 88, 92, 98],
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Previous Month',
+                    type: 'bar',
+                    data: [91, 94, 85, 89, 96],
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'Target',
+                    type: 'line',
+                    data: [95, 95, 90, 95, 95],
+                    itemStyle: { color: '#fbbf24' },
+                    lineStyle: { width: 3, type: 'dashed' }
+                }
+            ]
+        };
+
+        // Set chart options
+        demographicsChart.setOption(demographicsOption);
+        admissionsChart.setOption(admissionsOption);
+        outcomesChart.setOption(outcomesOption);
+        utilizationChart.setOption(utilizationOption);
+        flowChart.setOption(flowOption);
+        qualityChart.setOption(qualityOption);
+
+        // Filter functions
+        function applyFilters() {
+            const department = document.getElementById('department-filter').value;
+            const timePeriod = document.getElementById('time-filter').value;
+            const patientType = document.getElementById('patient-filter').value;
+            
+            console.log('Applying filters:', { department, timePeriod, patientType });
+            
+            // Simulate data update
+            updateHospitalStats();
+        }
+
+        function resetFilters() {
+            document.getElementById('department-filter').value = 'all';
+            document.getElementById('time-filter').value = '30d';
+            document.getElementById('patient-filter').value = 'all';
+            
+            console.log('Filters reset');
+            updateHospitalStats();
+        }
+
+        function updateHospitalStats() {
+            // Simulate real-time stats updates
+            const patients = Math.floor(Math.random() * 200) + 1200;
+            const avgStay = (Math.random() * 2 + 3.5).toFixed(1);
+            const satisfaction = (Math.random() * 5 + 90).toFixed(1);
+            const readmission = (Math.random() * 3 + 7).toFixed(1);
+            
+            document.getElementById('total-patients').textContent = patients.toLocaleString();
+            document.getElementById('avg-stay').textContent = avgStay;
+            document.getElementById('satisfaction').textContent = satisfaction + '%';
+            document.getElementById('readmission').textContent = readmission + '%';
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                updateHospitalStats();
+            }
+        }, 15000);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            demographicsChart.resize();
+            admissionsChart.resize();
+            outcomesChart.resize();
+            utilizationChart.resize();
+            flowChart.resize();
+            qualityChart.resize();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Bar and Column Charts - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Chapter 4: Bar and Column Charts</h1>
+            <p>Mastering categorical data visualization with bars and columns</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Bar Charts: The Workhorse of Data Visualization</h2>
+            
+            <p>Bar charts are one of the most versatile and commonly used chart types. They're perfect for comparing <strong>categorical data</strong>, showing <strong>rankings</strong>, and displaying <strong>discrete values</strong>.</p>
+
+            <div class="tip-box">
+                <h4>🎯 When to Use Bar Charts</h4>
+                <ul>
+                    <li><strong>Categorical comparisons</strong> - Product sales, survey results, performance metrics</li>
+                    <li><strong>Ranking data</strong> - Top performers, market share, popularity</li>
+                    <li><strong>Discrete values</strong> - Counts, percentages, scores</li>
+                    <li><strong>Multiple series</strong> - Comparing different groups or time periods</li>
+                </ul>
+            </div>
+
+            <h3>1. Basic Vertical Bar Chart (Column Chart)</h3>
+            
+            <div class="chart-container">
+                <h4>Simple Column Chart</h4>
+                <div id="basic-column"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Product Sales' },
+  xAxis: { data: ['Shirts', 'Cardigans', 'Chiffons', 'Jeans'] },
+  yAxis: {},
+  series: [{
+    type: 'bar',
+    data: [5, 20, 36, 10]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>2. Horizontal Bar Chart</h3>
+            
+            <p>Horizontal bars are great for long category names and when you have many categories:</p>
+
+            <div class="chart-container">
+                <h4>Horizontal Bar Chart</h4>
+                <div id="horizontal-bar"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Population by Age Group' },
+  xAxis: {},
+  yAxis: { data: ['0-14', '15-24', '25-54', '55-64', '65+'] },
+  series: [{
+    type: 'bar',
+    data: [120, 200, 150, 80, 70]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>3. Multiple Series Bar Chart</h3>
+            
+            <div class="chart-container">
+                <h4>Multiple Series Comparison</h4>
+                <div id="multiple-series"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Sales by Region' },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Q1', 'Q2', 'Q3'] },
+  xAxis: { data: ['North', 'South', 'East', 'West'] },
+  yAxis: {},
+  series: [
+    { name: 'Q1', type: 'bar', data: [120, 132, 101, 134] },
+    { name: 'Q2', type: 'bar', data: [220, 182, 191, 234] },
+    { name: 'Q3', type: 'bar', data: [150, 232, 201, 154] }
+  ]
+};</code></pre>
+            </div>
+
+            <h3>4. Stacked Bar Chart</h3>
+            
+            <p>Stacked bars show how different components contribute to a total:</p>
+
+            <div class="chart-container">
+                <h4>Stacked Bar Chart</h4>
+                <div id="stacked-bar"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Revenue by Product Category' },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Electronics', 'Clothing', 'Books'] },
+  xAxis: { data: ['Q1', 'Q2', 'Q3', 'Q4'] },
+  yAxis: {},
+  series: [
+    { name: 'Electronics', type: 'bar', stack: 'total', data: [120, 132, 101, 134] },
+    { name: 'Clothing', type: 'bar', stack: 'total', data: [220, 182, 191, 234] },
+    { name: 'Books', type: 'bar', stack: 'total', data: [150, 232, 201, 154] }
+  ]
+};</code></pre>
+            </div>
+
+            <h3>5. Bar Chart Styling and Customization</h3>
+            
+            <div class="chart-container">
+                <h4>Customized Bar Styles</h4>
+                <div id="styled-bars"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>series: [{
+  name: 'Sales',
+  type: 'bar',
+  data: [120, 200, 150, 80, 70, 110],
+  itemStyle: {                     // Bar styling
+    color: {
+      type: 'linear',
+      x: 0, y: 0, x2: 0, y2: 1,
+      colorStops: [{
+        offset: 0, color: '#4a90e2'
+      }, {
+        offset: 1, color: '#357abd'
+      }]
+    },
+    borderRadius: [4, 4, 0, 0]     // Rounded corners
+  },
+  emphasis: {                      // Hover effects
+    itemStyle: {
+      color: '#f39c12'
+    }
+  }
+}]</code></pre>
+            </div>
+
+            <h3>6. Advanced Bar Chart Features</h3>
+            
+            <div class="chart-grid">
+                <div class="chart-item">
+                    <h4>Grouped Bar Chart</h4>
+                    <div id="grouped-bar" class="chart"></div>
+                </div>
+                <div class="chart-item">
+                    <h4>Bar with Line Overlay</h4>
+                    <div id="bar-line" class="chart"></div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Grouped bars (default behavior)
+series: [
+  { name: '2023', type: 'bar', data: [120, 132, 101, 134] },
+  { name: '2024', type: 'bar', data: [220, 182, 191, 234] }
+]
+
+// Bar with line overlay
+series: [
+  { name: 'Sales', type: 'bar', data: [120, 200, 150, 80] },
+  { name: 'Target', type: 'line', data: [100, 180, 140, 90] }
+]</code></pre>
+            </div>
+
+            <h3>7. Interactive Bar Charts</h3>
+            
+            <div class="chart-container">
+                <h4>Interactive Bar Chart with Zoom</h4>
+                <div id="interactive-bar"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Interactive Bar Chart' },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'               // Shadow pointer
+    }
+  },
+  dataZoom: [{                     // Zoom control
+    type: 'inside',
+    start: 0,
+    end: 100
+  }, {
+    type: 'slider',
+    start: 0,
+    end: 100
+  }],
+  xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+  yAxis: {},
+  series: [{
+    type: 'bar',
+    data: [120, 200, 150, 80, 70, 110]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>8. Bar Chart with Value Labels</h3>
+            
+            <div class="chart-container">
+                <h4>Bar Chart with Data Labels</h4>
+                <div id="labeled-bars"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>series: [{
+  type: 'bar',
+  data: [120, 200, 150, 80, 70, 110],
+  label: {                         // Value labels
+    show: true,
+    position: 'top',
+    formatter: '{c}%'
+  }
+}]</code></pre>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Mini-Exercise</h4>
+                <p>Practice with the chart below:</p>
+                <ol>
+                    <li>Add a <strong>third series</strong> called "Marketing" with values <code>[80, 120, 90, 140, 100, 130]</code></li>
+                    <li>Change the chart to <strong>stacked bars</strong> by adding <code>stack: 'total'</code></li>
+                    <li>Add <strong>value labels</strong> on top of each bar</li>
+                    <li>Customize the <strong>bar colors</strong> using gradients</li>
+                </ol>
+            </div>
+
+            <div class="chart-container">
+                <h4>Practice Chart - Modify the Code</h4>
+                <div id="practice-chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Current configuration - try modifying this!
+var option = {
+  title: { text: 'Department Performance' },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Sales', 'Support'] },
+  xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+  yAxis: {},
+  series: [
+    { name: 'Sales', type: 'bar', data: [120, 200, 150, 80, 70, 110] },
+    { name: 'Support', type: 'bar', data: [90, 150, 120, 60, 50, 80] }
+  ]
+};</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Pro Tips for Bar Charts</h4>
+                <ul>
+                    <li><strong>Start at zero</strong> - Always start the Y-axis at 0 for accurate comparisons</li>
+                    <li><strong>Use consistent spacing</strong> - Keep bar widths and gaps consistent</li>
+                    <li><strong>Limit categories</strong> - Too many bars can become cluttered</li>
+                    <li><strong>Use horizontal bars</strong> for long category names or many categories</li>
+                    <li><strong>Add value labels</strong> for precise reading of values</li>
+                    <li><strong>Use color meaningfully</strong> - Different colors for different series</li>
+                </ul>
+            </div>
+
+            <h3>9. Real-World Examples</h3>
+            
+            <div class="chart-grid">
+                <div class="chart-item">
+                    <h4>Survey Results</h4>
+                    <div id="survey-results" class="chart"></div>
+                </div>
+                <div class="chart-item">
+                    <h4>Market Share</h4>
+                    <div id="market-share" class="chart"></div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <a href="chapter3-line-area.html" class="nav-btn">← Previous: Line & Area Charts</a>
+                <a href="chapter5-pie-donut.html" class="nav-btn">Next: Pie & Donut Charts →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Basic column chart
+        var basicColumn = echarts.init(document.getElementById('basic-column'));
+        var basicOption = {
+            title: {
+                text: 'Product Sales',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Shirts', 'Cardigans', 'Chiffons', 'Jeans', 'Shoes', 'Bags']
+            },
+            yAxis: {
+                name: 'Sales (units)'
+            },
+            series: [{
+                type: 'bar',
+                data: [5, 20, 36, 10, 15, 25],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        basicColumn.setOption(basicOption);
+
+        // Horizontal bar chart
+        var horizontalBar = echarts.init(document.getElementById('horizontal-bar'));
+        var horizontalOption = {
+            title: {
+                text: 'Population by Age Group',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                name: 'Population (millions)'
+            },
+            yAxis: {
+                data: ['0-14', '15-24', '25-54', '55-64', '65+']
+            },
+            series: [{
+                type: 'bar',
+                data: [120, 200, 150, 80, 70],
+                itemStyle: { color: '#f39c12' }
+            }]
+        };
+        horizontalBar.setOption(horizontalOption);
+
+        // Multiple series
+        var multipleSeries = echarts.init(document.getElementById('multiple-series'));
+        var multipleOption = {
+            title: {
+                text: 'Sales by Region',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Q1', 'Q2', 'Q3'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['North', 'South', 'East', 'West']
+            },
+            yAxis: {
+                name: 'Sales ($)'
+            },
+            series: [
+                {
+                    name: 'Q1',
+                    type: 'bar',
+                    data: [120, 132, 101, 134],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Q2',
+                    type: 'bar',
+                    data: [220, 182, 191, 234],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Q3',
+                    type: 'bar',
+                    data: [150, 232, 201, 154],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        multipleSeries.setOption(multipleOption);
+
+        // Stacked bar chart
+        var stackedBar = echarts.init(document.getElementById('stacked-bar'));
+        var stackedOption = {
+            title: {
+                text: 'Revenue by Product Category',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Electronics', 'Clothing', 'Books'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4']
+            },
+            yAxis: {
+                name: 'Revenue ($)'
+            },
+            series: [
+                {
+                    name: 'Electronics',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [120, 132, 101, 134],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Clothing',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [220, 182, 191, 234],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Books',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [150, 232, 201, 154],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        stackedBar.setOption(stackedOption);
+
+        // Styled bars
+        var styledBars = echarts.init(document.getElementById('styled-bars'));
+        var styledOption = {
+            title: {
+                text: 'Customized Bar Styles',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Value'
+            },
+            series: [{
+                type: 'bar',
+                data: [120, 200, 150, 80, 70, 110],
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [{
+                            offset: 0, color: '#4a90e2'
+                        }, {
+                            offset: 1, color: '#357abd'
+                        }]
+                    },
+                    borderRadius: [4, 4, 0, 0]
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: '#f39c12'
+                    }
+                }
+            }]
+        };
+        styledBars.setOption(styledOption);
+
+        // Grouped bar chart
+        var groupedBar = echarts.init(document.getElementById('grouped-bar'));
+        var groupedOption = {
+            title: {
+                text: 'Grouped Bar Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['2023', '2024'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4']
+            },
+            yAxis: {
+                name: 'Sales ($)'
+            },
+            series: [
+                {
+                    name: '2023',
+                    type: 'bar',
+                    data: [120, 132, 101, 134],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: '2024',
+                    type: 'bar',
+                    data: [220, 182, 191, 234],
+                    itemStyle: { color: '#f39c12' }
+                }
+            ]
+        };
+        groupedBar.setOption(groupedOption);
+
+        // Bar with line overlay
+        var barLine = echarts.init(document.getElementById('bar-line'));
+        var barLineOption = {
+            title: {
+                text: 'Bar with Line Overlay',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Target'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Value'
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [120, 200, 150, 80, 70, 110],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Target',
+                    type: 'line',
+                    data: [100, 180, 140, 90, 80, 120],
+                    itemStyle: { color: '#f39c12' }
+                }
+            ]
+        };
+        barLine.setOption(barLineOption);
+
+        // Interactive bar chart
+        var interactiveBar = echarts.init(document.getElementById('interactive-bar'));
+        var interactiveOption = {
+            title: {
+                text: 'Interactive Bar Chart with Zoom',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            dataZoom: [{
+                type: 'inside',
+                start: 0,
+                end: 100
+            }, {
+                type: 'slider',
+                start: 0,
+                end: 100
+            }],
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                name: 'Value'
+            },
+            series: [{
+                type: 'bar',
+                data: [120, 200, 150, 80, 70, 110, 130, 180, 160, 140, 190, 220],
+                itemStyle: { color: '#9b59b6' }
+            }]
+        };
+        interactiveBar.setOption(interactiveOption);
+
+        // Labeled bars
+        var labeledBars = echarts.init(document.getElementById('labeled-bars'));
+        var labeledOption = {
+            title: {
+                text: 'Bar Chart with Data Labels',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['A', 'B', 'C', 'D', 'E', 'F']
+            },
+            yAxis: {
+                name: 'Percentage (%)'
+            },
+            series: [{
+                type: 'bar',
+                data: [25, 40, 30, 50, 35, 45],
+                itemStyle: { color: '#e74c3c' },
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c}%'
+                }
+            }]
+        };
+        labeledBars.setOption(labeledOption);
+
+        // Practice chart
+        var practiceChart = echarts.init(document.getElementById('practice-chart'));
+        var practiceOption = {
+            title: {
+                text: 'Department Performance',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Support'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Performance Score'
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [120, 200, 150, 80, 70, 110],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Support',
+                    type: 'bar',
+                    data: [90, 150, 120, 60, 50, 80],
+                    itemStyle: { color: '#f39c12' }
+                }
+            ]
+        };
+        practiceChart.setOption(practiceOption);
+
+        // Survey results
+        var surveyResults = echarts.init(document.getElementById('survey-results'));
+        var surveyOption = {
+            title: {
+                text: 'Customer Satisfaction Survey',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied']
+            },
+            yAxis: {
+                name: 'Number of Responses'
+            },
+            series: [{
+                type: 'bar',
+                data: [45, 30, 15, 8, 2],
+                itemStyle: { color: '#27ae60' }
+            }]
+        };
+        surveyResults.setOption(surveyOption);
+
+        // Market share
+        var marketShare = echarts.init(document.getElementById('market-share'));
+        var marketOption = {
+            title: {
+                text: 'Market Share by Company',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Company A', 'Company B', 'Company C', 'Company D', 'Others']
+            },
+            yAxis: {
+                name: 'Market Share (%)'
+            },
+            series: [{
+                type: 'bar',
+                data: [35, 25, 20, 15, 5],
+                itemStyle: { color: '#34495e' }
+            }]
+        };
+        marketShare.setOption(marketOption);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            basicColumn.resize();
+            horizontalBar.resize();
+            multipleSeries.resize();
+            stackedBar.resize();
+            styledBars.resize();
+            groupedBar.resize();
+            barLine.resize();
+            interactiveBar.resize();
+            labeledBars.resize();
+            practiceChart.resize();
+            surveyResults.resize();
+            marketShare.resize();
+        });
+    </script>
+</body>
+</html>

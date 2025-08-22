@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Line and Area Charts - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Chapter 3: Line and Area Charts</h1>
+            <p>Mastering time series and trend visualizations with ECharts</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Line Charts: The Foundation of Time Series</h2>
+            
+            <p>Line charts are perfect for showing <strong>trends over time</strong>, <strong>continuous data</strong>, and <strong>relationships between variables</strong>. They're one of the most commonly used chart types in data visualization.</p>
+
+            <div class="tip-box">
+                <h4>🎯 When to Use Line Charts</h4>
+                <ul>
+                    <li><strong>Time series data</strong> - Stock prices, temperature, sales over time</li>
+                    <li><strong>Continuous data</strong> - Measurements, sensor readings</li>
+                    <li><strong>Trend analysis</strong> - Growth patterns, seasonal variations</li>
+                    <li><strong>Multiple series comparison</strong> - Different metrics over the same time period</li>
+                </ul>
+            </div>
+
+            <h3>1. Basic Line Chart</h3>
+            
+            <div class="chart-container">
+                <h4>Simple Line Chart Example</h4>
+                <div id="basic-line"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Monthly Visitors' },
+  xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] },
+  yAxis: {},
+  series: [{
+    type: 'line',
+    data: [820, 932, 901, 934, 1290]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>2. Multiple Lines</h3>
+            
+            <p>Compare multiple data series on the same chart:</p>
+
+            <div class="chart-container">
+                <h4>Multiple Line Series</h4>
+                <div id="multiple-lines"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Website Traffic Sources' },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Desktop', 'Mobile', 'Tablet'] },
+  xAxis: { data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
+  yAxis: {},
+  series: [
+    { name: 'Desktop', type: 'line', data: [120, 132, 101, 134, 90] },
+    { name: 'Mobile', type: 'line', data: [220, 182, 191, 234, 290] },
+    { name: 'Tablet', type: 'line', data: [150, 232, 201, 154, 190] }
+  ]
+};</code></pre>
+            </div>
+
+            <h3>3. Line Styling and Customization</h3>
+            
+            <div class="chart-container">
+                <h4>Customized Line Styles</h4>
+                <div id="styled-lines"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>series: [{
+  name: 'Sales',
+  type: 'line',
+  data: [120, 200, 150, 80, 70, 110],
+  smooth: true,                    // Smooth curves
+  lineStyle: {                     // Line styling
+    width: 3,
+    color: '#4a90e2'
+  },
+  itemStyle: {                     // Point styling
+    color: '#4a90e2',
+    borderWidth: 2,
+    borderColor: '#fff'
+  },
+  areaStyle: {                     // Area fill (optional)
+    color: {
+      type: 'linear',
+      x: 0, y: 0, x2: 0, y2: 1,
+      colorStops: [{
+        offset: 0, color: 'rgba(74, 144, 226, 0.3)'
+      }, {
+        offset: 1, color: 'rgba(74, 144, 226, 0.1)'
+      }]
+    }
+  }
+}]</code></pre>
+            </div>
+
+            <h2>Area Charts: Adding Depth to Trends</h2>
+            
+            <p>Area charts are line charts with the area below the line filled. They're great for showing <strong>volume</strong>, <strong>cumulative data</strong>, and <strong>part-to-whole relationships</strong>.</p>
+
+            <h3>4. Basic Area Chart</h3>
+            
+            <div class="chart-container">
+                <h4>Simple Area Chart</h4>
+                <div id="basic-area"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Rainfall Over Time' },
+  xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+  yAxis: { name: 'Rainfall (mm)' },
+  series: [{
+    type: 'line',
+    areaStyle: {},                 // Enable area fill
+    data: [20, 40, 30, 50, 60, 45]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>5. Stacked Area Chart</h3>
+            
+            <p>Show how different components contribute to a total over time:</p>
+
+            <div class="chart-container">
+                <h4>Stacked Area Chart</h4>
+                <div id="stacked-area"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Revenue by Product Category' },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Electronics', 'Clothing', 'Books'] },
+  xAxis: { data: ['Q1', 'Q2', 'Q3', 'Q4'] },
+  yAxis: {},
+  series: [
+    {
+      name: 'Electronics',
+      type: 'line',
+      stack: 'total',              // Enable stacking
+      areaStyle: {},
+      data: [120, 132, 101, 134]
+    },
+    {
+      name: 'Clothing',
+      type: 'line',
+      stack: 'total',
+      areaStyle: {},
+      data: [220, 182, 191, 234]
+    },
+    {
+      name: 'Books',
+      type: 'line',
+      stack: 'total',
+      areaStyle: {},
+      data: [150, 232, 201, 154]
+    }
+  ]
+};</code></pre>
+            </div>
+
+            <h3>6. Advanced Line Chart Features</h3>
+            
+            <div class="chart-grid">
+                <div class="chart-item">
+                    <h4>Step Line Chart</h4>
+                    <div id="step-line" class="chart"></div>
+                </div>
+                <div class="chart-item">
+                    <h4>Smooth Line Chart</h4>
+                    <div id="smooth-line" class="chart"></div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Step line chart
+series: [{
+  type: 'line',
+  step: 'start',                   // 'start', 'middle', 'end'
+  data: [120, 200, 150, 80, 70, 110]
+}]
+
+// Smooth line chart
+series: [{
+  type: 'line',
+  smooth: true,                    // Enable smooth curves
+  data: [120, 200, 150, 80, 70, 110]
+}]</code></pre>
+            </div>
+
+            <h3>7. Time Series with Real Dates</h3>
+            
+            <div class="chart-container">
+                <h4>Time Series Chart</h4>
+                <div id="time-series"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Stock Price Over Time' },
+  tooltip: { trigger: 'axis' },
+  xAxis: {
+    type: 'time',                  // Time axis
+    axisLabel: {
+      formatter: '{MM-dd}'         // Date format
+    }
+  },
+  yAxis: {},
+  series: [{
+    type: 'line',
+    data: [
+      ['2024-01-01', 100],
+      ['2024-01-02', 105],
+      ['2024-01-03', 98],
+      ['2024-01-04', 110],
+      ['2024-01-05', 108]
+    ]
+  }]
+};</code></pre>
+            </div>
+
+            <h3>8. Interactive Features</h3>
+            
+            <div class="chart-container">
+                <h4>Interactive Line Chart with Zoom</h4>
+                <div id="interactive-line"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Interactive Line Chart' },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross'                // Cross-hair pointer
+    }
+  },
+  dataZoom: [{                     // Zoom control
+    type: 'inside',
+    start: 0,
+    end: 100
+  }, {
+    type: 'slider',
+    start: 0,
+    end: 100
+  }],
+  xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+  yAxis: {},
+  series: [{
+    type: 'line',
+    data: [120, 200, 150, 80, 70, 110]
+  }]
+};</code></pre>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Mini-Exercise</h4>
+                <p>Practice with the chart below:</p>
+                <ol>
+                    <li>Add a <strong>third line series</strong> called "Marketing" with values <code>[80, 120, 90, 140, 100, 130]</code></li>
+                    <li>Change the <strong>line style</strong> to <code>smooth: true</code></li>
+                    <li>Add <strong>area styling</strong> to one of the series</li>
+                    <li>Customize the <strong>tooltip formatter</strong> to show values with currency symbols</li>
+                </ol>
+            </div>
+
+            <div class="chart-container">
+                <h4>Practice Chart - Modify the Code</h4>
+                <div id="practice-chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Current configuration - try modifying this!
+var option = {
+  title: { text: 'Department Performance' },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Sales', 'Support'] },
+  xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+  yAxis: {},
+  series: [
+    { name: 'Sales', type: 'line', data: [120, 200, 150, 80, 70, 110] },
+    { name: 'Support', type: 'line', data: [90, 150, 120, 60, 50, 80] }
+  ]
+};</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Pro Tips for Line Charts</h4>
+                <ul>
+                    <li><strong>Use smooth lines</strong> for better visual appeal with fewer data points</li>
+                    <li><strong>Limit series</strong> to 3-5 lines to avoid clutter</li>
+                    <li><strong>Use different line styles</strong> (solid, dashed, dotted) to distinguish series</li>
+                    <li><strong>Add area fills</strong> to emphasize volume or cumulative data</li>
+                    <li><strong>Include data points</strong> for precise value reading</li>
+                </ul>
+            </div>
+
+            <div class="navigation">
+                <a href="chapter2-core-concepts.html" class="nav-btn">← Previous: Core Concepts</a>
+                <a href="chapter4-bar-column.html" class="nav-btn">Next: Bar & Column Charts →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Basic line chart
+        var basicLine = echarts.init(document.getElementById('basic-line'));
+        var basicOption = {
+            title: {
+                text: 'Monthly Website Visitors',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Visitors'
+            },
+            series: [{
+                type: 'line',
+                data: [820, 932, 901, 934, 1290, 1330],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        basicLine.setOption(basicOption);
+
+        // Multiple lines
+        var multipleLines = echarts.init(document.getElementById('multiple-lines'));
+        var multipleOption = {
+            title: {
+                text: 'Website Traffic Sources',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Desktop', 'Mobile', 'Tablet'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                name: 'Visitors'
+            },
+            series: [
+                {
+                    name: 'Desktop',
+                    type: 'line',
+                    data: [120, 132, 101, 134, 90, 230, 210],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Mobile',
+                    type: 'line',
+                    data: [220, 182, 191, 234, 290, 330, 310],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Tablet',
+                    type: 'line',
+                    data: [150, 232, 201, 154, 190, 330, 410],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        multipleLines.setOption(multipleOption);
+
+        // Styled lines
+        var styledLines = echarts.init(document.getElementById('styled-lines'));
+        var styledOption = {
+            title: {
+                text: 'Customized Line Styles',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Profit', 'Cost'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Amount ($)'
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'line',
+                    smooth: true,
+                    data: [120, 200, 150, 80, 70, 110],
+                    lineStyle: { width: 3, color: '#4a90e2' },
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Profit',
+                    type: 'line',
+                    smooth: true,
+                    data: [20, 40, 30, 15, 10, 25],
+                    lineStyle: { width: 3, color: '#f39c12' },
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Cost',
+                    type: 'line',
+                    smooth: true,
+                    data: [100, 160, 120, 65, 60, 85],
+                    lineStyle: { width: 3, color: '#e74c3c' },
+                    itemStyle: { color: '#e74c3c' }
+                }
+            ]
+        };
+        styledLines.setOption(styledOption);
+
+        // Basic area chart
+        var basicArea = echarts.init(document.getElementById('basic-area'));
+        var areaOption = {
+            title: {
+                text: 'Rainfall Over Time',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Rainfall (mm)'
+            },
+            series: [{
+                type: 'line',
+                areaStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [{
+                            offset: 0, color: 'rgba(74, 144, 226, 0.3)'
+                        }, {
+                            offset: 1, color: 'rgba(74, 144, 226, 0.1)'
+                        }]
+                    }
+                },
+                data: [20, 40, 30, 50, 60, 45],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        basicArea.setOption(areaOption);
+
+        // Stacked area chart
+        var stackedArea = echarts.init(document.getElementById('stacked-area'));
+        var stackedOption = {
+            title: {
+                text: 'Revenue by Product Category',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Electronics', 'Clothing', 'Books'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4']
+            },
+            yAxis: {
+                name: 'Revenue ($)'
+            },
+            series: [
+                {
+                    name: 'Electronics',
+                    type: 'line',
+                    stack: 'total',
+                    areaStyle: { color: '#4a90e2' },
+                    data: [120, 132, 101, 134],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Clothing',
+                    type: 'line',
+                    stack: 'total',
+                    areaStyle: { color: '#f39c12' },
+                    data: [220, 182, 191, 234],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Books',
+                    type: 'line',
+                    stack: 'total',
+                    areaStyle: { color: '#27ae60' },
+                    data: [150, 232, 201, 154],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        stackedArea.setOption(stackedOption);
+
+        // Step line chart
+        var stepLine = echarts.init(document.getElementById('step-line'));
+        var stepOption = {
+            title: {
+                text: 'Step Line Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {},
+            series: [{
+                type: 'line',
+                step: 'start',
+                data: [120, 200, 150, 80, 70, 110],
+                itemStyle: { color: '#4a90e2' }
+            }]
+        };
+        stepLine.setOption(stepOption);
+
+        // Smooth line chart
+        var smoothLine = echarts.init(document.getElementById('smooth-line'));
+        var smoothOption = {
+            title: {
+                text: 'Smooth Line Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {},
+            series: [{
+                type: 'line',
+                smooth: true,
+                data: [120, 200, 150, 80, 70, 110],
+                itemStyle: { color: '#f39c12' }
+            }]
+        };
+        smoothLine.setOption(smoothOption);
+
+        // Time series chart
+        var timeSeries = echarts.init(document.getElementById('time-series'));
+        var timeOption = {
+            title: {
+                text: 'Stock Price Over Time',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: '{MM-dd}'
+                }
+            },
+            yAxis: {
+                name: 'Price ($)'
+            },
+            series: [{
+                type: 'line',
+                data: [
+                    ['2024-01-01', 100],
+                    ['2024-01-02', 105],
+                    ['2024-01-03', 98],
+                    ['2024-01-04', 110],
+                    ['2024-01-05', 108],
+                    ['2024-01-06', 115],
+                    ['2024-01-07', 112]
+                ],
+                itemStyle: { color: '#27ae60' }
+            }]
+        };
+        timeSeries.setOption(timeOption);
+
+        // Interactive line chart
+        var interactiveLine = echarts.init(document.getElementById('interactive-line'));
+        var interactiveOption = {
+            title: {
+                text: 'Interactive Line Chart with Zoom',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            dataZoom: [{
+                type: 'inside',
+                start: 0,
+                end: 100
+            }, {
+                type: 'slider',
+                start: 0,
+                end: 100
+            }],
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                name: 'Value'
+            },
+            series: [{
+                type: 'line',
+                data: [120, 200, 150, 80, 70, 110, 130, 180, 160, 140, 190, 220],
+                itemStyle: { color: '#9b59b6' }
+            }]
+        };
+        interactiveLine.setOption(interactiveOption);
+
+        // Practice chart
+        var practiceChart = echarts.init(document.getElementById('practice-chart'));
+        var practiceOption = {
+            title: {
+                text: 'Department Performance',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Support'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Performance Score'
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'line',
+                    data: [120, 200, 150, 80, 70, 110],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Support',
+                    type: 'line',
+                    data: [90, 150, 120, 60, 50, 80],
+                    itemStyle: { color: '#f39c12' }
+                }
+            ]
+        };
+        practiceChart.setOption(practiceOption);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            basicLine.resize();
+            multipleLines.resize();
+            styledLines.resize();
+            basicArea.resize();
+            stackedArea.resize();
+            stepLine.resize();
+            smoothLine.resize();
+            timeSeries.resize();
+            interactiveLine.resize();
+            practiceChart.resize();
+        });
+    </script>
+</body>
+</html>

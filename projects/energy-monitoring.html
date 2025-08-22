@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Monitoring Dashboard - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .energy-dashboard {
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c59 50%, #7fb069 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .dashboard-subtitle {
+            text-align: center;
+            margin: 10px 0 0 0;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        
+        .energy-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .energy-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .energy-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .energy-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .energy-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .energy-trend {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .trend-positive { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
+        .trend-negative { background: rgba(239, 68, 68, 0.3); color: #f87171; }
+        .trend-neutral { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+        
+        .power-sources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .source-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .source-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .source-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .status-active { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
+        .status-warning { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+        .status-offline { background: rgba(239, 68, 68, 0.3); color: #f87171; }
+        
+        .source-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .metric {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chart-title {
+            margin: 0 0 20px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .controls-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        .control-select option {
+            background: #2d5016;
+            color: white;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-btn.active {
+            background: #4ade80;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            
+            .energy-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .power-sources {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body class="energy-dashboard">
+    <div class="container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">⚡ Energy Monitoring Dashboard</h1>
+            <p class="dashboard-subtitle">Real-time energy consumption and renewable power monitoring</p>
+        </header>
+
+        <!-- Energy Overview -->
+        <div class="energy-overview">
+            <div class="energy-card">
+                <div class="energy-value" id="total-consumption">2,847 kW</div>
+                <div class="energy-label">Total Consumption</div>
+                <div class="energy-trend trend-negative" id="consumption-trend">+5.2% vs last hour</div>
+            </div>
+            <div class="energy-card">
+                <div class="energy-value" id="solar-generation">1,234 kW</div>
+                <div class="energy-label">Solar Generation</div>
+                <div class="energy-trend trend-positive" id="solar-trend">+12.8% vs last hour</div>
+            </div>
+            <div class="energy-card">
+                <div class="energy-value" id="wind-generation">567 kW</div>
+                <div class="energy-label">Wind Generation</div>
+                <div class="energy-trend trend-neutral" id="wind-trend">-2.1% vs last hour</div>
+            </div>
+            <div class="energy-card">
+                <div class="energy-value" id="efficiency">78.5%</div>
+                <div class="energy-label">System Efficiency</div>
+                <div class="energy-trend trend-positive" id="efficiency-trend">+1.2% vs last hour</div>
+            </div>
+        </div>
+
+        <!-- Power Sources -->
+        <div class="power-sources">
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-name">Solar Farm A</div>
+                    <div class="source-status status-active">Active</div>
+                </div>
+                <div class="source-metrics">
+                    <div class="metric">
+                        <div class="metric-value">789 kW</div>
+                        <div class="metric-label">Current Output</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">92%</div>
+                        <div class="metric-label">Efficiency</div>
+                    </div>
+                </div>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-name">Wind Turbine B</div>
+                    <div class="source-status status-active">Active</div>
+                </div>
+                <div class="source-metrics">
+                    <div class="metric">
+                        <div class="metric-value">445 kW</div>
+                        <div class="metric-label">Current Output</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">78%</div>
+                        <div class="metric-label">Efficiency</div>
+                    </div>
+                </div>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-name">Battery Storage</div>
+                    <div class="source-status status-warning">Charging</div>
+                </div>
+                <div class="source-metrics">
+                    <div class="metric">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Charge Level</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">2.1 MW</div>
+                        <div class="metric-label">Capacity</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="controls-group">
+                <label>Time Range:</label>
+                <select class="control-select" id="time-range">
+                    <option value="1h">Last Hour</option>
+                    <option value="24h" selected>Last 24 Hours</option>
+                    <option value="7d">Last 7 Days</option>
+                    <option value="30d">Last 30 Days</option>
+                </select>
+                
+                <label>Data Source:</label>
+                <select class="control-select" id="data-source">
+                    <option value="all" selected>All Sources</option>
+                    <option value="solar">Solar Only</option>
+                    <option value="wind">Wind Only</option>
+                    <option value="battery">Battery Only</option>
+                </select>
+                
+                <label>Display Mode:</label>
+                <select class="control-select" id="display-mode">
+                    <option value="real-time" selected>Real-time</option>
+                    <option value="historical">Historical</option>
+                    <option value="forecast">Forecast</option>
+                </select>
+                
+                <button class="control-btn" onclick="updateCharts()">Update</button>
+                <button class="control-btn" onclick="toggleRealTime()" id="realtime-btn">Start Real-time</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Power Consumption -->
+            <div class="chart-container">
+                <h3 class="chart-title">Power Consumption Over Time</h3>
+                <div id="consumption-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Energy Mix -->
+            <div class="chart-container">
+                <h3 class="chart-title">Energy Source Mix</h3>
+                <div id="energy-mix-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Solar Performance -->
+            <div class="chart-container">
+                <h3 class="chart-title">Solar Panel Performance</h3>
+                <div id="solar-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Wind Performance -->
+            <div class="chart-container">
+                <h3 class="chart-title">Wind Turbine Performance</h3>
+                <div id="wind-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Environmental Impact -->
+            <div class="chart-container">
+                <h3 class="chart-title">Environmental Impact</h3>
+                <div id="environmental-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- System Health -->
+            <div class="chart-container">
+                <h3 class="chart-title">System Health Monitoring</h3>
+                <div id="health-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script>
+        // Initialize charts
+        var consumptionChart = echarts.init(document.getElementById('consumption-chart'));
+        var energyMixChart = echarts.init(document.getElementById('energy-mix-chart'));
+        var solarChart = echarts.init(document.getElementById('solar-chart'));
+        var windChart = echarts.init(document.getElementById('wind-chart'));
+        var environmentalChart = echarts.init(document.getElementById('environmental-chart'));
+        var healthChart = echarts.init(document.getElementById('health-chart'));
+
+        // Generate time data
+        function generateTimeData(hours = 24) {
+            var data = [];
+            var now = new Date();
+            for (var i = hours - 1; i >= 0; i--) {
+                var time = new Date(now.getTime() - i * 60 * 60 * 1000);
+                data.push(time.getHours() + ':00');
+            }
+            return data;
+        }
+
+        // Power Consumption Chart
+        var consumptionOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Total Consumption', 'Solar Generation', 'Wind Generation'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: generateTimeData(),
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Power (kW)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Total Consumption',
+                    type: 'line',
+                    smooth: true,
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 1000) + 2000),
+                    itemStyle: { color: '#f87171' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(248, 113, 113, 0.3)' },
+                                { offset: 1, color: 'rgba(248, 113, 113, 0.1)' }
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Solar Generation',
+                    type: 'line',
+                    smooth: true,
+                    data: Array.from({length: 24}, (_, i) => {
+                        // Simulate solar pattern (higher during day)
+                        var hour = i;
+                        if (hour >= 6 && hour <= 18) {
+                            return Math.floor(Math.random() * 800) + 400;
+                        } else {
+                            return Math.floor(Math.random() * 100);
+                        }
+                    }),
+                    itemStyle: { color: '#fbbf24' }
+                },
+                {
+                    name: 'Wind Generation',
+                    type: 'line',
+                    smooth: true,
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 400) + 300),
+                    itemStyle: { color: '#60a5fa' }
+                }
+            ]
+        };
+
+        // Energy Mix Chart
+        var energyMixOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} kW ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Energy Mix',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['60%', '50%'],
+                    data: [
+                        { value: 1234, name: 'Solar', itemStyle: { color: '#fbbf24' } },
+                        { value: 567, name: 'Wind', itemStyle: { color: '#60a5fa' } },
+                        { value: 1046, name: 'Grid', itemStyle: { color: '#f87171' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Solar Performance Chart
+        var solarOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Power Output', 'Efficiency', 'Temperature'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: generateTimeData(),
+                axisLabel: { color: 'white' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Power (kW)',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                },
+                {
+                    type: 'value',
+                    name: 'Temperature (°C)',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Power Output',
+                    type: 'bar',
+                    data: Array.from({length: 24}, (_, i) => {
+                        var hour = i;
+                        if (hour >= 6 && hour <= 18) {
+                            return Math.floor(Math.random() * 800) + 400;
+                        } else {
+                            return Math.floor(Math.random() * 100);
+                        }
+                    }),
+                    itemStyle: { color: '#fbbf24' }
+                },
+                {
+                    name: 'Efficiency',
+                    type: 'line',
+                    yAxisIndex: 0,
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 20) + 80),
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Temperature',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 20) + 15),
+                    itemStyle: { color: '#f87171' }
+                }
+            ]
+        };
+
+        // Wind Performance Chart
+        var windOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Wind Speed', 'Power Output', 'Turbine Speed'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: generateTimeData(),
+                axisLabel: { color: 'white' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Speed (m/s)',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                },
+                {
+                    type: 'value',
+                    name: 'Power (kW)',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Wind Speed',
+                    type: 'line',
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 15) + 5),
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'Power Output',
+                    type: 'bar',
+                    yAxisIndex: 1,
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 400) + 200),
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Turbine Speed',
+                    type: 'line',
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 30) + 10),
+                    itemStyle: { color: '#fbbf24' }
+                }
+            ]
+        };
+
+        // Environmental Impact Chart
+        var environmentalOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item'
+            },
+            radar: {
+                indicator: [
+                    { name: 'CO2 Reduction', max: 100 },
+                    { name: 'Energy Efficiency', max: 100 },
+                    { name: 'Renewable %', max: 100 },
+                    { name: 'Carbon Footprint', max: 100 },
+                    { name: 'Sustainability', max: 100 },
+                    { name: 'Green Energy', max: 100 }
+                ],
+                axisName: {
+                    color: 'white'
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: false
+                }
+            },
+            series: [
+                {
+                    name: 'Environmental Metrics',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [85, 78, 92, 75, 88, 90],
+                            name: 'Current Performance',
+                            itemStyle: { color: '#4ade80' },
+                            areaStyle: {
+                                color: 'rgba(74, 222, 128, 0.3)'
+                            }
+                        },
+                        {
+                            value: [70, 65, 75, 60, 70, 75],
+                            name: 'Industry Average',
+                            itemStyle: { color: '#60a5fa' },
+                            areaStyle: {
+                                color: 'rgba(96, 165, 250, 0.3)'
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // System Health Chart
+        var healthOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['System Health', 'Performance', 'Reliability'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Solar Farm A', 'Wind Turbine B', 'Battery Storage', 'Grid Connection', 'Monitoring System'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Health Score (%)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'System Health',
+                    type: 'bar',
+                    data: [95, 88, 92, 85, 98],
+                    itemStyle: { color: '#4ade80' }
+                },
+                {
+                    name: 'Performance',
+                    type: 'bar',
+                    data: [92, 85, 90, 82, 96],
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'Reliability',
+                    type: 'bar',
+                    data: [98, 90, 95, 88, 99],
+                    itemStyle: { color: '#fbbf24' }
+                }
+            ]
+        };
+
+        // Set chart options
+        consumptionChart.setOption(consumptionOption);
+        energyMixChart.setOption(energyMixOption);
+        solarChart.setOption(solarOption);
+        windChart.setOption(windOption);
+        environmentalChart.setOption(environmentalOption);
+        healthChart.setOption(healthOption);
+
+        // Control functions
+        function updateCharts() {
+            const timeRange = document.getElementById('time-range').value;
+            const dataSource = document.getElementById('data-source').value;
+            const displayMode = document.getElementById('display-mode').value;
+            
+            console.log('Updating charts:', { timeRange, dataSource, displayMode });
+            
+            // Simulate data update
+            updateEnergyData();
+        }
+
+        function toggleRealTime() {
+            const btn = document.getElementById('realtime-btn');
+            if (btn.textContent === 'Start Real-time') {
+                btn.textContent = 'Stop Real-time';
+                btn.classList.add('active');
+                startRealTimeUpdates();
+            } else {
+                btn.textContent = 'Start Real-time';
+                btn.classList.remove('active');
+                stopRealTimeUpdates();
+            }
+        }
+
+        function updateEnergyData() {
+            // Simulate real-time energy data updates
+            const consumption = Math.floor(Math.random() * 500) + 2500;
+            const solar = Math.floor(Math.random() * 300) + 1000;
+            const wind = Math.floor(Math.random() * 200) + 400;
+            const efficiency = (Math.random() * 10 + 75).toFixed(1);
+            
+            document.getElementById('total-consumption').textContent = consumption + ' kW';
+            document.getElementById('solar-generation').textContent = solar + ' kW';
+            document.getElementById('wind-generation').textContent = wind + ' kW';
+            document.getElementById('efficiency').textContent = efficiency + '%';
+        }
+
+        let realTimeInterval;
+
+        function startRealTimeUpdates() {
+            realTimeInterval = setInterval(() => {
+                updateEnergyData();
+            }, 5000);
+        }
+
+        function stopRealTimeUpdates() {
+            if (realTimeInterval) {
+                clearInterval(realTimeInterval);
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            consumptionChart.resize();
+            energyMixChart.resize();
+            solarChart.resize();
+            windChart.resize();
+            environmentalChart.resize();
+            healthChart.resize();
+        });
+    </script>
+</body>
+</html>

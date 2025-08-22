@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Pie and Donut Charts - Mastering ECharts</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="chapter-header">
+            <h1>Chapter 5: Pie and Donut Charts</h1>
+            <p class="chapter-subtitle">Visualizing proportions and percentages with circular charts</p>
+            <div class="chapter-navigation">
+                <a href="chapter4-bar-column.html" class="nav-btn prev">← Chapter 4: Bar & Column Charts</a>
+                <a href="chapter6-scatter-bubble.html" class="nav-btn next">Chapter 6: Scatter & Bubble Charts →</a>
+            </div>
+        </header>
+
+        <div class="chapter-content">
+            <section class="content-section">
+                <h2>Introduction to Pie Charts</h2>
+                <p>Pie charts are perfect for showing proportions and percentages. They work best when you have a limited number of categories (typically 5-7) and want to emphasize the relationship between parts and the whole.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 Best Practices for Pie Charts</h3>
+                    <ul>
+                        <li>Use 5-7 categories maximum for clarity</li>
+                        <li>Order slices from largest to smallest</li>
+                        <li>Use contrasting colors for adjacent slices</li>
+                        <li>Include percentage labels for better readability</li>
+                        <li>Consider using donut charts for modern aesthetics</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Basic Pie Chart</h2>
+                <p>Let's start with a simple pie chart showing market share distribution:</p>
+                
+                <div class="chart-container">
+                    <div id="basic-pie" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var basicPie = echarts.init(document.getElementById('basic-pie'));
+var basicOption = {
+    title: {
+        text: 'Market Share by Company',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    series: [{
+        name: 'Market Share',
+        type: 'pie',
+        radius: '50%',
+        data: [
+            {value: 35, name: 'Company A'},
+            {value: 25, name: 'Company B'},
+            {value: 20, name: 'Company C'},
+            {value: 15, name: 'Company D'},
+            {value: 5, name: 'Others'}
+        ],
+        emphasis: {
+            itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }]
+};
+basicPie.setOption(basicOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Donut Chart</h2>
+                <p>Donut charts are modern variations of pie charts with a hole in the center. They're great for displaying additional information in the center:</p>
+                
+                <div class="chart-container">
+                    <div id="donut-chart" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var donutChart = echarts.init(document.getElementById('donut-chart'));
+var donutOption = {
+    title: {
+        text: 'Revenue by Department',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    series: [{
+        name: 'Revenue',
+        type: 'pie',
+        radius: ['40%', '70%'], // Creates donut effect
+        avoidLabelOverlap: false,
+        label: {
+            show: false,
+            position: 'center'
+        },
+        emphasis: {
+            label: {
+                show: true,
+                fontSize: '30',
+                fontWeight: 'bold'
+            }
+        },
+        labelLine: {
+            show: false
+        },
+        data: [
+            {value: 1048, name: 'Sales'},
+            {value: 735, name: 'Marketing'},
+            {value: 580, name: 'Engineering'},
+            {value: 484, name: 'Support'},
+            {value: 300, name: 'HR'}
+        ]
+    }]
+};
+donutChart.setOption(donutOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Styled Pie Chart with Labels</h2>
+                <p>This example shows how to customize colors, add labels, and create a more visually appealing chart:</p>
+                
+                <div class="chart-container">
+                    <div id="styled-pie" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var styledPie = echarts.init(document.getElementById('styled-pie'));
+var styledOption = {
+    title: {
+        text: 'Website Traffic Sources',
+        left: 'center',
+        textStyle: {
+            color: '#333'
+        }
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        top: 'middle'
+    },
+    series: [{
+        name: 'Traffic Sources',
+        type: 'pie',
+        radius: '50%',
+        center: ['60%', '50%'],
+        data: [
+            {value: 1048, name: 'Organic Search', itemStyle: {color: '#4a90e2'}},
+            {value: 735, name: 'Direct', itemStyle: {color: '#f39c12'}},
+            {value: 580, name: 'Social Media', itemStyle: {color: '#27ae60'}},
+            {value: 484, name: 'Email', itemStyle: {color: '#e74c3c'}},
+            {value: 300, name: 'Referral', itemStyle: {color: '#9b59b6'}}
+        ],
+        label: {
+            show: true,
+            formatter: '{b}: {d}%'
+        },
+        labelLine: {
+            show: true
+        },
+        emphasis: {
+            itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }]
+};
+styledPie.setOption(styledOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Nested Donut Chart</h2>
+                <p>Create a nested donut chart to show hierarchical data or multiple metrics:</p>
+                
+                <div class="chart-container">
+                    <div id="nested-donut" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var nestedDonut = echarts.init(document.getElementById('nested-donut'));
+var nestedOption = {
+    title: {
+        text: 'Product Performance Overview',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    legend: {
+        top: '5%',
+        left: 'center'
+    },
+    series: [
+        {
+            name: 'Sales',
+            type: 'pie',
+            radius: ['0%', '30%'],
+            center: ['50%', '50%'],
+            data: [
+                {value: 335, name: 'Direct Sales'},
+                {value: 310, name: 'Email Marketing'},
+                {value: 234, name: 'Affiliate Ads'},
+                {value: 135, name: 'Video Ads'},
+                {value: 1548, name: 'Search Engine'}
+            ]
+        },
+        {
+            name: 'Revenue',
+            type: 'pie',
+            radius: ['45%', '60%'],
+            center: ['50%', '50%'],
+            data: [
+                {value: 1048, name: 'Product A'},
+                {value: 735, name: 'Product B'},
+                {value: 580, name: 'Product C'},
+                {value: 484, name: 'Product D'},
+                {value: 300, name: 'Product E'}
+            ]
+        }
+    ]
+};
+nestedDonut.setOption(nestedOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Rose Chart (Polar Bar)</h2>
+                <p>Rose charts are circular bar charts that combine the best of pie and bar charts:</p>
+                
+                <div class="chart-container">
+                    <div id="rose-chart" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var roseChart = echarts.init(document.getElementById('rose-chart'));
+var roseOption = {
+    title: {
+        text: 'Monthly Sales Performance',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+        top: '5%',
+        left: 'center'
+    },
+    series: [{
+        name: 'Sales',
+        type: 'pie',
+        radius: [30, 110],
+        roseType: 'area', // Enable rose chart
+        itemStyle: {
+            borderRadius: 8
+        },
+        data: [
+            {value: 40, name: 'Jan'},
+            {value: 38, name: 'Feb'},
+            {value: 32, name: 'Mar'},
+            {value: 30, name: 'Apr'},
+            {value: 28, name: 'May'},
+            {value: 26, name: 'Jun'},
+            {value: 22, name: 'Jul'},
+            {value: 18, name: 'Aug'}
+        ]
+    }]
+};
+roseChart.setOption(roseOption);</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Interactive Features</h2>
+                <p>Pie charts support various interactive features like highlighting, selection, and dynamic updates:</p>
+                
+                <div class="chart-container">
+                    <div id="interactive-pie" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="code-block">
+                    <h3>Code:</h3>
+                    <pre><code>var interactivePie = echarts.init(document.getElementById('interactive-pie'));
+var interactiveOption = {
+    title: {
+        text: 'Interactive Pie Chart',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left'
+    },
+    series: [{
+        name: 'Access From',
+        type: 'pie',
+        radius: '50%',
+        center: ['60%', '50%'],
+        data: [
+            {value: 1048, name: 'Search Engine'},
+            {value: 735, name: 'Direct'},
+            {value: 580, name: 'Email'},
+            {value: 484, name: 'Union Ads'},
+            {value: 300, name: 'Video Ads'}
+        ],
+        emphasis: {
+            itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        },
+        select: {
+            disabled: false
+        },
+        selectedMode: 'single'
+    }]
+};
+interactivePie.setOption(interactiveOption);
+
+// Add click event
+interactivePie.on('click', function(params) {
+    console.log('Clicked on:', params.name, 'Value:', params.value);
+});</code></pre>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Practice Exercise</h2>
+                <div class="exercise-box">
+                    <h3>🎯 Your Turn!</h3>
+                    <p>Create a pie chart showing the distribution of programming languages used in a software company. Include at least 6 languages with different percentages.</p>
+                    
+                    <div class="chart-container">
+                        <div id="practice-pie" style="width: 100%; height: 400px;"></div>
+                    </div>
+                    
+                    <div class="code-editor">
+                        <h4>Your Code:</h4>
+                        <textarea id="practice-code" rows="15" placeholder="// Write your ECharts option here
+var option = {
+    // Your configuration
+};"></textarea>
+                        <button onclick="runPracticeCode()" class="run-btn">Run Code</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Key Takeaways</h2>
+                <div class="key-points">
+                    <div class="point">
+                        <h3>📊 Chart Types</h3>
+                        <ul>
+                            <li>Basic pie charts for simple proportions</li>
+                            <li>Donut charts for modern aesthetics</li>
+                            <li>Rose charts for comparing values</li>
+                            <li>Nested donuts for hierarchical data</li>
+                        </ul>
+                    </div>
+                    <div class="point">
+                        <h3>🎨 Styling Options</h3>
+                        <ul>
+                            <li>Custom colors with <code>itemStyle</code></li>
+                            <li>Labels and label lines</li>
+                            <li>Shadows and emphasis effects</li>
+                            <li>Border radius for rounded slices</li>
+                        </ul>
+                    </div>
+                    <div class="point">
+                        <h3>⚡ Interactive Features</h3>
+                        <ul>
+                            <li>Tooltips with custom formatting</li>
+                            <li>Click events and selection</li>
+                            <li>Hover effects and highlighting</li>
+                            <li>Legend interactions</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chapter-navigation">
+                <a href="chapter4-bar-column.html" class="nav-btn prev">← Chapter 4: Bar & Column Charts</a>
+                <a href="chapter6-scatter-bubble.html" class="nav-btn next">Chapter 6: Scatter & Bubble Charts →</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script>
+        // Basic Pie Chart
+        var basicPie = echarts.init(document.getElementById('basic-pie'));
+        var basicOption = {
+            title: {
+                text: 'Market Share by Company',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            series: [{
+                name: 'Market Share',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    {value: 35, name: 'Company A'},
+                    {value: 25, name: 'Company B'},
+                    {value: 20, name: 'Company C'},
+                    {value: 15, name: 'Company D'},
+                    {value: 5, name: 'Others'}
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        basicPie.setOption(basicOption);
+
+        // Donut Chart
+        var donutChart = echarts.init(document.getElementById('donut-chart'));
+        var donutOption = {
+            title: {
+                text: 'Revenue by Department',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [{
+                name: 'Revenue',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {value: 1048, name: 'Sales'},
+                    {value: 735, name: 'Marketing'},
+                    {value: 580, name: 'Engineering'},
+                    {value: 484, name: 'Support'},
+                    {value: 300, name: 'HR'}
+                ]
+            }]
+        };
+        donutChart.setOption(donutOption);
+
+        // Styled Pie Chart
+        var styledPie = echarts.init(document.getElementById('styled-pie'));
+        var styledOption = {
+            title: {
+                text: 'Website Traffic Sources',
+                left: 'center',
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                top: 'middle'
+            },
+            series: [{
+                name: 'Traffic Sources',
+                type: 'pie',
+                radius: '50%',
+                center: ['60%', '50%'],
+                data: [
+                    {value: 1048, name: 'Organic Search', itemStyle: {color: '#4a90e2'}},
+                    {value: 735, name: 'Direct', itemStyle: {color: '#f39c12'}},
+                    {value: 580, name: 'Social Media', itemStyle: {color: '#27ae60'}},
+                    {value: 484, name: 'Email', itemStyle: {color: '#e74c3c'}},
+                    {value: 300, name: 'Referral', itemStyle: {color: '#9b59b6'}}
+                ],
+                label: {
+                    show: true,
+                    formatter: '{b}: {d}%'
+                },
+                labelLine: {
+                    show: true
+                },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        styledPie.setOption(styledOption);
+
+        // Nested Donut Chart
+        var nestedDonut = echarts.init(document.getElementById('nested-donut'));
+        var nestedOption = {
+            title: {
+                text: 'Product Performance Overview',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'pie',
+                    radius: ['0%', '30%'],
+                    center: ['50%', '50%'],
+                    data: [
+                        {value: 335, name: 'Direct Sales'},
+                        {value: 310, name: 'Email Marketing'},
+                        {value: 234, name: 'Affiliate Ads'},
+                        {value: 135, name: 'Video Ads'},
+                        {value: 1548, name: 'Search Engine'}
+                    ]
+                },
+                {
+                    name: 'Revenue',
+                    type: 'pie',
+                    radius: ['45%', '60%'],
+                    center: ['50%', '50%'],
+                    data: [
+                        {value: 1048, name: 'Product A'},
+                        {value: 735, name: 'Product B'},
+                        {value: 580, name: 'Product C'},
+                        {value: 484, name: 'Product D'},
+                        {value: 300, name: 'Product E'}
+                    ]
+                }
+            ]
+        };
+        nestedDonut.setOption(nestedOption);
+
+        // Rose Chart
+        var roseChart = echarts.init(document.getElementById('rose-chart'));
+        var roseOption = {
+            title: {
+                text: 'Monthly Sales Performance',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            series: [{
+                name: 'Sales',
+                type: 'pie',
+                radius: [30, 110],
+                roseType: 'area',
+                itemStyle: {
+                    borderRadius: 8
+                },
+                data: [
+                    {value: 40, name: 'Jan'},
+                    {value: 38, name: 'Feb'},
+                    {value: 32, name: 'Mar'},
+                    {value: 30, name: 'Apr'},
+                    {value: 28, name: 'May'},
+                    {value: 26, name: 'Jun'},
+                    {value: 22, name: 'Jul'},
+                    {value: 18, name: 'Aug'}
+                ]
+            }]
+        };
+        roseChart.setOption(roseOption);
+
+        // Interactive Pie Chart
+        var interactivePie = echarts.init(document.getElementById('interactive-pie'));
+        var interactiveOption = {
+            title: {
+                text: 'Interactive Pie Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [{
+                name: 'Access From',
+                type: 'pie',
+                radius: '50%',
+                center: ['60%', '50%'],
+                data: [
+                    {value: 1048, name: 'Search Engine'},
+                    {value: 735, name: 'Direct'},
+                    {value: 580, name: 'Email'},
+                    {value: 484, name: 'Union Ads'},
+                    {value: 300, name: 'Video Ads'}
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                select: {
+                    disabled: false
+                },
+                selectedMode: 'single'
+            }]
+        };
+        interactivePie.setOption(interactiveOption);
+
+        // Add click event
+        interactivePie.on('click', function(params) {
+            console.log('Clicked on:', params.name, 'Value:', params.value);
+        });
+
+        // Practice Chart
+        var practiceChart = echarts.init(document.getElementById('practice-pie'));
+        var practiceOption = {
+            title: {
+                text: 'Programming Languages Usage',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c}%'
+            },
+            series: [{
+                name: 'Languages',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    {value: 35, name: 'JavaScript'},
+                    {value: 25, name: 'Python'},
+                    {value: 20, name: 'Java'},
+                    {value: 15, name: 'C#'},
+                    {value: 5, name: 'Others'}
+                ]
+            }]
+        };
+        practiceChart.setOption(practiceOption);
+
+        // Practice code runner
+        function runPracticeCode() {
+            var code = document.getElementById('practice-code').value;
+            try {
+                // Clear previous chart
+                practiceChart.clear();
+                
+                // Execute the code
+                eval(code);
+                
+                // Apply the option
+                practiceChart.setOption(option);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            basicPie.resize();
+            donutChart.resize();
+            styledPie.resize();
+            nestedDonut.resize();
+            roseChart.resize();
+            interactivePie.resize();
+            practiceChart.resize();
+        });
+    </script>
+</body>
+</html>

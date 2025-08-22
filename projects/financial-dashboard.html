@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .financial-dashboard {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .dashboard-subtitle {
+            text-align: center;
+            margin: 10px 0 0 0;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        
+        .market-status {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .status-indicator {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .status-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .status-positive { color: #4ade80; }
+        .status-negative { color: #f87171; }
+        .status-neutral { color: #fbbf24; }
+        
+        .portfolio-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .portfolio-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .portfolio-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .portfolio-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .portfolio-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        
+        .portfolio-change {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chart-title {
+            margin: 0 0 20px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .controls-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-select {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        .control-select option {
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .control-btn.active {
+            background: #4ade80;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            
+            .portfolio-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .controls-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body class="financial-dashboard">
+    <div class="container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">💰 Financial Dashboard</h1>
+            <p class="dashboard-subtitle">Real-time market analysis and portfolio tracking</p>
+        </header>
+
+        <!-- Market Status -->
+        <div class="market-status">
+            <div class="status-indicator">
+                <div class="status-value status-positive" id="sp500">4,567.89</div>
+                <div class="status-label">S&P 500</div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-value status-negative" id="nasdaq">14,234.56</div>
+                <div class="status-label">NASDAQ</div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-value status-positive" id="dow">35,678.90</div>
+                <div class="status-label">Dow Jones</div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-value status-neutral" id="gold">1,987.65</div>
+                <div class="status-label">Gold (USD/oz)</div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-value status-negative" id="oil">78.45</div>
+                <div class="status-label">Oil (USD/bbl)</div>
+            </div>
+        </div>
+
+        <!-- Portfolio Summary -->
+        <div class="portfolio-summary">
+            <div class="portfolio-card">
+                <div class="portfolio-value" id="total-value">$1,247,892</div>
+                <div class="portfolio-label">Total Portfolio Value</div>
+                <div class="portfolio-change status-positive" id="total-change">+$12,847 (+1.04%)</div>
+            </div>
+            <div class="portfolio-card">
+                <div class="portfolio-value" id="daily-pnl">+$2,456</div>
+                <div class="portfolio-label">Daily P&L</div>
+                <div class="portfolio-change status-positive" id="daily-change">+0.20%</div>
+            </div>
+            <div class="portfolio-card">
+                <div class="portfolio-value" id="monthly-pnl">+$45,678</div>
+                <div class="portfolio-label">Monthly P&L</div>
+                <div class="portfolio-change status-positive" id="monthly-change">+3.8%</div>
+            </div>
+            <div class="portfolio-card">
+                <div class="portfolio-value" id="sharpe-ratio">1.85</div>
+                <div class="portfolio-label">Sharpe Ratio</div>
+                <div class="portfolio-change status-positive" id="sharpe-change">Excellent</div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="controls-group">
+                <label>Symbol:</label>
+                <select class="control-select" id="symbol-select">
+                    <option value="AAPL" selected>Apple (AAPL)</option>
+                    <option value="GOOGL">Google (GOOGL)</option>
+                    <option value="MSFT">Microsoft (MSFT)</option>
+                    <option value="TSLA">Tesla (TSLA)</option>
+                    <option value="AMZN">Amazon (AMZN)</option>
+                </select>
+                
+                <label>Timeframe:</label>
+                <select class="control-select" id="timeframe-select">
+                    <option value="1d">1 Day</option>
+                    <option value="1w">1 Week</option>
+                    <option value="1m" selected>1 Month</option>
+                    <option value="3m">3 Months</option>
+                    <option value="1y">1 Year</option>
+                </select>
+                
+                <button class="control-btn" onclick="updateCharts()">Update</button>
+                <button class="control-btn" onclick="toggleRealTime()" id="realtime-btn">Start Real-time</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Stock Price Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title">Stock Price Analysis</h3>
+                <div id="stock-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Volume Analysis -->
+            <div class="chart-container">
+                <h3 class="chart-title">Volume Analysis</h3>
+                <div id="volume-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Portfolio Allocation -->
+            <div class="chart-container">
+                <h3 class="chart-title">Portfolio Allocation</h3>
+                <div id="allocation-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Risk Analysis -->
+            <div class="chart-container">
+                <h3 class="chart-title">Risk Analysis</h3>
+                <div id="risk-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Performance Comparison -->
+            <div class="chart-container">
+                <h3 class="chart-title">Performance vs Benchmark</h3>
+                <div id="performance-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+
+            <!-- Technical Indicators -->
+            <div class="chart-container">
+                <h3 class="chart-title">Technical Indicators</h3>
+                <div id="indicators-chart" style="width: 100%; height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script>
+        // Initialize charts
+        var stockChart = echarts.init(document.getElementById('stock-chart'));
+        var volumeChart = echarts.init(document.getElementById('volume-chart'));
+        var allocationChart = echarts.init(document.getElementById('allocation-chart'));
+        var riskChart = echarts.init(document.getElementById('risk-chart'));
+        var performanceChart = echarts.init(document.getElementById('performance-chart'));
+        var indicatorsChart = echarts.init(document.getElementById('indicators-chart'));
+
+        // Generate sample stock data
+        function generateStockData(days = 30) {
+            var data = [];
+            var basePrice = 150;
+            var currentPrice = basePrice;
+            
+            for (var i = 0; i < days; i++) {
+                var change = (Math.random() - 0.5) * 4;
+                currentPrice += change;
+                var open = currentPrice - (Math.random() - 0.5) * 2;
+                var close = currentPrice;
+                var high = Math.max(open, close) + Math.random() * 3;
+                var low = Math.min(open, close) - Math.random() * 3;
+                var volume = Math.floor(Math.random() * 1000000) + 500000;
+                
+                data.push([
+                    i,
+                    open,
+                    close,
+                    low,
+                    high,
+                    volume
+                ]);
+            }
+            return data;
+        }
+
+        // Stock Price Chart (Candlestick)
+        var stockOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Price', 'Volume'],
+                textStyle: { color: 'white' }
+            },
+            grid: [
+                {
+                    left: '10%',
+                    right: '10%',
+                    height: '60%'
+                },
+                {
+                    left: '10%',
+                    right: '10%',
+                    top: '75%',
+                    height: '20%'
+                }
+            ],
+            xAxis: [
+                {
+                    type: 'category',
+                    data: Array.from({length: 30}, (_, i) => i + 1),
+                    axisLabel: { color: 'white' },
+                    scale: true,
+                    boundaryGap: false,
+                    axisLine: { onZero: false },
+                    splitLine: { show: false },
+                    min: 'dataMin',
+                    max: 'dataMax'
+                },
+                {
+                    type: 'category',
+                    gridIndex: 1,
+                    data: Array.from({length: 30}, (_, i) => i + 1),
+                    axisLabel: { color: 'white' },
+                    scale: true,
+                    boundaryGap: false,
+                    axisLine: { onZero: false },
+                    splitLine: { show: false },
+                    min: 'dataMin',
+                    max: 'dataMax'
+                }
+            ],
+            yAxis: [
+                {
+                    scale: true,
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' },
+                    splitArea: { show: true }
+                },
+                {
+                    scale: true,
+                    gridIndex: 1,
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' },
+                    splitNumber: 2,
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false }
+                }
+            ],
+            dataZoom: [
+                {
+                    type: 'inside',
+                    xAxisIndex: [0, 1],
+                    start: 0,
+                    end: 100
+                },
+                {
+                    show: true,
+                    xAxisIndex: [0, 1],
+                    type: 'slider',
+                    bottom: '0%',
+                    start: 0,
+                    end: 100
+                }
+            ],
+            series: [
+                {
+                    name: 'Price',
+                    type: 'candlestick',
+                    data: generateStockData(),
+                    itemStyle: {
+                        color: '#f87171',
+                        color0: '#4ade80',
+                        borderColor: '#f87171',
+                        borderColor0: '#4ade80'
+                    }
+                },
+                {
+                    name: 'Volume',
+                    type: 'bar',
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    data: generateStockData().map(item => item[5])
+                }
+            ]
+        };
+
+        // Volume Analysis Chart
+        var volumeOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Volume', 'Price'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Array.from({length: 30}, (_, i) => i + 1),
+                axisLabel: { color: 'white' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Volume',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                },
+                {
+                    type: 'value',
+                    name: 'Price',
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Volume',
+                    type: 'bar',
+                    data: generateStockData().map(item => item[5]),
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'Price',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: generateStockData().map(item => item[2]),
+                    itemStyle: { color: '#4ade80' }
+                }
+            ]
+        };
+
+        // Portfolio Allocation Chart
+        var allocationOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: ${c}K ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Portfolio',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['60%', '50%'],
+                    data: [
+                        { value: 450, name: 'Technology', itemStyle: { color: '#4ade80' } },
+                        { value: 320, name: 'Healthcare', itemStyle: { color: '#60a5fa' } },
+                        { value: 280, name: 'Finance', itemStyle: { color: '#fbbf24' } },
+                        { value: 200, name: 'Consumer', itemStyle: { color: '#f87171' } },
+                        { value: 150, name: 'Energy', itemStyle: { color: '#a78bfa' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Risk Analysis Chart
+        var riskOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item'
+            },
+            radar: {
+                indicator: [
+                    { name: 'Volatility', max: 100 },
+                    { name: 'Beta', max: 100 },
+                    { name: 'Sharpe Ratio', max: 100 },
+                    { name: 'Max Drawdown', max: 100 },
+                    { name: 'VaR (95%)', max: 100 },
+                    { name: 'Correlation', max: 100 }
+                ],
+                axisName: {
+                    color: 'white'
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: false
+                }
+            },
+            series: [
+                {
+                    name: 'Risk Metrics',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [75, 85, 90, 65, 70, 80],
+                            name: 'Current Portfolio',
+                            itemStyle: { color: '#4ade80' },
+                            areaStyle: {
+                                color: 'rgba(74, 222, 128, 0.3)'
+                            }
+                        },
+                        {
+                            value: [60, 70, 75, 80, 65, 85],
+                            name: 'Benchmark (S&P 500)',
+                            itemStyle: { color: '#60a5fa' },
+                            areaStyle: {
+                                color: 'rgba(96, 165, 250, 0.3)'
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Performance Comparison Chart
+        var performanceOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Portfolio', 'S&P 500', 'NASDAQ'],
+                textStyle: { color: 'white' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLabel: { color: 'white' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Cumulative Return (%)',
+                axisLabel: { color: 'white' },
+                nameTextStyle: { color: 'white' }
+            },
+            series: [
+                {
+                    name: 'Portfolio',
+                    type: 'line',
+                    smooth: true,
+                    data: [0, 2.5, 5.2, 8.1, 12.3, 15.7, 18.2, 22.1, 25.8, 28.4, 32.1, 35.6],
+                    itemStyle: { color: '#4ade80' },
+                    lineStyle: { width: 3 }
+                },
+                {
+                    name: 'S&P 500',
+                    type: 'line',
+                    smooth: true,
+                    data: [0, 1.8, 3.5, 6.2, 9.8, 12.1, 14.5, 17.2, 19.8, 22.1, 25.3, 28.7],
+                    itemStyle: { color: '#60a5fa' }
+                },
+                {
+                    name: 'NASDAQ',
+                    type: 'line',
+                    smooth: true,
+                    data: [0, 2.1, 4.8, 7.5, 11.2, 13.8, 16.4, 19.1, 21.7, 24.3, 27.8, 31.2],
+                    itemStyle: { color: '#fbbf24' }
+                }
+            ]
+        };
+
+        // Technical Indicators Chart
+        var indicatorsOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['Price', 'SMA 20', 'SMA 50', 'RSI', 'MACD'],
+                textStyle: { color: 'white' }
+            },
+            grid: [
+                {
+                    left: '10%',
+                    right: '10%',
+                    height: '60%'
+                },
+                {
+                    left: '10%',
+                    right: '10%',
+                    top: '75%',
+                    height: '20%'
+                }
+            ],
+            xAxis: [
+                {
+                    type: 'category',
+                    data: Array.from({length: 30}, (_, i) => i + 1),
+                    axisLabel: { color: 'white' },
+                    scale: true,
+                    boundaryGap: false,
+                    axisLine: { onZero: false },
+                    splitLine: { show: false },
+                    min: 'dataMin',
+                    max: 'dataMax'
+                },
+                {
+                    type: 'category',
+                    gridIndex: 1,
+                    data: Array.from({length: 30}, (_, i) => i + 1),
+                    axisLabel: { color: 'white' },
+                    scale: true,
+                    boundaryGap: false,
+                    axisLine: { onZero: false },
+                    splitLine: { show: false },
+                    min: 'dataMin',
+                    max: 'dataMax'
+                }
+            ],
+            yAxis: [
+                {
+                    scale: true,
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' },
+                    splitArea: { show: true }
+                },
+                {
+                    scale: true,
+                    gridIndex: 1,
+                    axisLabel: { color: 'white' },
+                    nameTextStyle: { color: 'white' },
+                    splitNumber: 2,
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false }
+                }
+            ],
+            series: [
+                {
+                    name: 'Price',
+                    type: 'line',
+                    data: generateStockData().map(item => item[2]),
+                    itemStyle: { color: '#4ade80' },
+                    lineStyle: { width: 2 }
+                },
+                {
+                    name: 'SMA 20',
+                    type: 'line',
+                    data: generateStockData().map(item => item[2] + (Math.random() - 0.5) * 5),
+                    itemStyle: { color: '#60a5fa' },
+                    lineStyle: { width: 1 }
+                },
+                {
+                    name: 'SMA 50',
+                    type: 'line',
+                    data: generateStockData().map(item => item[2] + (Math.random() - 0.5) * 8),
+                    itemStyle: { color: '#fbbf24' },
+                    lineStyle: { width: 1 }
+                },
+                {
+                    name: 'RSI',
+                    type: 'line',
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    data: Array.from({length: 30}, () => Math.random() * 100),
+                    itemStyle: { color: '#f87171' }
+                }
+            ]
+        };
+
+        // Set chart options
+        stockChart.setOption(stockOption);
+        volumeChart.setOption(volumeOption);
+        allocationChart.setOption(allocationOption);
+        riskChart.setOption(riskOption);
+        performanceChart.setOption(performanceOption);
+        indicatorsChart.setOption(indicatorsOption);
+
+        // Control functions
+        function updateCharts() {
+            const symbol = document.getElementById('symbol-select').value;
+            const timeframe = document.getElementById('timeframe-select').value;
+            
+            console.log('Updating charts for:', symbol, 'timeframe:', timeframe);
+            
+            // Simulate data update
+            updateMarketData();
+        }
+
+        function toggleRealTime() {
+            const btn = document.getElementById('realtime-btn');
+            if (btn.textContent === 'Start Real-time') {
+                btn.textContent = 'Stop Real-time';
+                btn.classList.add('active');
+                startRealTimeUpdates();
+            } else {
+                btn.textContent = 'Start Real-time';
+                btn.classList.remove('active');
+                stopRealTimeUpdates();
+            }
+        }
+
+        function updateMarketData() {
+            // Simulate market data updates
+            const sp500 = (4567.89 + (Math.random() - 0.5) * 50).toFixed(2);
+            const nasdaq = (14234.56 + (Math.random() - 0.5) * 100).toFixed(2);
+            const dow = (35678.90 + (Math.random() - 0.5) * 200).toFixed(2);
+            const gold = (1987.65 + (Math.random() - 0.5) * 20).toFixed(2);
+            const oil = (78.45 + (Math.random() - 0.5) * 5).toFixed(2);
+            
+            document.getElementById('sp500').textContent = sp500;
+            document.getElementById('nasdaq').textContent = nasdaq;
+            document.getElementById('dow').textContent = dow;
+            document.getElementById('gold').textContent = gold;
+            document.getElementById('oil').textContent = oil;
+        }
+
+        let realTimeInterval;
+
+        function startRealTimeUpdates() {
+            realTimeInterval = setInterval(() => {
+                updateMarketData();
+            }, 5000);
+        }
+
+        function stopRealTimeUpdates() {
+            if (realTimeInterval) {
+                clearInterval(realTimeInterval);
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            stockChart.resize();
+            volumeChart.resize();
+            allocationChart.resize();
+            riskChart.resize();
+            performanceChart.resize();
+            indicatorsChart.resize();
+        });
+    </script>
+</body>
+</html>

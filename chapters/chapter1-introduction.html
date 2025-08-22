@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: What is ECharts? - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Chapter 1: What is ECharts?</h1>
+            <p>Your first steps into the world of data visualization with Apache ECharts</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Introduction to Apache ECharts</h2>
+            
+            <p>Apache ECharts is a <strong>powerful JavaScript library</strong> for building interactive, highly customizable charts and visualizations. It is developed under the <strong>Apache Software Foundation</strong>, and it's widely used in dashboards, analytics platforms, and even large-scale <strong>smart city projects</strong>.</p>
+
+            <div class="tip-box">
+                <h4>🎯 Why Choose ECharts?</h4>
+                <p>Other chart libraries like <strong>Chart.js</strong> or <strong>D3.js</strong> are great, but ECharts brings some unique strengths:</p>
+                <ul>
+                    <li><strong>Rich library of chart types</strong> – over 20 built-in chart types</li>
+                    <li><strong>Interactive & animated</strong> – tooltips, zoom, drill-downs, brushing</li>
+                    <li><strong>Handles big data</strong> – optimized for large-scale datasets</li>
+                    <li><strong>Easy setup</strong> – works with just a single script tag</li>
+                    <li><strong>Cross-platform</strong> – works in browsers, mobile apps, and embedded systems</li>
+                </ul>
+            </div>
+
+            <h3>Your First ECharts Chart</h3>
+            
+            <p>Let's create your very first chart! Below is a simple bar chart that demonstrates the basic ECharts setup:</p>
+
+            <div class="chart-container">
+                <h4>Interactive Bar Chart Example</h4>
+                <div id="chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;My First ECharts&lt;/title&gt;
+  &lt;style&gt;
+    #main {
+      width: 600px;
+      height: 400px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Chart container --&gt;
+  &lt;div id="main"&gt;&lt;/div&gt;
+
+  &lt;!-- Import ECharts via CDN --&gt;
+  &lt;script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    // Initialize the chart
+    var chart = echarts.init(document.getElementById('main'));
+
+    // Define chart options
+    var option = {
+      title: {
+        text: 'Hello ECharts'
+      },
+      tooltip: {},
+      xAxis: {
+        data: ['A', 'B', 'C', 'D', 'E']
+      },
+      yAxis: {},
+      series: [{
+        name: 'Example',
+        type: 'bar',
+        data: [5, 20, 36, 10, 15]
+      }]
+    };
+
+    // Apply the options
+    chart.setOption(option);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+
+            <h3>Anatomy of an ECharts Option</h3>
+            
+            <p>Every ECharts visualization is defined by an <strong>option object</strong>. Here are the main components:</p>
+
+            <div class="chart-container">
+                <h4>Chart Components Breakdown</h4>
+                <div id="components-chart"></div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>var option = {
+  title: { text: 'Sales Overview' },        // Chart title
+  tooltip: {},                              // Interactive hover info
+  legend: { data: ['Sales'] },              // Categories of data series
+  xAxis: { data: ['Jan', 'Feb', 'Mar'] },   // X-axis configuration
+  yAxis: {},                                // Y-axis configuration
+  series: [{                                // Data and chart type
+    name: 'Sales',
+    type: 'line',
+    data: [150, 230, 224]
+  }]
+};</code></pre>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Mini-Exercise</h4>
+                <p>Try these modifications to practice:</p>
+                <ol>
+                    <li>Change the chart type from <strong>bar</strong> to <strong>line</strong></li>
+                    <li>Add a new category "F" with a value of <code>25</code></li>
+                    <li>Customize the title text to your name (e.g., "Mika's First Chart")</li>
+                </ol>
+                <p><strong>Hint:</strong> Look for the <code>type: 'bar'</code> and <code>text: 'Hello ECharts'</code> in the code above!</p>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Pro Tips</h4>
+                <ul>
+                    <li>✅ Always set a fixed <strong>width and height</strong> on your chart container, otherwise the chart won't show up</li>
+                    <li>✅ Use <code>echarts.init()</code> only once per container</li>
+                    <li>✅ The chart container must exist in the DOM before initializing ECharts</li>
+                    <li>✅ Use <code>chart.setOption()</code> to update chart data dynamically</li>
+                </ul>
+            </div>
+
+            <h3>Setup Options</h3>
+
+            <h4>Option A – Use via CDN (Quick Start)</h4>
+            <p>All examples in this guide use CDN links - just open the HTML files in your browser!</p>
+
+            <h4>Option B – Use via npm</h4>
+            <div class="code-block">
+                <pre><code>npm install echarts
+
+// Then in your JavaScript/TypeScript project:
+import * as echarts from 'echarts';
+
+var chart = echarts.init(document.getElementById('main'));
+chart.setOption({
+  title: { text: 'Hello ECharts' },
+  xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
+  yAxis: {},
+  series: [{ type: 'bar', data: [5, 20, 36, 10, 15] }]
+});</code></pre>
+            </div>
+
+            <div class="navigation">
+                <a href="../README.md" class="nav-btn">← Back to Home</a>
+                <a href="chapter2-core-concepts.html" class="nav-btn">Next: Core Concepts →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Initialize the main chart
+        var chart = echarts.init(document.getElementById('chart'));
+        
+        var option = {
+            title: {
+                text: 'Hello ECharts!',
+                subtext: 'Your first interactive chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['Sales', 'Profit'],
+                top: '10%'
+            },
+            xAxis: {
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                name: 'Amount ($)'
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [120, 200, 150, 80, 70, 110],
+                    itemStyle: {
+                        color: '#4a90e2'
+                    }
+                },
+                {
+                    name: 'Profit',
+                    type: 'bar',
+                    data: [20, 40, 30, 15, 10, 25],
+                    itemStyle: {
+                        color: '#f39c12'
+                    }
+                }
+            ]
+        };
+        
+        chart.setOption(option);
+
+        // Components breakdown chart
+        var componentsChart = echarts.init(document.getElementById('components-chart'));
+        
+        var componentsOption = {
+            title: {
+                text: 'ECharts Components',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['50%', '60%'],
+                    data: [
+                        { value: 25, name: 'Title', itemStyle: { color: '#4a90e2' } },
+                        { value: 20, name: 'Tooltip', itemStyle: { color: '#f39c12' } },
+                        { value: 15, name: 'Legend', itemStyle: { color: '#27ae60' } },
+                        { value: 20, name: 'Axes', itemStyle: { color: '#e74c3c' } },
+                        { value: 20, name: 'Series', itemStyle: { color: '#9b59b6' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        
+        componentsChart.setOption(componentsOption);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            chart.resize();
+            componentsChart.resize();
+        });
+    </script>
+</body>
+</html>

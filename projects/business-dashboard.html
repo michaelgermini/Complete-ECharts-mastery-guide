@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Dashboard - ECharts Real-World Project</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .dashboard-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .dashboard-item h3 {
+            color: #4a90e2;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .dashboard-item .chart {
+            height: 300px;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+        
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .kpi-card h4 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        .kpi-card .change {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Business Analytics Dashboard</h1>
+            <p>Real-world ECharts implementation with multiple chart types and interactive features</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>Executive Dashboard Overview</h2>
+            
+            <p>This dashboard demonstrates how to combine multiple ECharts visualizations into a comprehensive business analytics interface. It includes KPI cards, various chart types, and interactive features commonly used in real business applications.</p>
+
+            <!-- KPI Cards -->
+            <div class="kpi-cards">
+                <div class="kpi-card">
+                    <h4>Total Revenue</h4>
+                    <div class="value">$2.4M</div>
+                    <div class="change positive">+12.5% vs last month</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Total Orders</h4>
+                    <div class="value">15,234</div>
+                    <div class="change positive">+8.3% vs last month</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Average Order Value</h4>
+                    <div class="value">$157</div>
+                    <div class="change positive">+3.8% vs last month</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Customer Satisfaction</h4>
+                    <div class="value">4.6/5</div>
+                    <div class="change negative">-0.2 vs last month</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard">
+                <div class="dashboard-item">
+                    <h3>Revenue Trend</h3>
+                    <div id="revenue-chart" class="chart"></div>
+                </div>
+                <div class="dashboard-item">
+                    <h3>Sales by Category</h3>
+                    <div id="category-chart" class="chart"></div>
+                </div>
+                <div class="dashboard-item">
+                    <h3>Regional Performance</h3>
+                    <div id="regional-chart" class="chart"></div>
+                </div>
+                <div class="dashboard-item">
+                    <h3>Customer Demographics</h3>
+                    <div id="demographics-chart" class="chart"></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Monthly Performance Overview</h4>
+                <div id="performance-chart"></div>
+            </div>
+
+            <div class="tip-box">
+                <h4>🔧 Dashboard Features</h4>
+                <ul>
+                    <li><strong>Responsive Design</strong> - Adapts to different screen sizes</li>
+                    <li><strong>Interactive Charts</strong> - Hover tooltips, zoom, and drill-down capabilities</li>
+                    <li><strong>Real-time Updates</strong> - Charts can be updated with live data</li>
+                    <li><strong>Professional Styling</strong> - Clean, modern design suitable for business presentations</li>
+                    <li><strong>Multiple Chart Types</strong> - Line, bar, pie, and area charts working together</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Dashboard initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all charts
+    const revenueChart = echarts.init(document.getElementById('revenue-chart'));
+    const categoryChart = echarts.init(document.getElementById('category-chart'));
+    const regionalChart = echarts.init(document.getElementById('regional-chart'));
+    const demographicsChart = echarts.init(document.getElementById('demographics-chart'));
+    const performanceChart = echarts.init(document.getElementById('performance-chart'));
+    
+    // Set options for each chart
+    revenueChart.setOption(revenueOption);
+    categoryChart.setOption(categoryOption);
+    regionalChart.setOption(regionalOption);
+    demographicsChart.setOption(demographicsOption);
+    performanceChart.setOption(performanceOption);
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        revenueChart.resize();
+        categoryChart.resize();
+        regionalChart.resize();
+        demographicsChart.resize();
+        performanceChart.resize();
+    });
+});</code></pre>
+            </div>
+
+            <div class="exercise-box">
+                <h4>🎯 Dashboard Enhancement Exercise</h4>
+                <p>Try these modifications to enhance the dashboard:</p>
+                <ol>
+                    <li>Add a <strong>new KPI card</strong> for "Conversion Rate" with a value of "3.2%"</li>
+                    <li>Create a <strong>new chart</strong> showing "Top Products by Sales"</li>
+                    <li>Add <strong>data zoom controls</strong> to the revenue trend chart</li>
+                    <li>Implement <strong>dark mode toggle</strong> for the entire dashboard</li>
+                    <li>Add <strong>export functionality</strong> to save charts as images</li>
+                </ol>
+            </div>
+
+            <div class="navigation">
+                <a href="../README.md" class="nav-btn">← Back to Home</a>
+                <a href="iot-monitoring.html" class="nav-btn">Next: IoT Monitoring →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <script>
+        // Revenue Trend Chart (Line Chart)
+        var revenueChart = echarts.init(document.getElementById('revenue-chart'));
+        var revenueOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            legend: {
+                data: ['Revenue', 'Target'],
+                top: '5%'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Revenue ($K)'
+            },
+            series: [
+                {
+                    name: 'Revenue',
+                    type: 'line',
+                    smooth: true,
+                    data: [180, 220, 190, 240, 280, 320, 300, 350, 380, 420, 450, 480],
+                    itemStyle: { color: '#4a90e2' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(74, 144, 226, 0.3)'
+                            }, {
+                                offset: 1, color: 'rgba(74, 144, 226, 0.1)'
+                            }]
+                        }
+                    }
+                },
+                {
+                    name: 'Target',
+                    type: 'line',
+                    smooth: true,
+                    data: [200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 420],
+                    itemStyle: { color: '#f39c12' },
+                    lineStyle: { type: 'dashed' }
+                }
+            ]
+        };
+        revenueChart.setOption(revenueOption);
+
+        // Sales by Category Chart (Pie Chart)
+        var categoryChart = echarts.init(document.getElementById('category-chart'));
+        var categoryOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                top: 'middle'
+            },
+            series: [
+                {
+                    name: 'Sales by Category',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['60%', '50%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        { value: 1048, name: 'Electronics', itemStyle: { color: '#4a90e2' } },
+                        { value: 735, name: 'Clothing', itemStyle: { color: '#f39c12' } },
+                        { value: 580, name: 'Books', itemStyle: { color: '#27ae60' } },
+                        { value: 484, name: 'Home & Garden', itemStyle: { color: '#e74c3c' } },
+                        { value: 300, name: 'Sports', itemStyle: { color: '#9b59b6' } }
+                    ]
+                }
+            ]
+        };
+        categoryChart.setOption(categoryOption);
+
+        // Regional Performance Chart (Bar Chart)
+        var regionalChart = echarts.init(document.getElementById('regional-chart'));
+        var regionalOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4'],
+                top: '5%'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['North', 'South', 'East', 'West', 'Central']
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Sales ($K)'
+            },
+            series: [
+                {
+                    name: 'Q1',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [120, 132, 101, 134, 90],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Q2',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [220, 182, 191, 234, 290],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'Q3',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [150, 232, 201, 154, 190],
+                    itemStyle: { color: '#27ae60' }
+                },
+                {
+                    name: 'Q4',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [320, 332, 301, 334, 390],
+                    itemStyle: { color: '#e74c3c' }
+                }
+            ]
+        };
+        regionalChart.setOption(regionalOption);
+
+        // Customer Demographics Chart (Radar Chart)
+        var demographicsChart = echarts.init(document.getElementById('demographics-chart'));
+        var demographicsOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                data: ['Current', 'Target'],
+                top: '5%'
+            },
+            radar: {
+                indicator: [
+                    { name: '18-24', max: 100 },
+                    { name: '25-34', max: 100 },
+                    { name: '35-44', max: 100 },
+                    { name: '45-54', max: 100 },
+                    { name: '55+', max: 100 }
+                ]
+            },
+            series: [
+                {
+                    name: 'Customer Demographics',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [30, 45, 35, 25, 15],
+                            name: 'Current',
+                            itemStyle: { color: '#4a90e2' }
+                        },
+                        {
+                            value: [25, 50, 40, 30, 20],
+                            name: 'Target',
+                            itemStyle: { color: '#f39c12' }
+                        }
+                    ]
+                }
+            ]
+        };
+        demographicsChart.setOption(demographicsOption);
+
+        // Performance Overview Chart (Mixed Chart)
+        var performanceChart = echarts.init(document.getElementById('performance-chart'));
+        var performanceOption = {
+            title: {
+                text: 'Monthly Performance Overview',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            legend: {
+                data: ['Revenue', 'Orders', 'AOV'],
+                top: '10%'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Revenue ($K)',
+                    position: 'left'
+                },
+                {
+                    type: 'value',
+                    name: 'Orders',
+                    position: 'right'
+                }
+            ],
+            series: [
+                {
+                    name: 'Revenue',
+                    type: 'bar',
+                    data: [180, 220, 190, 240, 280, 320, 300, 350, 380, 420, 450, 480],
+                    itemStyle: { color: '#4a90e2' }
+                },
+                {
+                    name: 'Orders',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [1200, 1400, 1300, 1600, 1800, 2000, 1900, 2200, 2400, 2600, 2800, 3000],
+                    itemStyle: { color: '#f39c12' }
+                },
+                {
+                    name: 'AOV',
+                    type: 'line',
+                    data: [150, 157, 146, 150, 156, 160, 158, 159, 158, 162, 161, 160],
+                    itemStyle: { color: '#27ae60' }
+                }
+            ]
+        };
+        performanceChart.setOption(performanceOption);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            revenueChart.resize();
+            categoryChart.resize();
+            regionalChart.resize();
+            demographicsChart.resize();
+            performanceChart.resize();
+        });
+
+        // Simulate real-time updates
+        setInterval(function() {
+            // Update KPI values with random variations
+            const kpiValues = document.querySelectorAll('.kpi-card .value');
+            const changes = document.querySelectorAll('.kpi-card .change');
+            
+            // Simulate revenue updates
+            const currentRevenue = parseFloat(kpiValues[0].textContent.replace('$', '').replace('M', ''));
+            const newRevenue = currentRevenue + (Math.random() - 0.5) * 0.1;
+            kpiValues[0].textContent = '$' + newRevenue.toFixed(1) + 'M';
+            
+            // Simulate order updates
+            const currentOrders = parseInt(kpiValues[1].textContent.replace(',', ''));
+            const newOrders = currentOrders + Math.floor((Math.random() - 0.5) * 100);
+            kpiValues[1].textContent = newOrders.toLocaleString();
+            
+            // Update change indicators
+            changes.forEach(change => {
+                const isPositive = Math.random() > 0.5;
+                change.textContent = (isPositive ? '+' : '-') + (Math.random() * 10).toFixed(1) + '% vs last month';
+                change.className = 'change ' + (isPositive ? 'positive' : 'negative');
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

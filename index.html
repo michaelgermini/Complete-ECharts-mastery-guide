@@ -6,6 +6,121 @@
     <title>Mastering Data Visualization with Apache ECharts - Complete Guide</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        /* Navigation Menu */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .navbar-menu li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-menu li a:hover {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        .navbar-menu li a.active {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-radius: 0;
+        }
+        
+        .dropdown-content a:hover {
+            background: #f8f9fa;
+            color: #4a90e2;
+        }
+        
+        .dropdown-content a:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .dropdown-content a:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        /* Adjust body padding for fixed navbar */
+        body {
+            padding-top: 80px;
+        }
+        
         .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -146,23 +261,89 @@
             padding: 60px 20px;
         }
         
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
         .project-card {
             background: white;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
         }
         
         .project-header {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: white;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
+            color: white;
+        }
+        
+        .project-header.business {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .project-header.iot {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .project-header.sales {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+        
+        .project-header.financial {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        
+        .project-header.healthcare {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+        }
+        
+        .project-header.energy {
+            background: linear-gradient(135deg, #27ae60, #229954);
         }
         
         .project-content {
-            padding: 30px;
+            padding: 25px;
+        }
+        
+        .project-content h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .project-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .project-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        
+        .project-features li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .project-features li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #4a90e2;
+            font-weight: bold;
         }
         
         .stats-grid {
@@ -201,6 +382,32 @@
         }
         
         @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                margin-top: 0;
+            }
+            
             .hero-section h1 {
                 font-size: 2rem;
             }
@@ -210,21 +417,47 @@
                 align-items: center;
             }
             
-            .chapter-grid {
+            .chapter-grid,
+            .projects-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand">📊 ECharts Guide</a>
+            <ul class="navbar-menu">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#chapters">Chapters</a></li>
+                <li class="dropdown">
+                    <a href="#projects">Dashboards ▼</a>
+                    <div class="dropdown-content">
+                        <a href="projects/business-dashboard.html">🏢 Business Analytics</a>
+                        <a href="projects/iot-monitoring.html">⚙️ IoT Monitoring</a>
+                        <a href="projects/sales-analytics.html">📈 Sales Analytics</a>
+                        <a href="projects/financial-dashboard.html">💰 Financial Dashboard</a>
+                        <a href="projects/healthcare-analytics.html">🏥 Healthcare Analytics</a>
+                        <a href="projects/energy-monitoring.html">⚡ Energy Monitoring</a>
+                    </div>
+                </li>
+                <li><a href="README.md">Documentation</a></li>
+                <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+
     <div class="container">
         <!-- Hero Section -->
-        <section class="hero-section">
+        <section id="home" class="hero-section">
             <h1>📊 Mastering Data Visualization with Apache ECharts</h1>
             <p>A comprehensive, interactive guide to creating stunning charts and dashboards with the world's most powerful JavaScript visualization library</p>
             <div class="cta-buttons">
                 <a href="#chapters" class="cta-btn">Start Learning</a>
-                <a href="projects/business-dashboard.html" class="cta-btn">View Demo</a>
+                <a href="#projects" class="cta-btn">View Dashboards</a>
                 <a href="README.md" class="cta-btn">Documentation</a>
             </div>
         </section>
@@ -278,12 +511,12 @@
                     <div class="stat-label">Interactive Examples</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">8</div>
-                    <div class="stat-label">Chart Types Covered</div>
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Real-World Dashboards</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label">Complete Dashboard Project</div>
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Chart Types Covered</div>
                 </div>
             </div>
         </section>
@@ -380,14 +613,14 @@
                             <h3>Chapter 6: Scatter & Bubble Charts</h3>
                         </div>
                         <div class="chapter-content">
-                            <p>Coming soon! Learn to create scatter plots, bubble charts, and correlation visualizations.</p>
+                            <p>Learn to create scatter plots, bubble charts, and correlation visualizations.</p>
                             <ul class="chapter-features">
                                 <li>Basic scatter plots</li>
                                 <li>Bubble charts</li>
                                 <li>Correlation analysis</li>
                                 <li>Multi-dimensional data</li>
                             </ul>
-                            <span class="nav-btn next" style="opacity: 0.5; cursor: not-allowed;">Coming Soon</span>
+                            <a href="chapters/chapter6-scatter-bubble.html" class="nav-btn next">Start Chapter 6 →</a>
                         </div>
                     </div>
                 </div>
@@ -395,27 +628,124 @@
         </section>
 
         <!-- Projects Section -->
-        <section class="projects-section">
+        <section id="projects" class="projects-section">
             <div class="container">
-                <h2>🚀 Real-World Projects</h2>
-                <p>Apply your knowledge by building complete, production-ready applications and dashboards.</p>
+                <h2>🚀 Real-World Dashboards</h2>
+                <p>Apply your knowledge by exploring complete, production-ready applications and dashboards.</p>
                 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Business Analytics Dashboard</h3>
-                        <p>A comprehensive dashboard showcasing multiple chart types and real-time data updates</p>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-header business">
+                            <h3>🏢 Business Analytics Dashboard</h3>
+                            <p>Comprehensive business intelligence with multiple chart types</p>
+                        </div>
+                        <div class="project-content">
+                            <h4>Key Features:</h4>
+                            <ul class="project-features">
+                                <li>Revenue trend analysis with line charts</li>
+                                <li>Sales distribution with pie charts</li>
+                                <li>Regional performance with bar charts</li>
+                                <li>Customer demographics with radar charts</li>
+                                <li>Real-time KPI updates</li>
+                                <li>Responsive design for all devices</li>
+                            </ul>
+                            <a href="projects/business-dashboard.html" class="nav-btn next">View Dashboard →</a>
+                        </div>
                     </div>
-                    <div class="project-content">
-                        <p>This project demonstrates how to combine multiple ECharts visualizations into a cohesive business dashboard. Features include:</p>
-                        <ul class="chapter-features">
-                            <li>Revenue trend analysis with line charts</li>
-                            <li>Sales distribution with pie charts</li>
-                            <li>Regional performance with bar charts</li>
-                            <li>Customer demographics with radar charts</li>
-                            <li>Real-time KPI updates</li>
-                            <li>Responsive design for all devices</li>
-                        </ul>
-                        <a href="projects/business-dashboard.html" class="nav-btn next">View Dashboard →</a>
+
+                    <div class="project-card">
+                        <div class="project-header iot">
+                            <h3>⚙️ IoT Monitoring Dashboard</h3>
+                            <p>Real-time sensor data and device management</p>
+                        </div>
+                        <div class="project-content">
+                            <h4>Key Features:</h4>
+                            <ul class="project-features">
+                                <li>Real-time temperature and humidity monitoring</li>
+                                <li>Device status overview with pie charts</li>
+                                <li>Alert distribution analysis</li>
+                                <li>Network latency tracking</li>
+                                <li>Power consumption monitoring</li>
+                                <li>Interactive filters and controls</li>
+                            </ul>
+                            <a href="projects/iot-monitoring.html" class="nav-btn next">View Dashboard →</a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header sales">
+                            <h3>📈 Sales Analytics Dashboard</h3>
+                            <p>Comprehensive sales performance and customer insights</p>
+                        </div>
+                        <div class="project-content">
+                            <h4>Key Features:</h4>
+                            <ul class="project-features">
+                                <li>Revenue trends and forecasting</li>
+                                <li>Sales by category and region</li>
+                                <li>Customer segment analysis</li>
+                                <li>Sales funnel visualization</li>
+                                <li>Product performance tracking</li>
+                                <li>Interactive date range filters</li>
+                            </ul>
+                            <a href="projects/sales-analytics.html" class="nav-btn next">View Dashboard →</a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header financial">
+                            <h3>💰 Financial Dashboard</h3>
+                            <p>Advanced financial analysis and portfolio tracking</p>
+                        </div>
+                        <div class="project-content">
+                            <h4>Key Features:</h4>
+                            <ul class="project-features">
+                                <li>Stock price candlestick charts</li>
+                                <li>Portfolio allocation visualization</li>
+                                <li>Risk analysis and metrics</li>
+                                <li>Market performance comparison</li>
+                                <li>Volume analysis</li>
+                                <li>Real-time market data simulation</li>
+                            </ul>
+                            <a href="projects/financial-dashboard.html" class="nav-btn next">View Dashboard →</a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header healthcare">
+                            <h3>🏥 Healthcare Analytics Dashboard</h3>
+                            <p>Hospital performance and patient statistics</p>
+                        </div>
+                        <div class="project-content">
+                            <h4>Key Features:</h4>
+                            <ul class="project-features">
+                                <li>Patient demographics analysis</li>
+                                <li>Admission trends over time</li>
+                                <li>Treatment outcomes tracking</li>
+                                <li>Resource utilization monitoring</li>
+                                <li>Department performance comparison</li>
+                                <li>Patient flow visualization</li>
+                            </ul>
+                            <a href="projects/healthcare-analytics.html" class="nav-btn next">View Dashboard →</a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header energy">
+                            <h3>⚡ Energy Monitoring Dashboard</h3>
+                            <p>Energy consumption and renewable power tracking</p>
+                        </div>
+                        <div class="project-content">
+                            <h4>Key Features:</h4>
+                            <ul class="project-features">
+                                <li>Energy consumption over time</li>
+                                <li>Renewable energy mix analysis</li>
+                                <li>Solar and wind performance</li>
+                                <li>Power source status monitoring</li>
+                                <li>Environmental impact metrics</li>
+                                <li>System health indicators</li>
+                            </ul>
+                            <a href="projects/energy-monitoring.html" class="nav-btn next">View Dashboard →</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -430,7 +760,7 @@
                     <li><strong>Start with Chapter 1:</strong> Learn the basics and create your first chart</li>
                     <li><strong>Follow the progression:</strong> Each chapter builds upon the previous one</li>
                     <li><strong>Practice with exercises:</strong> Use the interactive code editors in each chapter</li>
-                    <li><strong>Build the dashboard:</strong> Apply your skills to the real-world project</li>
+                    <li><strong>Explore dashboards:</strong> Apply your skills to the real-world projects</li>
                     <li><strong>Experiment:</strong> Modify examples and create your own visualizations</li>
                 </ol>
             </div>
@@ -456,6 +786,12 @@
     </div>
 
     <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.navbar-menu');
+            menu.classList.toggle('active');
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -478,6 +814,28 @@
             
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Active navigation highlighting
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.navbar-menu a[href^="#"]');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
             });
         });
     </script>

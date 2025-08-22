@@ -355,6 +355,40 @@ yAxis: {
                 <div id="data-formats"></div>
             </div>
 
+            <div class="interactive-section">
+                <h4>🎯 Interactive Data Format Explorer</h4>
+                <p>Experiment with different data formats and see how they affect your chart:</p>
+                
+                <div class="option-builder">
+                    <div class="builder-controls">
+                        <div class="control-group">
+                            <label>Data Format:</label>
+                            <select id="data-format-selector">
+                                <option value="simple">Simple Array</option>
+                                <option value="object">Object Array</option>
+                                <option value="2d">2D Array (Scatter)</option>
+                                <option value="named">Named Object</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Chart Type:</label>
+                            <select id="format-chart-type">
+                                <option value="bar">Bar Chart</option>
+                                <option value="line">Line Chart</option>
+                                <option value="scatter">Scatter Plot</option>
+                                <option value="pie">Pie Chart</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Data Values:</label>
+                            <input type="text" id="format-data-input" value="25,35,45,30" placeholder="Comma-separated values">
+                        </div>
+                        <button onclick="updateDataFormatChart()" class="update-btn">Update Chart</button>
+                    </div>
+                    <div id="data-format-explorer-chart" style="height: 400px; margin-top: 20px;"></div>
+                </div>
+            </div>
+
             <div class="code-block">
                 <pre><code>// Simple array
 data: [120, 200, 150, 80]
@@ -999,30 +1033,70 @@ series: [{
             }
         });
 
-        // Data formats example
+        // Interactive Data Format Examples
         var dataFormats = echarts.init(document.getElementById('data-formats'));
         var formatsOption = {
             title: {
-                text: 'Data Format Examples',
-                left: 'center'
+                text: 'Interactive Data Format Examples',
+                subtext: 'Click on different data formats to see their structure and usage',
+                left: 'center',
+                textStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                formatter: function(params) {
+                    var formatInfo = {
+                        'Simple Array': 'Basic numeric array<br/>Format: [120, 200, 150, 80]',
+                        'Object Array': 'Array of objects with properties<br/>Format: [{value: 100, name: "Jan"}]',
+                        '2D Array': 'Two-dimensional coordinates<br/>Format: [[x1, y1], [x2, y2]]',
+                        'Named Object': 'Object with named properties<br/>Format: {"2023": [120, 200], "2024": [180, 250]}'
+                    };
+                    return '<strong>' + params[0].name + '</strong><br/>' + formatInfo[params[0].name];
+                }
             },
             legend: {
-                data: ['Simple Array', 'Object Array', '2D Array'],
-                top: '10%'
+                data: ['Simple Array', 'Object Array', '2D Array', 'Named Object'],
+                top: '10%',
+                selectedMode: true
+            },
+            grid: {
+                left: '10%',
+                right: '10%',
+                top: '20%',
+                bottom: '15%'
             },
             xAxis: {
-                data: ['Jan', 'Feb', 'Mar', 'Apr']
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr'],
+                name: 'Month',
+                nameLocation: 'middle',
+                nameGap: 30
             },
-            yAxis: {},
+            yAxis: {
+                type: 'value',
+                name: 'Value',
+                nameLocation: 'middle',
+                nameGap: 40
+            },
             series: [
                 {
                     name: 'Simple Array',
                     type: 'bar',
                     data: [120, 200, 150, 80],
-                    itemStyle: { color: '#4a90e2' }
+                    itemStyle: { 
+                        color: '#4a90e2',
+                        borderRadius: [4, 4, 0, 0]
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#357abd',
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0,0,0,0.3)'
+                        }
+                    }
                 },
                 {
                     name: 'Object Array',
@@ -1033,17 +1107,165 @@ series: [{
                         { value: 130, name: 'Mar' },
                         { value: 90, name: 'Apr' }
                     ],
-                    itemStyle: { color: '#f39c12' }
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: '#f39c12'
+                    },
+                    itemStyle: { 
+                        color: '#f39c12',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#d68910',
+                            borderColor: '#fff',
+                            borderWidth: 3
+                        }
+                    }
                 },
                 {
                     name: '2D Array',
                     type: 'scatter',
                     data: [[120, 100], [200, 180], [150, 130], [80, 90]],
-                    itemStyle: { color: '#27ae60' }
+                    symbolSize: 12,
+                    itemStyle: { 
+                        color: '#27ae60',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#229954',
+                            borderColor: '#fff',
+                            borderWidth: 3,
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0,0,0,0.3)'
+                        }
+                    }
+                },
+                {
+                    name: 'Named Object',
+                    type: 'line',
+                    data: [95, 160, 140, 85],
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: '#9b59b6',
+                        type: 'dashed'
+                    },
+                    itemStyle: { 
+                        color: '#9b59b6',
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#8e44ad',
+                            borderColor: '#fff',
+                            borderWidth: 3
+                        }
+                    }
                 }
             ]
         };
         dataFormats.setOption(formatsOption);
+        
+        // Add click event to show data format details
+        dataFormats.on('click', function(params) {
+            var dataFormatInfo = {
+                'Simple Array': {
+                    code: `// Simple array format
+data: [120, 200, 150, 80]
+
+// Usage example
+series: [{
+  name: 'Sales',
+  type: 'bar',
+  data: [120, 200, 150, 80]
+}]`,
+                    description: 'The simplest data format in ECharts. Just an array of numeric values. Perfect for basic charts where you only need values.',
+                    advantages: ['Simple and clean', 'Easy to understand', 'Memory efficient', 'Fast processing'],
+                    useCases: ['Basic bar charts', 'Simple line charts', 'When you only have values', 'Quick prototypes']
+                },
+                'Object Array': {
+                    code: `// Object array format
+data: [
+  { value: 100, name: 'Jan' },
+  { value: 180, name: 'Feb' },
+  { value: 130, name: 'Mar' },
+  { value: 90, name: 'Apr' }
+]
+
+// Usage example
+series: [{
+  name: 'Revenue',
+  type: 'line',
+  data: [
+    { value: 100, name: 'Jan' },
+    { value: 180, name: 'Feb' },
+    { value: 130, name: 'Mar' },
+    { value: 90, name: 'Apr' }
+  ]
+}]`,
+                    description: 'Array of objects where each object can have multiple properties. Very flexible and allows for custom labels and additional metadata.',
+                    advantages: ['Custom labels', 'Additional properties', 'Flexible structure', 'Rich metadata'],
+                    useCases: ['Custom labels needed', 'Additional data properties', 'Complex tooltips', 'Pie charts with names']
+                },
+                '2D Array': {
+                    code: `// 2D array format for scatter plots
+data: [[120, 100], [200, 180], [150, 130], [80, 90]]
+
+// Usage example
+series: [{
+  name: 'Correlation',
+  type: 'scatter',
+  data: [[120, 100], [200, 180], [150, 130], [80, 90]]
+}]
+
+// For bubble charts (3D)
+data: [[120, 100, 50], [200, 180, 80], [150, 130, 60]]`,
+                    description: 'Two-dimensional array where each element is [x, y] coordinates. Essential for scatter plots and bubble charts.',
+                    advantages: ['Perfect for coordinates', 'Supports bubble charts', 'Efficient for large datasets', 'Natural for correlations'],
+                    useCases: ['Scatter plots', 'Bubble charts', 'Correlation analysis', 'Coordinate-based visualizations']
+                },
+                'Named Object': {
+                    code: `// Named object format
+data: {
+  '2023': [120, 200, 150, 80],
+  '2024': [180, 250, 200, 120]
+}
+
+// Usage example
+series: [
+  {
+    name: '2023',
+    type: 'line',
+    data: [120, 200, 150, 80]
+  },
+  {
+    name: '2024',
+    type: 'line',
+    data: [180, 250, 200, 120]
+  }
+]`,
+                    description: 'Object with named properties, where each property contains an array of values. Great for multiple series with meaningful names.',
+                    advantages: ['Meaningful series names', 'Organized structure', 'Easy to iterate', 'Clear data organization'],
+                    useCases: ['Multiple series', 'Time-based comparisons', 'Category comparisons', 'Organized datasets']
+                }
+            };
+            
+            if (dataFormatInfo[params.name]) {
+                var info = dataFormatInfo[params.name];
+                var message = 'Data Format: ' + params.name + '\n\n' +
+                             'Description: ' + info.description + '\n\n' +
+                             'Advantages: ' + info.advantages.join(', ') + '\n\n' +
+                             'Use Cases: ' + info.useCases.join(', ') + '\n\n' +
+                             'Code Example:\n' + info.code;
+                alert(message);
+            }
+        });
 
         // Practice chart
         var practiceChart = echarts.init(document.getElementById('practice-chart'));
@@ -1430,6 +1652,161 @@ series: [{
         // Initialize series explorer chart
         updateSeriesChart();
         
+        // Interactive data format explorer
+        var dataFormatExplorerChart = echarts.init(document.getElementById('data-format-explorer-chart'));
+        
+        function updateDataFormatChart() {
+            var dataFormat = document.getElementById('data-format-selector').value;
+            var chartType = document.getElementById('format-chart-type').value;
+            var dataString = document.getElementById('format-data-input').value;
+            
+            // Parse data
+            var data = dataString.split(',').map(function(val) {
+                return parseFloat(val.trim()) || 0;
+            });
+            
+            var option = {
+                title: {
+                    text: 'Data Format Explorer',
+                    subtext: 'Format: ' + dataFormat + ' | Chart: ' + chartType + ' | Data: ' + dataString,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        if (chartType === 'scatter') {
+                            return 'Point: (' + params.value[0] + ', ' + params.value[1] + ')';
+                        } else {
+                            return params.name + ': ' + params.value;
+                        }
+                    }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    top: '20%',
+                    bottom: '15%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['A', 'B', 'C', 'D'],
+                    name: 'Categories',
+                    nameLocation: 'middle',
+                    nameGap: 30
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Values',
+                    nameLocation: 'middle',
+                    nameGap: 40
+                },
+                series: [{
+                    name: 'Data',
+                    type: chartType,
+                    data: data,
+                    itemStyle: {
+                        color: '#4a90e2'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#357abd',
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0,0,0,0.3)'
+                        }
+                    }
+                }]
+            };
+            
+            // Handle different data formats
+            if (dataFormat === 'simple') {
+                // Simple array - data is already in correct format
+                option.series[0].data = data;
+            } else if (dataFormat === 'object') {
+                // Object array
+                option.series[0].data = data.map(function(val, index) {
+                    return {
+                        value: val,
+                        name: String.fromCharCode(65 + index) // A, B, C, D...
+                    };
+                });
+            } else if (dataFormat === '2d') {
+                // 2D array for scatter plots
+                option.series[0].data = data.map(function(val, index) {
+                    return [index, val];
+                });
+                option.series[0].symbolSize = 12;
+            } else if (dataFormat === 'named') {
+                // Named object - create multiple series
+                option.series = [
+                    {
+                        name: 'Series 1',
+                        type: chartType,
+                        data: data,
+                        itemStyle: { color: '#4a90e2' }
+                    },
+                    {
+                        name: 'Series 2',
+                        type: chartType,
+                        data: data.map(function(val) { return val * 0.8; }),
+                        itemStyle: { color: '#f39c12' }
+                    }
+                ];
+                option.legend = {
+                    data: ['Series 1', 'Series 2'],
+                    top: '10%'
+                };
+            }
+            
+            // Handle different chart types
+            if (chartType === 'line') {
+                option.series.forEach(function(series) {
+                    series.smooth = true;
+                    series.lineStyle = { width: 3 };
+                    series.symbol = 'circle';
+                    series.symbolSize = 8;
+                });
+            } else if (chartType === 'bar') {
+                option.series.forEach(function(series) {
+                    series.itemStyle.borderRadius = [4, 4, 0, 0];
+                });
+            } else if (chartType === 'pie') {
+                // Remove axes for pie chart
+                option.xAxis = undefined;
+                option.yAxis = undefined;
+                option.series.forEach(function(series) {
+                    if (dataFormat === 'object') {
+                        // Object array already has name/value structure
+                        series.data = series.data;
+                    } else {
+                        // Convert simple array to object array
+                        series.data = series.data.map(function(val, index) {
+                            return {
+                                name: String.fromCharCode(65 + index),
+                                value: val
+                            };
+                        });
+                    }
+                    series.radius = '50%';
+                    series.center = ['50%', '50%'];
+                });
+            } else if (chartType === 'scatter') {
+                option.series.forEach(function(series) {
+                    if (dataFormat !== '2d') {
+                        // Convert to 2D array if not already
+                        series.data = series.data.map(function(val, index) {
+                            return [index, val];
+                        });
+                    }
+                    series.symbolSize = 12;
+                });
+            }
+            
+            dataFormatExplorerChart.setOption(option, true);
+        }
+        
+        // Initialize data format explorer chart
+        updateDataFormatChart();
+        
         // Handle window resize
         window.addEventListener('resize', function() {
             optionStructure.resize();
@@ -1442,6 +1819,7 @@ series: [{
             interactiveChart.resize();
             axisExperimentChart.resize();
             seriesExplorerChart.resize();
+            dataFormatExplorerChart.resize();
         });
     </script>
     <script src="../assets/js/menu.js"></script>

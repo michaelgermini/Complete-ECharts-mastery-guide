@@ -5,98 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mastering Data Visualization with Apache ECharts - Complete Guide</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/menu.css">
     <style>
-        /* Navigation Menu */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            padding: 15px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-            text-decoration: none;
-        }
-        
-        .navbar-menu {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            gap: 30px;
-        }
-        
-        .navbar-menu li a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            padding: 10px 15px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar-menu li a:hover {
-            background: #4a90e2;
-            color: white;
-        }
-        
-        .navbar-menu li a.active {
-            background: #4a90e2;
-            color: white;
-        }
-        
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background: white;
-            min-width: 250px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            border-radius: 10px;
-            z-index: 1;
-            top: 100%;
-            left: 0;
-            margin-top: 10px;
-        }
-        
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        
-        .dropdown-content a {
-            color: #333;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            border-radius: 0;
-        }
-        
-        .dropdown-content a:hover {
-            background: #f8f9fa;
-            color: #4a90e2;
+        /* Additional styles for index page */
+        .hero-section {
+            margin-top: 20px;
         }
         
         .dropdown-content a:first-child {
@@ -425,30 +338,63 @@
     </style>
 </head>
 <body>
-    <!-- Navigation Menu -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="#" class="navbar-brand">📊 ECharts Guide</a>
-            <ul class="navbar-menu">
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#chapters">Chapters</a></li>
-                <li class="dropdown">
-                    <a href="#projects">Dashboards ▼</a>
-                    <div class="dropdown-content">
-                        <a href="projects/business-dashboard.html">🏢 Business Analytics</a>
-                        <a href="projects/iot-monitoring.html">⚙️ IoT Monitoring</a>
-                        <a href="projects/sales-analytics.html">📈 Sales Analytics</a>
-                        <a href="projects/financial-dashboard.html">💰 Financial Dashboard</a>
-                        <a href="projects/healthcare-analytics.html">🏥 Healthcare Analytics</a>
-                        <a href="projects/energy-monitoring.html">⚡ Energy Monitoring</a>
+    <!-- ECharts Guide Navigation -->
+    <nav class="echarts-nav">
+        <div class="echarts-nav-container">
+            <a href="index.html" class="echarts-nav-brand">📊 ECharts Guide</a>
+            <ul class="echarts-nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li class="echarts-dropdown">
+                    <a href="#">📚 Chapters</a>
+                    <div class="echarts-dropdown-content">
+                        <a href="chapters/chapter1-introduction.html">Chapter 1: Introduction</a>
+                        <a href="chapters/chapter2-core-concepts.html">Chapter 2: Core Concepts</a>
+                        <a href="chapters/chapter3-line-area.html">Chapter 3: Line & Area Charts</a>
+                        <a href="chapters/chapter4-bar-column.html">Chapter 4: Bar & Column Charts</a>
+                        <a href="chapters/chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a>
+                        <a href="chapters/chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a>
+                        <a href="chapters/chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a>
+                    </div>
+                </li>
+                <li class="echarts-dropdown">
+                    <a href="#">🏗️ Projects</a>
+                    <div class="echarts-dropdown-content">
+                        <a href="projects/business-dashboard.html">Business Analytics</a>
+                        <a href="projects/iot-monitoring.html">IoT Monitoring</a>
+                        <a href="projects/sales-analytics.html">Sales Analytics</a>
+                        <a href="projects/financial-dashboard.html">Financial Dashboard</a>
+                        <a href="projects/healthcare-analytics.html">Healthcare Analytics</a>
+                        <a href="projects/energy-monitoring.html">Energy Monitoring</a>
                     </div>
                 </li>
                 <li><a href="README.md">Documentation</a></li>
                 <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
             </ul>
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <button class="echarts-mobile-menu-toggle">☰</button>
         </div>
     </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="echarts-mobile-menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chapters/chapter1-introduction.html">Chapter 1: Introduction</a></li>
+            <li><a href="chapters/chapter2-core-concepts.html">Chapter 2: Core Concepts</a></li>
+            <li><a href="chapters/chapter3-line-area.html">Chapter 3: Line & Area Charts</a></li>
+            <li><a href="chapters/chapter4-bar-column.html">Chapter 4: Bar & Column Charts</a></li>
+            <li><a href="chapters/chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a></li>
+            <li><a href="chapters/chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a></li>
+            <li><a href="chapters/chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a></li>
+            <li><a href="projects/business-dashboard.html">Business Analytics</a></li>
+            <li><a href="projects/iot-monitoring.html">IoT Monitoring</a></li>
+            <li><a href="projects/sales-analytics.html">Sales Analytics</a></li>
+            <li><a href="projects/financial-dashboard.html">Financial Dashboard</a></li>
+            <li><a href="projects/healthcare-analytics.html">Healthcare Analytics</a></li>
+            <li><a href="projects/energy-monitoring.html">Energy Monitoring</a></li>
+            <li><a href="README.md">Documentation</a></li>
+            <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
 
     <div class="container">
         <!-- Hero Section -->
@@ -785,27 +731,8 @@
         </footer>
     </div>
 
+    <script src="assets/js/menu.js"></script>
     <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const menu = document.querySelector('.navbar-menu');
-            menu.classList.toggle('active');
-        }
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
         // Add some interactivity to feature cards
         document.querySelectorAll('.feature-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
@@ -817,24 +744,16 @@
             });
         });
 
-        // Active navigation highlighting
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.navbar-menu a[href^="#"]');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
         });

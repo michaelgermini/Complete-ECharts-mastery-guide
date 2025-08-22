@@ -1,0 +1,5 @@
+# Static site configuration for GitHub Pages
+# This file ensures proper deployment of the static HTML site
+
+# No build process needed - all files are static HTML
+# GitHub Pages will serve the files directly from the root directory

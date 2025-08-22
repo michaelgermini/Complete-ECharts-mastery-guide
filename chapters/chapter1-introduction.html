@@ -5,8 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chapter 1: What is ECharts? - Mastering Data Visualization</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/menu.css">
 </head>
 <body>
+    <!-- ECharts Guide Navigation -->
+    <nav class="echarts-nav">
+        <div class="echarts-nav-container">
+            <a href="../index.html" class="echarts-nav-brand">📊 ECharts Guide</a>
+            <ul class="echarts-nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li class="echarts-dropdown">
+                    <a href="#">📚 Chapters</a>
+                    <div class="echarts-dropdown-content">
+                        <a href="chapter1-introduction.html" class="active">Chapter 1: Introduction</a>
+                        <a href="chapter2-core-concepts.html">Chapter 2: Core Concepts</a>
+                        <a href="chapter3-line-area.html">Chapter 3: Line & Area Charts</a>
+                        <a href="chapter4-bar-column.html">Chapter 4: Bar & Column Charts</a>
+                        <a href="chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a>
+                        <a href="chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a>
+                        <a href="chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a>
+                    </div>
+                </li>
+                <li class="echarts-dropdown">
+                    <a href="#">🏗️ Projects</a>
+                    <div class="echarts-dropdown-content">
+                        <a href="../projects/business-dashboard.html">Business Analytics</a>
+                        <a href="../projects/iot-monitoring.html">IoT Monitoring</a>
+                        <a href="../projects/sales-analytics.html">Sales Analytics</a>
+                        <a href="../projects/financial-dashboard.html">Financial Dashboard</a>
+                        <a href="../projects/healthcare-analytics.html">Healthcare Analytics</a>
+                        <a href="../projects/energy-monitoring.html">Energy Monitoring</a>
+                    </div>
+                </li>
+                <li><a href="../README.md">Documentation</a></li>
+                <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+            </ul>
+            <button class="echarts-mobile-menu-toggle">☰</button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="echarts-mobile-menu">
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="chapter1-introduction.html" class="active">Chapter 1: Introduction</a></li>
+            <li><a href="chapter2-core-concepts.html">Chapter 2: Core Concepts</a></li>
+            <li><a href="chapter3-line-area.html">Chapter 3: Line & Area Charts</a></li>
+            <li><a href="chapter4-bar-column.html">Chapter 4: Bar & Column Charts</a></li>
+            <li><a href="chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a></li>
+            <li><a href="chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a></li>
+            <li><a href="chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a></li>
+            <li><a href="../projects/business-dashboard.html">Business Analytics</a></li>
+            <li><a href="../projects/iot-monitoring.html">IoT Monitoring</a></li>
+            <li><a href="../projects/sales-analytics.html">Sales Analytics</a></li>
+            <li><a href="../projects/financial-dashboard.html">Financial Dashboard</a></li>
+            <li><a href="../projects/healthcare-analytics.html">Healthcare Analytics</a></li>
+            <li><a href="../projects/energy-monitoring.html">Energy Monitoring</a></li>
+            <li><a href="../README.md">Documentation</a></li>
+            <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>📊 Chapter 1: What is ECharts?</h1>
@@ -161,6 +220,7 @@ chart.setOption({
 
     <!-- Import ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="../assets/js/menu.js"></script>
     
     <script>
         // Initialize the main chart

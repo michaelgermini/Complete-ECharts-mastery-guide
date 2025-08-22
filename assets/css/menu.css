@@ -1,0 +1,246 @@
+/* ECharts Guide Navigation Menu */
+.echarts-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.echarts-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.echarts-nav-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.echarts-nav-brand:hover {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.echarts-nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+    align-items: center;
+}
+
+.echarts-nav-menu li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 10px 15px;
+    border-radius: 25px;
+    position: relative;
+}
+
+.echarts-nav-menu li a:hover {
+    background: #4a90e2;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.echarts-nav-menu li a.active {
+    background: #4a90e2;
+    color: white;
+}
+
+.echarts-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.echarts-dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 280px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    z-index: 1001;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.echarts-dropdown:hover .echarts-dropdown-content {
+    display: block;
+    animation: fadeInDown 0.3s ease;
+}
+
+.echarts-dropdown-content a {
+    color: #333;
+    padding: 15px 20px;
+    text-decoration: none;
+    display: block;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.echarts-dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.echarts-dropdown-content a:hover {
+    background: #f8f9fa;
+    color: #4a90e2;
+    padding-left: 25px;
+}
+
+.echarts-dropdown-content a.active {
+    background: #4a90e2;
+    color: white;
+}
+
+.echarts-dropdown-content a.active:hover {
+    background: #357abd;
+}
+
+.echarts-mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.echarts-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+
+.echarts-mobile-menu.active {
+    display: block;
+}
+
+.echarts-mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 20px;
+}
+
+.echarts-mobile-menu li {
+    margin-bottom: 15px;
+}
+
+.echarts-mobile-menu a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.echarts-mobile-menu a:hover {
+    background: #4a90e2;
+    color: white;
+}
+
+.echarts-mobile-menu a.active {
+    background: #4a90e2;
+    color: white;
+}
+
+/* Adjust body padding for fixed navigation */
+body {
+    padding-top: 80px;
+}
+
+/* Animation for dropdown */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .echarts-nav-menu {
+        display: none;
+    }
+    
+    .echarts-mobile-menu-toggle {
+        display: block;
+    }
+    
+    .echarts-nav-container {
+        padding: 0 15px;
+    }
+    
+    .echarts-nav-brand {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .echarts-nav-brand {
+        font-size: 1.1rem;
+    }
+    
+    .echarts-nav {
+        padding: 10px 0;
+    }
+    
+    body {
+        padding-top: 70px;
+    }
+}
+
+/* Chapter-specific navigation adjustments */
+.chapter-header {
+    margin-top: 20px;
+}
+
+.chapter-navigation {
+    margin-top: 30px;
+}
+
+/* Project-specific navigation adjustments */
+.dashboard-nav {
+    top: 80px;
+}
+
+.dashboard-header {
+    margin-top: 20px;
+}

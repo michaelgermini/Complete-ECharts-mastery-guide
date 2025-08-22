@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: Advanced Features - Mastering Data Visualization</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/menu.css">
+</head>
+<body>
+    <!-- ECharts Guide Navigation -->
+    <nav class="echarts-nav">
+        <div class="echarts-nav-container">
+            <a href="../index.html" class="echarts-nav-brand">📊 ECharts Guide</a>
+            <ul class="echarts-nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li class="echarts-dropdown">
+                    <a href="#">📚 Chapters</a>
+                    <div class="echarts-dropdown-content">
+                        <a href="chapter1-introduction.html">Chapter 1: Introduction</a>
+                        <a href="chapter2-core-concepts.html">Chapter 2: Core Concepts</a>
+                        <a href="chapter3-line-area.html">Chapter 3: Line & Area Charts</a>
+                        <a href="chapter4-bar-column.html">Chapter 4: Bar & Column Charts</a>
+                        <a href="chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a>
+                        <a href="chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a>
+                        <a href="chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a>
+                        <a href="chapter8-advanced-features.html" class="active">Chapter 8: Advanced Features</a>
+                        <a href="chapter9-themes-styling.html">Chapter 9: Themes & Styling</a>
+                        <a href="chapter10-interactivity.html">Chapter 10: Interactivity & Events</a>
+                    </div>
+                </li>
+                <li class="echarts-dropdown">
+                    <a href="#">🏗️ Projects</a>
+                    <div class="echarts-dropdown-content">
+                        <a href="../projects/business-dashboard.html">Business Analytics</a>
+                        <a href="../projects/iot-monitoring.html">IoT Monitoring</a>
+                        <a href="../projects/sales-analytics.html">Sales Analytics</a>
+                        <a href="../projects/financial-dashboard.html">Financial Dashboard</a>
+                        <a href="../projects/healthcare-analytics.html">Healthcare Analytics</a>
+                        <a href="../projects/energy-monitoring.html">Energy Monitoring</a>
+                        <a href="../projects/social-media-analytics.html">Social Media Analytics</a>
+                        <a href="../projects/ecommerce-dashboard.html">E-commerce Dashboard</a>
+                        <a href="../projects/weather-monitoring.html">Weather Monitoring</a>
+                        <a href="../projects/education-analytics.html">Education Analytics</a>
+                    </div>
+                </li>
+                <li><a href="../README.md">Documentation</a></li>
+                <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+            </ul>
+            <button class="echarts-mobile-menu-toggle">☰</button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="echarts-mobile-menu">
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="chapter1-introduction.html">Chapter 1: Introduction</a></li>
+            <li><a href="chapter2-core-concepts.html">Chapter 2: Core Concepts</a></li>
+            <li><a href="chapter3-line-area.html">Chapter 3: Line & Area Charts</a></li>
+            <li><a href="chapter4-bar-column.html">Chapter 4: Bar & Column Charts</a></li>
+            <li><a href="chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a></li>
+            <li><a href="chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a></li>
+            <li><a href="chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a></li>
+            <li><a href="chapter8-advanced-features.html" class="active">Chapter 8: Advanced Features</a></li>
+            <li><a href="chapter9-themes-styling.html">Chapter 9: Themes & Styling</a></li>
+            <li><a href="chapter10-interactivity.html">Chapter 10: Interactivity & Events</a></li>
+            <li><a href="../projects/business-dashboard.html">Business Analytics</a></li>
+            <li><a href="../projects/iot-monitoring.html">IoT Monitoring</a></li>
+            <li><a href="../projects/sales-analytics.html">Sales Analytics</a></li>
+            <li><a href="../projects/financial-dashboard.html">Financial Dashboard</a></li>
+            <li><a href="../projects/healthcare-analytics.html">Healthcare Analytics</a></li>
+            <li><a href="../projects/energy-monitoring.html">Energy Monitoring</a></li>
+            <li><a href="../projects/social-media-analytics.html">Social Media Analytics</a></li>
+            <li><a href="../projects/ecommerce-dashboard.html">E-commerce Dashboard</a></li>
+            <li><a href="../projects/weather-monitoring.html">Weather Monitoring</a></li>
+            <li><a href="../projects/education-analytics.html">Education Analytics</a></li>
+            <li><a href="../README.md">Documentation</a></li>
+            <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Chapter 8: Advanced Features</h1>
+            <p>Master advanced ECharts functionality for professional visualizations</p>
+        </div>
+
+        <div class="chapter-content">
+            <h2>8.1 Data Zoom & Panning</h2>
+            <p>Data zoom allows users to zoom in on specific data ranges and pan through large datasets. This is essential for handling large amounts of data effectively.</p>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Interactive Data Zoom Example</h3>
+                <div id="data-zoom-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var dataZoomChart = echarts.init(document.getElementById('data-zoom-chart'));
+var dataZoomOption = {
+    title: { text: 'Large Dataset with Data Zoom', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    dataZoom: [
+        {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+            start: 0,
+            end: 50
+        },
+        {
+            type: 'inside',
+            xAxisIndex: [0],
+            start: 0,
+            end: 50
+        }
+    ],
+    xAxis: {
+        type: 'category',
+        data: Array.from({length: 1000}, (_, i) => `Day ${i+1}`)
+    },
+    yAxis: { type: 'value' },
+    series: [{
+        name: 'Sales',
+        type: 'line',
+        data: Array.from({length: 1000}, () => Math.random() * 100),
+        smooth: true
+    }]
+};
+dataZoomChart.setOption(dataZoomOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>8.2 Advanced Animations</h2>
+            <p>ECharts provides powerful animation capabilities that can make your charts more engaging and help users understand data changes over time.</p>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Animated Chart with Progressive Loading</h3>
+                <div id="animated-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var animatedChart = echarts.init(document.getElementById('animated-chart'));
+var animatedOption = {
+    title: { text: 'Progressive Animation', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    animation: true,
+    animationDuration: 2000,
+    animationEasing: 'cubicOut',
+    animationDelay: function (idx) {
+        return idx * 100;
+    },
+    xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+    yAxis: {},
+    series: [{
+        name: 'Revenue',
+        type: 'bar',
+        data: [120, 200, 150, 80, 70, 110],
+        itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#83bff6' },
+                { offset: 0.5, color: '#188df0' },
+                { offset: 1, color: '#188df0' }
+            ])
+        }
+    }]
+};
+animatedChart.setOption(animatedOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>8.3 Custom Themes</h2>
+            <p>Create consistent visual styles across your application with custom themes. ECharts themes define colors, fonts, and other visual properties.</p>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Custom Dark Theme</h3>
+                <div id="dark-theme-chart" style="width: 100%; height: 400px; background: #1a1a1a;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+// Custom dark theme
+var darkTheme = {
+    backgroundColor: '#1a1a1a',
+    textStyle: { color: '#fff' },
+    title: { textStyle: { color: '#fff' } },
+    legend: { textStyle: { color: '#fff' } },
+    xAxis: { 
+        axisLine: { lineStyle: { color: '#333' } },
+        axisLabel: { color: '#fff' }
+    },
+    yAxis: { 
+        axisLine: { lineStyle: { color: '#333' } },
+        axisLabel: { color: '#fff' }
+    }
+};
+
+var darkThemeChart = echarts.init(document.getElementById('dark-theme-chart'));
+var darkOption = {
+    title: { text: 'Dark Theme Chart', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Series A', 'Series B'] },
+    xAxis: { data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
+    yAxis: {},
+    series: [
+        {
+            name: 'Series A',
+            type: 'line',
+            data: [120, 132, 101, 134, 90],
+            itemStyle: { color: '#ff6b6b' }
+        },
+        {
+            name: 'Series B',
+            type: 'line',
+            data: [220, 182, 191, 234, 290],
+            itemStyle: { color: '#4ecdc4' }
+        }
+    ]
+};
+darkThemeChart.setOption(darkOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>8.4 Advanced Tooltips</h2>
+            <p>Custom tooltips can provide rich, contextual information and enhance user interaction with your charts.</p>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Custom Tooltip with HTML</h3>
+                <div id="custom-tooltip-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var customTooltipChart = echarts.init(document.getElementById('custom-tooltip-chart'));
+var customTooltipOption = {
+    title: { text: 'Custom Tooltip Example', left: 'center' },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function(params) {
+            var result = '<div style="padding: 10px; background: rgba(0,0,0,0.8); color: white; border-radius: 5px;">';
+            result += '<h4 style="margin: 0 0 10px 0; color: #4ecdc4;">' + params[0].name + '</h4>';
+            params.forEach(function(param) {
+                result += '<div style="margin: 5px 0;">';
+                result += '<span style="display: inline-block; width: 10px; height: 10px; background: ' + param.color + '; margin-right: 5px;"></span>';
+                result += param.seriesName + ': <strong>' + param.value + '</strong>';
+                result += '</div>';
+            });
+            result += '</div>';
+            return result;
+        }
+    },
+    xAxis: { data: ['Q1', 'Q2', 'Q3', 'Q4'] },
+    yAxis: {},
+    series: [
+        {
+            name: 'Revenue',
+            type: 'bar',
+            data: [120, 200, 150, 80],
+            itemStyle: { color: '#4ecdc4' }
+        },
+        {
+            name: 'Profit',
+            type: 'bar',
+            data: [20, 40, 30, 15],
+            itemStyle: { color: '#ff6b6b' }
+        }
+    ]
+};
+customTooltipChart.setOption(customTooltipOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>8.5 Dynamic Data Updates</h2>
+            <p>Learn how to update chart data dynamically for real-time applications and interactive dashboards.</p>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Real-time Data Updates</h3>
+                <div id="dynamic-chart" style="width: 100%; height: 400px;"></div>
+                <button onclick="updateData()" style="margin: 10px; padding: 10px 20px; background: #4a90e2; color: white; border: none; border-radius: 5px; cursor: pointer;">Update Data</button>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var dynamicChart = echarts.init(document.getElementById('dynamic-chart'));
+var dynamicOption = {
+    title: { text: 'Dynamic Data Updates', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
+    yAxis: {},
+    series: [{
+        name: 'Values',
+        type: 'line',
+        data: [10, 20, 15, 25, 18],
+        smooth: true
+    }]
+};
+dynamicChart.setOption(dynamicOption);
+
+function updateData() {
+    var newData = Array.from({length: 5}, () => Math.floor(Math.random() * 30) + 5);
+    dynamicChart.setOption({
+        series: [{
+            data: newData
+        }]
+    });
+}
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>💡 Advanced Features Best Practices</h3>
+                <ul>
+                    <li><strong>Data Zoom:</strong> Use for datasets with more than 100 data points</li>
+                    <li><strong>Animations:</strong> Keep animations under 2 seconds for better UX</li>
+                    <li><strong>Themes:</strong> Create consistent themes across your application</li>
+                    <li><strong>Tooltips:</strong> Provide context and actionable information</li>
+                    <li><strong>Performance:</strong> Use data sampling for very large datasets</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h3>🎯 Practice Exercise</h3>
+                <p>Create a chart with the following advanced features:</p>
+                <ol>
+                    <li>Data zoom with both slider and inside zoom</li>
+                    <li>Custom tooltip with formatted content</li>
+                    <li>Progressive animation with staggered delays</li>
+                    <li>Dynamic data update functionality</li>
+                </ol>
+                <div class="code-editor">
+                    <textarea id="exercise-code" rows="15" placeholder="// Your advanced chart code here..."></textarea>
+                    <button onclick="runExercise()">Run Code</button>
+                </div>
+                <div id="exercise-result" style="width: 100%; height: 300px; margin-top: 20px;"></div>
+            </div>
+
+            <h2>8.6 Key Takeaways</h2>
+            <ul>
+                <li><strong>Data zoom</strong> is essential for large datasets and user exploration</li>
+                <li><strong>Animations</strong> enhance user experience but should be used judiciously</li>
+                <li><strong>Custom themes</strong> ensure visual consistency across applications</li>
+                <li><strong>Advanced tooltips</strong> provide rich contextual information</li>
+                <li><strong>Dynamic updates</strong> enable real-time data visualization</li>
+            </ul>
+
+            <div class="chapter-navigation">
+                <a href="chapter7-radar-gauge.html" class="nav-btn prev">← Chapter 7: Radar & Gauge Charts</a>
+                <a href="../index.html" class="nav-btn home">Home</a>
+                <a href="chapter9-themes-styling.html" class="nav-btn next">Chapter 9: Themes & Styling →</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    <script>
+        // Initialize charts
+        var dataZoomChart = echarts.init(document.getElementById('data-zoom-chart'));
+        var animatedChart = echarts.init(document.getElementById('animated-chart'));
+        var darkThemeChart = echarts.init(document.getElementById('dark-theme-chart'));
+        var customTooltipChart = echarts.init(document.getElementById('custom-tooltip-chart'));
+        var dynamicChart = echarts.init(document.getElementById('dynamic-chart'));
+
+        // Data Zoom Chart
+        var dataZoomOption = {
+            title: { text: 'Large Dataset with Data Zoom', left: 'center' },
+            tooltip: { trigger: 'axis' },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    show: true,
+                    xAxisIndex: [0],
+                    start: 0,
+                    end: 50
+                },
+                {
+                    type: 'inside',
+                    xAxisIndex: [0],
+                    start: 0,
+                    end: 50
+                }
+            ],
+            xAxis: {
+                type: 'category',
+                data: Array.from({length: 1000}, (_, i) => `Day ${i+1}`)
+            },
+            yAxis: { type: 'value' },
+            series: [{
+                name: 'Sales',
+                type: 'line',
+                data: Array.from({length: 1000}, () => Math.random() * 100),
+                smooth: true
+            }]
+        };
+
+        // Animated Chart
+        var animatedOption = {
+            title: { text: 'Progressive Animation', left: 'center' },
+            tooltip: { trigger: 'axis' },
+            animation: true,
+            animationDuration: 2000,
+            animationEasing: 'cubicOut',
+            animationDelay: function (idx) {
+                return idx * 100;
+            },
+            xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+            yAxis: {},
+            series: [{
+                name: 'Revenue',
+                type: 'bar',
+                data: [120, 200, 150, 80, 70, 110],
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#83bff6' },
+                        { offset: 0.5, color: '#188df0' },
+                        { offset: 1, color: '#188df0' }
+                    ])
+                }
+            }]
+        };
+
+        // Dark Theme Chart
+        var darkOption = {
+            title: { text: 'Dark Theme Chart', left: 'center', textStyle: { color: '#fff' } },
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['Series A', 'Series B'], textStyle: { color: '#fff' } },
+            xAxis: { 
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                axisLine: { lineStyle: { color: '#333' } },
+                axisLabel: { color: '#fff' }
+            },
+            yAxis: { 
+                axisLine: { lineStyle: { color: '#333' } },
+                axisLabel: { color: '#fff' }
+            },
+            series: [
+                {
+                    name: 'Series A',
+                    type: 'line',
+                    data: [120, 132, 101, 134, 90],
+                    itemStyle: { color: '#ff6b6b' }
+                },
+                {
+                    name: 'Series B',
+                    type: 'line',
+                    data: [220, 182, 191, 234, 290],
+                    itemStyle: { color: '#4ecdc4' }
+                }
+            ]
+        };
+
+        // Custom Tooltip Chart
+        var customTooltipOption = {
+            title: { text: 'Custom Tooltip Example', left: 'center' },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                    var result = '<div style="padding: 10px; background: rgba(0,0,0,0.8); color: white; border-radius: 5px;">';
+                    result += '<h4 style="margin: 0 0 10px 0; color: #4ecdc4;">' + params[0].name + '</h4>';
+                    params.forEach(function(param) {
+                        result += '<div style="margin: 5px 0;">';
+                        result += '<span style="display: inline-block; width: 10px; height: 10px; background: ' + param.color + '; margin-right: 5px;"></span>';
+                        result += param.seriesName + ': <strong>' + param.value + '</strong>';
+                        result += '</div>';
+                    });
+                    result += '</div>';
+                    return result;
+                }
+            },
+            xAxis: { data: ['Q1', 'Q2', 'Q3', 'Q4'] },
+            yAxis: {},
+            series: [
+                {
+                    name: 'Revenue',
+                    type: 'bar',
+                    data: [120, 200, 150, 80],
+                    itemStyle: { color: '#4ecdc4' }
+                },
+                {
+                    name: 'Profit',
+                    type: 'bar',
+                    data: [20, 40, 30, 15],
+                    itemStyle: { color: '#ff6b6b' }
+                }
+            ]
+        };
+
+        // Dynamic Chart
+        var dynamicOption = {
+            title: { text: 'Dynamic Data Updates', left: 'center' },
+            tooltip: { trigger: 'axis' },
+            xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
+            yAxis: {},
+            series: [{
+                name: 'Values',
+                type: 'line',
+                data: [10, 20, 15, 25, 18],
+                smooth: true
+            }]
+        };
+
+        // Set chart options
+        dataZoomChart.setOption(dataZoomOption);
+        animatedChart.setOption(animatedOption);
+        darkThemeChart.setOption(darkOption);
+        customTooltipChart.setOption(customTooltipOption);
+        dynamicChart.setOption(dynamicOption);
+
+        // Dynamic data update function
+        function updateData() {
+            var newData = Array.from({length: 5}, () => Math.floor(Math.random() * 30) + 5);
+            dynamicChart.setOption({
+                series: [{
+                    data: newData
+                }]
+            });
+        }
+
+        // Exercise function
+        function runExercise() {
+            const code = document.getElementById('exercise-code').value;
+            const resultDiv = document.getElementById('exercise-result');
+            
+            try {
+                // Clear previous chart
+                if (window.exerciseChart) {
+                    window.exerciseChart.dispose();
+                }
+                
+                // Create new chart
+                window.exerciseChart = echarts.init(resultDiv);
+                
+                // Execute the code
+                const option = eval('(' + code + ')');
+                window.exerciseChart.setOption(option);
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div style="color: red; padding: 20px;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            dataZoomChart.resize();
+            animatedChart.resize();
+            darkThemeChart.resize();
+            customTooltipChart.resize();
+            dynamicChart.resize();
+            if (window.exerciseChart) {
+                window.exerciseChart.resize();
+            }
+        });
+    </script>
+</body>
+</html>

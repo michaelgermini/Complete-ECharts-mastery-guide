@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Radar & Gauge Charts - Mastering ECharts</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="chapter-header">
+            <h1>Chapter 7: Radar & Gauge Charts</h1>
+            <p class="chapter-subtitle">Multi-dimensional comparisons and performance indicators</p>
+            <div class="chapter-navigation">
+                <a href="chapter6-scatter-bubble.html" class="nav-btn prev">← Chapter 6: Scatter & Bubble Charts</a>
+                <a href="../index.html" class="nav-btn home">Home</a>
+                <a href="chapter8-advanced-features.html" class="nav-btn next">Chapter 8: Advanced Features →</a>
+            </div>
+        </header>
+
+        <section class="chapter-content">
+            <h2>7.1 Introduction to Radar Charts</h2>
+            <p>Radar charts (also known as spider charts or star charts) are excellent for comparing multiple variables across different categories. They display data on axes radiating from a central point, making it easy to see patterns and identify strengths and weaknesses.</p>
+            
+            <h3>When to Use Radar Charts:</h3>
+            <ul>
+                <li>Comparing multiple variables for different entities (e.g., product features, employee skills)</li>
+                <li>Showing performance across different dimensions</li>
+                <li>Identifying strengths and weaknesses in a dataset</li>
+                <li>Comparing multiple datasets with the same variables</li>
+            </ul>
+
+            <h2>7.2 Basic Radar Chart</h2>
+            <p>Let's start with a simple radar chart showing student performance across different subjects.</p>
+            <div class="chart-container">
+                <h3 class="chart-title">Student Performance by Subject</h3>
+                <div id="basic-radar-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var basicRadarChart = echarts.init(document.getElementById('basic-radar-chart'));
+var basicRadarOption = {
+    title: { text: 'Student Performance by Subject', left: 'center', textStyle: { color: '#333' } },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{b}: {c}%'
+    },
+    legend: {
+        data: ['John', 'Sarah', 'Mike'],
+        bottom: 0
+    },
+    radar: {
+        indicator: [
+            { name: 'Math', max: 100 },
+            { name: 'Science', max: 100 },
+            { name: 'English', max: 100 },
+            { name: 'History', max: 100 },
+            { name: 'Art', max: 100 },
+            { name: 'Physical Education', max: 100 }
+        ],
+        radius: '65%',
+        center: ['50%', '50%'],
+        shape: 'polygon',
+        axisName: {
+            color: '#333',
+            fontSize: 12
+        },
+        splitLine: {
+            lineStyle: {
+                color: ['#ddd']
+            }
+        },
+        splitArea: {
+            show: true,
+            areaStyle: {
+                color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
+            }
+        }
+    },
+    series: [{
+        name: 'Student Performance',
+        type: 'radar',
+        data: [
+            {
+                value: [85, 90, 75, 80, 95, 70],
+                name: 'John',
+                itemStyle: { color: '#4a90e2' },
+                areaStyle: { color: 'rgba(74, 144, 226, 0.3)' }
+            },
+            {
+                value: [90, 85, 95, 75, 80, 85],
+                name: 'Sarah',
+                itemStyle: { color: '#f39c12' },
+                areaStyle: { color: 'rgba(243, 156, 18, 0.3)' }
+            },
+            {
+                value: [75, 80, 85, 90, 70, 95],
+                name: 'Mike',
+                itemStyle: { color: '#27ae60' },
+                areaStyle: { color: 'rgba(39, 174, 96, 0.3)' }
+            }
+        ]
+    }]
+};
+basicRadarChart.setOption(basicRadarOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>7.3 Advanced Radar Chart with Multiple Indicators</h2>
+            <p>Radar charts can handle complex data with multiple indicators and different scales. Here's an example showing product comparison across various features.</p>
+            <div class="chart-container">
+                <h3 class="chart-title">Product Comparison Analysis</h3>
+                <div id="advanced-radar-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var advancedRadarChart = echarts.init(document.getElementById('advanced-radar-chart'));
+var advancedRadarOption = {
+    title: { text: 'Product Comparison Analysis', left: 'center', textStyle: { color: '#333' } },
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return params.name + '<br/>' + params.seriesName + ': ' + params.value;
+        }
+    },
+    legend: {
+        data: ['Product A', 'Product B', 'Product C'],
+        bottom: 0
+    },
+    radar: {
+        indicator: [
+            { name: 'Performance', max: 10 },
+            { name: 'Price', max: 10 },
+            { name: 'Design', max: 10 },
+            { name: 'Features', max: 10 },
+            { name: 'Support', max: 10 },
+            { name: 'Reliability', max: 10 },
+            { name: 'Ease of Use', max: 10 },
+            { name: 'Innovation', max: 10 }
+        ],
+        radius: '60%',
+        center: ['50%', '50%'],
+        shape: 'circle',
+        axisName: {
+            color: '#333',
+            fontSize: 11
+        },
+        splitLine: {
+            lineStyle: {
+                color: ['#ddd']
+            }
+        },
+        splitArea: {
+            show: true,
+            areaStyle: {
+                color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
+            }
+        }
+    },
+    series: [{
+        name: 'Product Comparison',
+        type: 'radar',
+        data: [
+            {
+                value: [8, 6, 9, 7, 8, 9, 8, 7],
+                name: 'Product A',
+                itemStyle: { color: '#4a90e2' },
+                areaStyle: { color: 'rgba(74, 144, 226, 0.2)' },
+                lineStyle: { width: 2 }
+            },
+            {
+                value: [7, 8, 7, 9, 7, 8, 9, 8],
+                name: 'Product B',
+                itemStyle: { color: '#f39c12' },
+                areaStyle: { color: 'rgba(243, 156, 18, 0.2)' },
+                lineStyle: { width: 2 }
+            },
+            {
+                value: [9, 7, 8, 6, 9, 7, 7, 9],
+                name: 'Product C',
+                itemStyle: { color: '#27ae60' },
+                areaStyle: { color: 'rgba(39, 174, 96, 0.2)' },
+                lineStyle: { width: 2 }
+            }
+        ]
+    }]
+};
+advancedRadarChart.setOption(advancedRadarOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>7.4 Introduction to Gauge Charts</h2>
+            <p>Gauge charts are perfect for displaying progress, performance metrics, or any value within a defined range. They provide an intuitive visual representation of how a value relates to a target or threshold.</p>
+            
+            <h3>When to Use Gauge Charts:</h3>
+            <ul>
+                <li>Displaying progress towards a goal</li>
+                <li>Showing performance metrics (KPIs)</li>
+                <li>Representing values within a range</li>
+                <li>Monitoring system status or health</li>
+            </ul>
+
+            <h2>7.5 Basic Gauge Chart</h2>
+            <p>Let's create a simple gauge chart showing a performance metric.</p>
+            <div class="chart-container">
+                <h3 class="chart-title">Performance Gauge</h3>
+                <div id="basic-gauge-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var basicGaugeChart = echarts.init(document.getElementById('basic-gauge-chart'));
+var basicGaugeOption = {
+    title: { text: 'Performance Gauge', left: 'center', textStyle: { color: '#333' } },
+    tooltip: {
+        formatter: '{a} <br/>{b} : {c}%'
+    },
+    series: [{
+        name: 'Performance',
+        type: 'gauge',
+        detail: { formatter: '{value}%' },
+        data: [{ value: 75, name: 'Performance' }],
+        title: {
+            color: '#333',
+            fontSize: 16
+        },
+        axisLine: {
+            lineStyle: {
+                width: 30,
+                color: [
+                    [0.3, '#ff6b6b'],
+                    [0.7, '#feca57'],
+                    [1, '#48dbfb']
+                ]
+            }
+        },
+        pointer: {
+            itemStyle: {
+                color: 'auto'
+            }
+        },
+        axisTick: {
+            distance: -30,
+            length: 8,
+            lineStyle: {
+                color: '#fff',
+                width: 2
+            }
+        },
+        splitLine: {
+            distance: -30,
+            length: 30,
+            lineStyle: {
+                color: '#fff',
+                width: 4
+            }
+        },
+        axisLabel: {
+            color: 'inherit',
+            distance: 40,
+            fontSize: 12
+        },
+        detail: {
+            valueAnimation: true,
+            formatter: '{value}%',
+            color: 'inherit'
+        }
+    }]
+};
+basicGaugeChart.setOption(basicGaugeOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>7.6 Multiple Gauge Charts</h2>
+            <p>You can display multiple gauge charts together to show different metrics at a glance. This is useful for dashboards and monitoring systems.</p>
+            <div class="chart-container">
+                <h3 class="chart-title">System Metrics Dashboard</h3>
+                <div id="multiple-gauge-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var multipleGaugeChart = echarts.init(document.getElementById('multiple-gauge-chart'));
+var multipleGaugeOption = {
+    title: { text: 'System Metrics Dashboard', left: 'center', textStyle: { color: '#333' } },
+    tooltip: {
+        formatter: '{a} <br/>{b} : {c}'
+    },
+    series: [
+        {
+            name: 'CPU Usage',
+            type: 'gauge',
+            center: ['25%', '50%'],
+            radius: '60%',
+            detail: { formatter: '{value}%' },
+            data: [{ value: 65, name: 'CPU' }],
+            title: { color: '#333' },
+            axisLine: {
+                lineStyle: {
+                    width: 20,
+                    color: [
+                        [0.3, '#67e480'],
+                        [0.7, '#37a2ff'],
+                        [1, '#fd666d']
+                    ]
+                }
+            }
+        },
+        {
+            name: 'Memory Usage',
+            type: 'gauge',
+            center: ['75%', '50%'],
+            radius: '60%',
+            detail: { formatter: '{value}%' },
+            data: [{ value: 45, name: 'Memory' }],
+            title: { color: '#333' },
+            axisLine: {
+                lineStyle: {
+                    width: 20,
+                    color: [
+                        [0.3, '#67e480'],
+                        [0.7, '#37a2ff'],
+                        [1, '#fd666d']
+                    ]
+                }
+            }
+        }
+    ]
+};
+multipleGaugeChart.setOption(multipleGaugeOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>7.7 Advanced Gauge with Custom Styling</h2>
+            <p>Gauge charts can be highly customized with different styles, colors, and animations. Here's an example with custom styling and progressive animation.</p>
+            <div class="chart-container">
+                <h3 class="chart-title">Custom Styled Gauge</h3>
+                <div id="custom-gauge-chart" style="width: 100%; height: 400px;"></div>
+                <div class="code-snippet">
+                    <pre><code class="language-javascript">
+var customGaugeChart = echarts.init(document.getElementById('custom-gauge-chart'));
+var customGaugeOption = {
+    title: { text: 'Custom Styled Gauge', left: 'center', textStyle: { color: '#333' } },
+    tooltip: {
+        formatter: '{a} <br/>{b} : {c}'
+    },
+    series: [{
+        name: 'Custom Metric',
+        type: 'gauge',
+        startAngle: 180,
+        endAngle: 0,
+        min: 0,
+        max: 100,
+        splitNumber: 10,
+        radius: '80%',
+        center: ['50%', '75%'],
+        detail: {
+            formatter: '{value}',
+            fontSize: 30,
+            fontWeight: 'bold',
+            color: '#333'
+        },
+        data: [{ value: 82, name: 'Score' }],
+        title: {
+            color: '#333',
+            fontSize: 18,
+            fontWeight: 'bold'
+        },
+        axisLine: {
+            lineStyle: {
+                width: 25,
+                color: [
+                    [0.2, '#ff6b6b'],
+                    [0.4, '#feca57'],
+                    [0.6, '#48dbfb'],
+                    [0.8, '#0abde3'],
+                    [1, '#54a0ff']
+                ]
+            }
+        },
+        pointer: {
+            icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+            length: '12%',
+            width: 20,
+            offsetCenter: [0, '-60%'],
+            itemStyle: {
+                color: 'auto'
+            }
+        },
+        axisTick: {
+            length: 12,
+            lineStyle: {
+                color: 'auto',
+                width: 2
+            }
+        },
+        splitLine: {
+            length: 20,
+            lineStyle: {
+                color: 'auto',
+                width: 5
+            }
+        },
+        axisLabel: {
+            color: '#333',
+            fontSize: 14,
+            distance: -60
+        }
+    }]
+};
+customGaugeChart.setOption(customGaugeOption);
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>💡 Pro Tips for Radar & Gauge Charts</h3>
+                <ul>
+                    <li><strong>Radar Charts:</strong> Use consistent scales across indicators for fair comparison</li>
+                    <li><strong>Gauge Charts:</strong> Choose appropriate color schemes (green-yellow-red for performance)</li>
+                    <li><strong>Multiple Series:</strong> Limit to 3-4 series in radar charts to avoid clutter</li>
+                    <li><strong>Animations:</strong> Use progressive animations to engage users</li>
+                    <li><strong>Responsive Design:</strong> Ensure charts work well on all screen sizes</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h3>🎯 Practice Exercise</h3>
+                <p>Create a radar chart comparing three different smartphones across features like: Camera, Battery, Performance, Design, Price, and Features. Use a scale of 1-10 and add appropriate colors and styling.</p>
+                <div class="code-editor">
+                    <textarea id="exercise-code" rows="15" placeholder="// Your code here..."></textarea>
+                    <button onclick="runExercise()">Run Code</button>
+                </div>
+                <div id="exercise-result" style="width: 100%; height: 300px; margin-top: 20px;"></div>
+            </div>
+
+            <h2>7.8 Key Takeaways</h2>
+            <ul>
+                <li><strong>Radar charts</strong> are excellent for comparing multiple variables across different categories</li>
+                <li><strong>Gauge charts</strong> provide intuitive visualization of progress and performance metrics</li>
+                <li>Both chart types support extensive customization for different use cases</li>
+                <li>Use appropriate color schemes and scales to enhance readability</li>
+                <li>Consider the number of data series to avoid visual clutter</li>
+            </ul>
+
+            <div class="chapter-navigation">
+                <a href="chapter6-scatter-bubble.html" class="nav-btn prev">← Chapter 6: Scatter & Bubble Charts</a>
+                <a href="../index.html" class="nav-btn home">Home</a>
+                <a href="chapter8-advanced-features.html" class="nav-btn next">Chapter 8: Advanced Features →</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Initialize charts
+        var basicRadarChart = echarts.init(document.getElementById('basic-radar-chart'));
+        var advancedRadarChart = echarts.init(document.getElementById('advanced-radar-chart'));
+        var basicGaugeChart = echarts.init(document.getElementById('basic-gauge-chart'));
+        var multipleGaugeChart = echarts.init(document.getElementById('multiple-gauge-chart'));
+        var customGaugeChart = echarts.init(document.getElementById('custom-gauge-chart'));
+
+        // Basic Radar Chart
+        var basicRadarOption = {
+            title: { text: 'Student Performance by Subject', left: 'center', textStyle: { color: '#333' } },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c}%'
+            },
+            legend: {
+                data: ['John', 'Sarah', 'Mike'],
+                bottom: 0
+            },
+            radar: {
+                indicator: [
+                    { name: 'Math', max: 100 },
+                    { name: 'Science', max: 100 },
+                    { name: 'English', max: 100 },
+                    { name: 'History', max: 100 },
+                    { name: 'Art', max: 100 },
+                    { name: 'Physical Education', max: 100 }
+                ],
+                radius: '65%',
+                center: ['50%', '50%'],
+                shape: 'polygon',
+                axisName: {
+                    color: '#333',
+                    fontSize: 12
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: ['#ddd']
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
+                    }
+                }
+            },
+            series: [{
+                name: 'Student Performance',
+                type: 'radar',
+                data: [
+                    {
+                        value: [85, 90, 75, 80, 95, 70],
+                        name: 'John',
+                        itemStyle: { color: '#4a90e2' },
+                        areaStyle: { color: 'rgba(74, 144, 226, 0.3)' }
+                    },
+                    {
+                        value: [90, 85, 95, 75, 80, 85],
+                        name: 'Sarah',
+                        itemStyle: { color: '#f39c12' },
+                        areaStyle: { color: 'rgba(243, 156, 18, 0.3)' }
+                    },
+                    {
+                        value: [75, 80, 85, 90, 70, 95],
+                        name: 'Mike',
+                        itemStyle: { color: '#27ae60' },
+                        areaStyle: { color: 'rgba(39, 174, 96, 0.3)' }
+                    }
+                ]
+            }]
+        };
+
+        // Advanced Radar Chart
+        var advancedRadarOption = {
+            title: { text: 'Product Comparison Analysis', left: 'center', textStyle: { color: '#333' } },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return params.name + '<br/>' + params.seriesName + ': ' + params.value;
+                }
+            },
+            legend: {
+                data: ['Product A', 'Product B', 'Product C'],
+                bottom: 0
+            },
+            radar: {
+                indicator: [
+                    { name: 'Performance', max: 10 },
+                    { name: 'Price', max: 10 },
+                    { name: 'Design', max: 10 },
+                    { name: 'Features', max: 10 },
+                    { name: 'Support', max: 10 },
+                    { name: 'Reliability', max: 10 },
+                    { name: 'Ease of Use', max: 10 },
+                    { name: 'Innovation', max: 10 }
+                ],
+                radius: '60%',
+                center: ['50%', '50%'],
+                shape: 'circle',
+                axisName: {
+                    color: '#333',
+                    fontSize: 11
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: ['#ddd']
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
+                    }
+                }
+            },
+            series: [{
+                name: 'Product Comparison',
+                type: 'radar',
+                data: [
+                    {
+                        value: [8, 6, 9, 7, 8, 9, 8, 7],
+                        name: 'Product A',
+                        itemStyle: { color: '#4a90e2' },
+                        areaStyle: { color: 'rgba(74, 144, 226, 0.2)' },
+                        lineStyle: { width: 2 }
+                    },
+                    {
+                        value: [7, 8, 7, 9, 7, 8, 9, 8],
+                        name: 'Product B',
+                        itemStyle: { color: '#f39c12' },
+                        areaStyle: { color: 'rgba(243, 156, 18, 0.2)' },
+                        lineStyle: { width: 2 }
+                    },
+                    {
+                        value: [9, 7, 8, 6, 9, 7, 7, 9],
+                        name: 'Product C',
+                        itemStyle: { color: '#27ae60' },
+                        areaStyle: { color: 'rgba(39, 174, 96, 0.2)' },
+                        lineStyle: { width: 2 }
+                    }
+                ]
+            }]
+        };
+
+        // Basic Gauge Chart
+        var basicGaugeOption = {
+            title: { text: 'Performance Gauge', left: 'center', textStyle: { color: '#333' } },
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+            },
+            series: [{
+                name: 'Performance',
+                type: 'gauge',
+                detail: { formatter: '{value}%' },
+                data: [{ value: 75, name: 'Performance' }],
+                title: {
+                    color: '#333',
+                    fontSize: 16
+                },
+                axisLine: {
+                    lineStyle: {
+                        width: 30,
+                        color: [
+                            [0.3, '#ff6b6b'],
+                            [0.7, '#feca57'],
+                            [1, '#48dbfb']
+                        ]
+                    }
+                },
+                pointer: {
+                    itemStyle: {
+                        color: 'auto'
+                    }
+                },
+                axisTick: {
+                    distance: -30,
+                    length: 8,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 2
+                    }
+                },
+                splitLine: {
+                    distance: -30,
+                    length: 30,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 4
+                    }
+                },
+                axisLabel: {
+                    color: 'inherit',
+                    distance: 40,
+                    fontSize: 12
+                },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value}%',
+                    color: 'inherit'
+                }
+            }]
+        };
+
+        // Multiple Gauge Charts
+        var multipleGaugeOption = {
+            title: { text: 'System Metrics Dashboard', left: 'center', textStyle: { color: '#333' } },
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            series: [
+                {
+                    name: 'CPU Usage',
+                    type: 'gauge',
+                    center: ['25%', '50%'],
+                    radius: '60%',
+                    detail: { formatter: '{value}%' },
+                    data: [{ value: 65, name: 'CPU' }],
+                    title: { color: '#333' },
+                    axisLine: {
+                        lineStyle: {
+                            width: 20,
+                            color: [
+                                [0.3, '#67e480'],
+                                [0.7, '#37a2ff'],
+                                [1, '#fd666d']
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Memory Usage',
+                    type: 'gauge',
+                    center: ['75%', '50%'],
+                    radius: '60%',
+                    detail: { formatter: '{value}%' },
+                    data: [{ value: 45, name: 'Memory' }],
+                    title: { color: '#333' },
+                    axisLine: {
+                        lineStyle: {
+                            width: 20,
+                            color: [
+                                [0.3, '#67e480'],
+                                [0.7, '#37a2ff'],
+                                [1, '#fd666d']
+                            ]
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Custom Gauge Chart
+        var customGaugeOption = {
+            title: { text: 'Custom Styled Gauge', left: 'center', textStyle: { color: '#333' } },
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            series: [{
+                name: 'Custom Metric',
+                type: 'gauge',
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 100,
+                splitNumber: 10,
+                radius: '80%',
+                center: ['50%', '75%'],
+                detail: {
+                    formatter: '{value}',
+                    fontSize: 30,
+                    fontWeight: 'bold',
+                    color: '#333'
+                },
+                data: [{ value: 82, name: 'Score' }],
+                title: {
+                    color: '#333',
+                    fontSize: 18,
+                    fontWeight: 'bold'
+                },
+                axisLine: {
+                    lineStyle: {
+                        width: 25,
+                        color: [
+                            [0.2, '#ff6b6b'],
+                            [0.4, '#feca57'],
+                            [0.6, '#48dbfb'],
+                            [0.8, '#0abde3'],
+                            [1, '#54a0ff']
+                        ]
+                    }
+                },
+                pointer: {
+                    icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+                    length: '12%',
+                    width: 20,
+                    offsetCenter: [0, '-60%'],
+                    itemStyle: {
+                        color: 'auto'
+                    }
+                },
+                axisTick: {
+                    length: 12,
+                    lineStyle: {
+                        color: 'auto',
+                        width: 2
+                    }
+                },
+                splitLine: {
+                    length: 20,
+                    lineStyle: {
+                        color: 'auto',
+                        width: 5
+                    }
+                },
+                axisLabel: {
+                    color: '#333',
+                    fontSize: 14,
+                    distance: -60
+                }
+            }]
+        };
+
+        // Set chart options
+        basicRadarChart.setOption(basicRadarOption);
+        advancedRadarChart.setOption(advancedRadarOption);
+        basicGaugeChart.setOption(basicGaugeOption);
+        multipleGaugeChart.setOption(multipleGaugeOption);
+        customGaugeChart.setOption(customGaugeOption);
+
+        // Exercise function
+        function runExercise() {
+            const code = document.getElementById('exercise-code').value;
+            const resultDiv = document.getElementById('exercise-result');
+            
+            try {
+                // Clear previous chart
+                if (window.exerciseChart) {
+                    window.exerciseChart.dispose();
+                }
+                
+                // Create new chart
+                window.exerciseChart = echarts.init(resultDiv);
+                
+                // Execute the code
+                const option = eval('(' + code + ')');
+                window.exerciseChart.setOption(option);
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div style="color: red; padding: 20px;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            basicRadarChart.resize();
+            advancedRadarChart.resize();
+            basicGaugeChart.resize();
+            multipleGaugeChart.resize();
+            customGaugeChart.resize();
+            if (window.exerciseChart) {
+                window.exerciseChart.resize();
+            }
+        });
+    </script>
+</body>
+</html>

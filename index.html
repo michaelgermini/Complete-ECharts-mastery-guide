@@ -170,6 +170,53 @@
             font-weight: bold;
         }
         
+        .nav-btn.next {
+            margin-top: 60px;
+            display: block;
+            text-align: center;
+            width: 100%;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn.next:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-btn.next:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .nav-btn.next:hover:before {
+            left: 100%;
+        }
+        
+        .nav-btn.next:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
         .projects-section {
             padding: 60px 20px;
         }
@@ -683,6 +730,150 @@
                                 <li>Best practices and performance tips</li>
                             </ul>
                             <a href="chapters/chapter11-integration-frameworks.html" class="nav-btn next">Start Chapter 11 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 12: Real-World Applications</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Apply ECharts to practical scenarios and real-world use cases.</p>
+                            <ul class="chapter-features">
+                                <li>Business intelligence dashboards</li>
+                                <li>Financial data visualization</li>
+                                <li>Healthcare analytics</li>
+                                <li>IoT and sensor data</li>
+                            </ul>
+                            <a href="chapters/chapter12-real-world-applications.html" class="nav-btn next">Start Chapter 12 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 13: Geographic Maps</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Create stunning geographic visualizations and location-based analytics.</p>
+                            <ul class="chapter-features">
+                                <li>World maps and regional data</li>
+                                <li>Custom map projections</li>
+                                <li>Heat maps and choropleth charts</li>
+                                <li>Interactive map features</li>
+                            </ul>
+                            <a href="chapters/chapter13-geographic-maps.html" class="nav-btn next">Start Chapter 13 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 14: 3D Visualizations</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Explore three-dimensional data visualization with ECharts GL.</p>
+                            <ul class="chapter-features">
+                                <li>3D scatter plots and surfaces</li>
+                                <li>3D bar charts and line charts</li>
+                                <li>Camera controls and lighting</li>
+                                <li>Performance optimization for 3D</li>
+                            </ul>
+                            <a href="chapters/chapter14-3d-visualizations.html" class="nav-btn next">Start Chapter 14 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 15: Time Series Analysis</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Master temporal data visualization and time-based analytics.</p>
+                            <ul class="chapter-features">
+                                <li>Trend analysis and seasonality</li>
+                                <li>Forecasting and predictions</li>
+                                <li>Real-time data streaming</li>
+                                <li>Anomaly detection</li>
+                            </ul>
+                            <a href="chapters/chapter15-time-series-analysis.html" class="nav-btn next">Start Chapter 15 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 16: Advanced Interactions</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Create dynamic, interactive dashboards with advanced user interactions.</p>
+                            <ul class="chapter-features">
+                                <li>Custom event handlers</li>
+                                <li>Dynamic data filtering</li>
+                                <li>Cross-chart interactions</li>
+                                <li>Advanced tooltips and legends</li>
+                            </ul>
+                            <a href="chapters/chapter16-advanced-interactions.html" class="nav-btn next">Start Chapter 16 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 17: Data Storytelling</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Master narrative visualization techniques and data-driven storytelling.</p>
+                            <ul class="chapter-features">
+                                <li>Progressive disclosure</li>
+                                <li>Interactive storyboards</li>
+                                <li>Narrative flow design</li>
+                                <li>Engaging user experiences</li>
+                            </ul>
+                            <a href="chapters/chapter17-data-storytelling.html" class="nav-btn next">Start Chapter 17 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 18: Mobile Optimization</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Optimize charts for mobile devices and touch interactions.</p>
+                            <ul class="chapter-features">
+                                <li>Responsive chart design</li>
+                                <li>Touch-friendly interactions</li>
+                                <li>Mobile performance optimization</li>
+                                <li>Progressive web app features</li>
+                            </ul>
+                            <a href="chapters/chapter18-mobile-optimization.html" class="nav-btn next">Start Chapter 18 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 19: Accessibility</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Make charts accessible to everyone with WCAG compliance and inclusive design.</p>
+                            <ul class="chapter-features">
+                                <li>Screen reader support</li>
+                                <li>Keyboard navigation</li>
+                                <li>Color contrast and ARIA</li>
+                                <li>Inclusive design principles</li>
+                            </ul>
+                            <a href="chapters/chapter19-accessibility.html" class="nav-btn next">Start Chapter 19 →</a>
+                        </div>
+                    </div>
+
+                    <div class="chapter-card">
+                        <div class="chapter-header">
+                            <h3>Chapter 20: Advanced Techniques</h3>
+                        </div>
+                        <div class="chapter-content">
+                            <p>Master advanced ECharts features and custom visualization techniques.</p>
+                            <ul class="chapter-features">
+                                <li>Custom graphics and shapes</li>
+                                <li>Advanced animations</li>
+                                <li>Data processing pipelines</li>
+                                <li>Performance optimization</li>
+                            </ul>
+                            <a href="chapters/chapter20-advanced-techniques.html" class="nav-btn next">Start Chapter 20 →</a>
                         </div>
                     </div>
                 </div>

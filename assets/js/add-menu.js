@@ -2,6 +2,12 @@
 // This script can be run to automatically add the menu to existing pages
 
 function addEChartsMenu() {
+    // Check if navigation already exists
+    if (document.querySelector('.echarts-nav')) {
+        console.log('ECharts navigation already exists, skipping...');
+        return;
+    }
+    
     // Get the current page path to determine relative paths
     const currentPath = window.location.pathname;
     const isInChapters = currentPath.includes('/chapters/');
@@ -76,12 +82,17 @@ function addEChartsMenu() {
     const body = document.body;
     body.insertAdjacentHTML('afterbegin', navHTML);
     
+    console.log('ECharts navigation added successfully');
+    
     // Add the menu CSS link to the head if it doesn't exist
     if (!document.querySelector('link[href*="menu.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = `${basePath}assets/css/menu.css`;
         document.head.appendChild(link);
+        console.log('Menu CSS added:', link.href);
+    } else {
+        console.log('Menu CSS already exists');
     }
     
     // Add the menu JavaScript if it doesn't exist
@@ -89,6 +100,9 @@ function addEChartsMenu() {
         const script = document.createElement('script');
         script.src = `${basePath}assets/js/menu.js`;
         document.head.appendChild(script);
+        console.log('Menu JS added:', script.src);
+    } else {
+        console.log('Menu JS already exists');
     }
 }
 
@@ -109,3 +123,17 @@ function addMenuCSS() {
 
 // Auto-add menu CSS when script loads
 addMenuCSS();
+
+// Auto-add the complete menu when script loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('add-menu.js: DOMContentLoaded event fired');
+    addEChartsMenu();
+});
+
+// Also try to add menu immediately if DOM is already loaded
+if (document.readyState === 'loading') {
+    console.log('add-menu.js: DOM still loading, waiting for DOMContentLoaded');
+} else {
+    console.log('add-menu.js: DOM already loaded, adding menu immediately');
+    addEChartsMenu();
+}

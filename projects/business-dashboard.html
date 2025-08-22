@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Analytics Dashboard - ECharts Mastery Guide</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/navigation.css">
     <script src="../assets/js/add-menu.js"></script>
     <style>
         .dashboard {
@@ -84,31 +83,7 @@
     </style>
 </head>
 <body>
-    <!-- Dashboard Navigation -->
-    <nav class="dashboard-nav">
-        <div class="dashboard-nav-container">
-            <a href="../index.html" class="dashboard-nav-brand">
-                📊 ECharts Guide
-            </a>
-            <ul class="dashboard-nav-menu">
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../#chapters">Chapters</a></li>
-                <li class="dashboard-nav-dropdown">
-                    <a href="#projects">Dashboards ▼</a>
-                    <div class="dashboard-nav-dropdown-content">
-                        <a href="business-dashboard.html" class="active">🏢 Business Analytics</a>
-                        <a href="iot-monitoring.html">⚙️ IoT Monitoring</a>
-                        <a href="sales-analytics.html">📈 Sales Analytics</a>
-                        <a href="financial-dashboard.html">💰 Financial Dashboard</a>
-                        <a href="healthcare-analytics.html">🏥 Healthcare Analytics</a>
-                        <a href="energy-monitoring.html">⚡ Energy Monitoring</a>
-                    </div>
-                </li>
-                <li><a href="../README.md">Documentation</a></li>
-            </ul>
-            <button class="dashboard-mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
-        </div>
-    </nav>
+
 
     <div class="container">
         <!-- Dashboard Header -->
@@ -248,12 +223,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     
     <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const menu = document.querySelector('.dashboard-nav-menu');
-            menu.classList.toggle('active');
-        }
-
         // Initialize charts
         var revenueChart = echarts.init(document.getElementById('revenue-chart'));
         var categoryChart = echarts.init(document.getElementById('category-chart'));

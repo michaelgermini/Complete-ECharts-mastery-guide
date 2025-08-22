@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14: 3D Visualizations - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/add-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <style>
+        .chart3d-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .chart3d-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chart3d {
+            width: 100%;
+            height: 400px;
+            margin: 10px 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .control-group select, .control-group input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .code-example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .practice-section {
+            background: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .practice-section h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .live-editor {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .live-editor textarea {
+            width: 100%;
+            height: 200px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            resize: vertical;
+        }
+        
+        .live-editor button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        
+        .live-editor button:hover {
+            background: #0056b3;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chapter 14: 3D Visualizations</h1>
+        <p class="lead">Explore the world of three-dimensional data visualization with ECharts GL, creating immersive and interactive 3D charts and plots.</p>
+
+        <div class="chapter-nav">
+            <a href="chapter13-geographic-maps.html">← Chapter 13: Geographic Maps</a>
+            <a href="chapter15-time-series-analysis.html">Chapter 15: Time Series Analysis →</a>
+        </div>
+
+        <div class="warning">
+            <strong>Note:</strong> This chapter requires ECharts GL extension. Make sure to include the ECharts GL library in your project for 3D visualizations.
+        </div>
+
+        <h2>Introduction to 3D Visualizations</h2>
+        <p>3D visualizations add an extra dimension to data representation, allowing you to explore complex relationships and patterns that might be hidden in 2D views. ECharts GL provides powerful 3D rendering capabilities.</p>
+
+        <h3>Key Concepts</h3>
+        <ul>
+            <li><strong>3D Coordinate System:</strong> X, Y, and Z axes for three-dimensional plotting</li>
+            <li><strong>Camera Controls:</strong> Rotate, zoom, and pan in 3D space</li>
+            <li><strong>Lighting:</strong> Shading and shadows for depth perception</li>
+            <li><strong>Surface Rendering:</strong> Different rendering modes for surfaces</li>
+            <li><strong>Performance Optimization:</strong> Techniques for smooth 3D rendering</li>
+        </ul>
+
+        <h2>3D Scatter Plot</h2>
+        <p>3D scatter plots are excellent for visualizing relationships between three variables.</p>
+        
+        <div class="chart3d-container">
+            <div class="chart3d-card">
+                <h3>Basic 3D Scatter Plot</h3>
+                <div id="3d-scatter" class="chart3d"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Point Size:</label>
+                        <input type="range" id="scatter-size" min="2" max="20" value="8">
+                    </div>
+                    <div class="control-group">
+                        <label>Opacity:</label>
+                        <input type="range" id="scatter-opacity" min="0.1" max="1" step="0.1" value="0.8">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart3d-card">
+                <h3>Interactive 3D Scatter</h3>
+                <div id="3d-scatter-interactive" class="chart3d"></div>
+                <div class="controls">
+                    <button onclick="reset3DView()">Reset View</button>
+                    <button onclick="toggleRotation()">Toggle Rotation</button>
+                    <button onclick="changeColorScheme()">Change Colors</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>3D Surface Plot</h2>
+        <p>Surface plots are perfect for visualizing mathematical functions and continuous data over a 2D domain.</p>
+        
+        <div class="chart3d-container">
+            <div class="chart3d-card">
+                <h3>Mathematical Surface</h3>
+                <div id="3d-surface" class="chart3d"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Function:</label>
+                        <select id="surface-function">
+                            <option value="sine">Sine Wave</option>
+                            <option value="gaussian">Gaussian</option>
+                            <option value="saddle">Saddle</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Resolution:</label>
+                        <input type="range" id="surface-resolution" min="10" max="50" value="20">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart3d-card">
+                <h3>Contour Surface</h3>
+                <div id="3d-contour" class="chart3d"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Show Contours:</label>
+                        <input type="checkbox" id="show-contours" checked>
+                    </div>
+                    <div class="control-group">
+                        <label>Wireframe:</label>
+                        <input type="checkbox" id="show-wireframe">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>3D Bar Chart</h2>
+        <p>3D bar charts add depth to traditional bar visualizations, allowing for better comparison of multiple variables.</p>
+        
+        <div class="chart3d-container">
+            <div class="chart3d-card">
+                <h3>3D Bar Chart</h3>
+                <div id="3d-bar" class="chart3d"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Bar Width:</label>
+                        <input type="range" id="bar-width" min="0.1" max="1" step="0.1" value="0.6">
+                    </div>
+                    <div class="control-group">
+                        <label>Bar Depth:</label>
+                        <input type="range" id="bar-depth" min="0.1" max="1" step="0.1" value="0.6">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart3d-card">
+                <h3>3D Stacked Bar</h3>
+                <div id="3d-stacked-bar" class="chart3d"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Stack Direction:</label>
+                        <select id="stack-direction">
+                            <option value="z">Z-axis</option>
+                            <option value="y">Y-axis</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Advanced 3D Features</h2>
+        
+        <h3>3D Line and Area</h3>
+        <p>Create 3D line plots and area charts for time series and trajectory data.</p>
+        
+        <div class="chart3d-card">
+            <h3>3D Line Plot</h3>
+            <div id="3d-line" class="chart3d"></div>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Line Width:</label>
+                    <input type="range" id="line-width" min="1" max="10" value="3">
+                </div>
+                <div class="control-group">
+                    <label>Show Points:</label>
+                    <input type="checkbox" id="show-line-points" checked>
+                </div>
+            </div>
+        </div>
+
+        <h3>3D Scatter with Multiple Series</h3>
+        <p>Combine multiple data series in a single 3D visualization.</p>
+        
+        <div class="chart3d-card">
+            <h3>Multi-Series 3D Scatter</h3>
+            <div id="3d-multi-scatter" class="chart3d"></div>
+            <div class="controls">
+                <button onclick="toggleSeries('series1')">Toggle Series 1</button>
+                <button onclick="toggleSeries('series2')">Toggle Series 2</button>
+                <button onclick="toggleSeries('series3')">Toggle Series 3</button>
+            </div>
+        </div>
+
+        <h2>3D Configuration Options</h2>
+        
+        <div class="code-example">
+// Basic 3D chart configuration
+var option = {
+    grid3D: {
+        viewControl: {
+            // Camera controls
+            alpha: 20,        // Vertical rotation
+            beta: 40,         // Horizontal rotation
+            distance: 200,    // Distance from center
+            autoRotate: false // Auto rotation
+        },
+        light: {
+            main: {
+                intensity: 1.2,
+                shadow: true
+            },
+            ambient: {
+                intensity: 0.3
+            }
+        }
+    },
+    xAxis3D: {
+        type: 'value'
+    },
+    yAxis3D: {
+        type: 'value'
+    },
+    zAxis3D: {
+        type: 'value'
+    },
+    series: [{
+        type: 'scatter3D',
+        data: yourData
+    }]
+};
+        </div>
+
+        <h2>Interactive 3D Builder</h2>
+        <p>Experiment with different 3D chart configurations in real-time.</p>
+        
+        <div class="practice-section">
+            <h3>3D Chart Configuration Tool</h3>
+            <div class="live-editor">
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Chart Type:</label>
+                        <select id="3d-chart-type">
+                            <option value="scatter3D">3D Scatter</option>
+                            <option value="surface">3D Surface</option>
+                            <option value="bar3D">3D Bar</option>
+                            <option value="line3D">3D Line</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Camera Alpha:</label>
+                        <input type="range" id="camera-alpha" min="0" max="90" value="20">
+                    </div>
+                    <div class="control-group">
+                        <label>Camera Beta:</label>
+                        <input type="range" id="camera-beta" min="0" max="360" value="40">
+                    </div>
+                    <div class="control-group">
+                        <label>Auto Rotate:</label>
+                        <input type="checkbox" id="auto-rotate">
+                    </div>
+                </div>
+                <div id="3d-builder" class="chart3d"></div>
+            </div>
+        </div>
+
+        <h2>Performance Optimization</h2>
+        <ul>
+            <li><strong>Data Sampling:</strong> Reduce data points for large datasets</li>
+            <li><strong>Level of Detail:</strong> Adjust detail based on zoom level</li>
+            <li><strong>WebGL Rendering:</strong> Use hardware acceleration when available</li>
+            <li><strong>Memory Management:</strong> Dispose of charts when not needed</li>
+            <li><strong>Responsive Design:</strong> Adjust 3D settings for mobile devices</li>
+        </ul>
+
+        <h2>Best Practices</h2>
+        <ul>
+            <li><strong>Choose appropriate chart types:</strong> Not all data benefits from 3D visualization</li>
+            <li><strong>Provide clear navigation:</strong> Help users understand how to interact with 3D charts</li>
+            <li><strong>Use meaningful colors:</strong> Color should represent data values, not just aesthetics</li>
+            <li><strong>Include legends and labels:</strong> Make sure axes and data are clearly labeled</li>
+            <li><strong>Consider accessibility:</strong> Provide alternative 2D views when possible</li>
+        </ul>
+
+        <h2>Practice Exercise</h2>
+        <div class="practice-section">
+            <h3>Create a Custom 3D Visualization</h3>
+            <p>Build a 3D visualization that demonstrates a real-world scenario. Include the following features:</p>
+            <ul>
+                <li>Multiple data series with different colors</li>
+                <li>Interactive camera controls</li>
+                <li>Custom lighting and shading</li>
+                <li>Tooltips with detailed information</li>
+                <li>Responsive design considerations</li>
+            </ul>
+            
+            <div class="live-editor">
+                <textarea id="exercise-code" placeholder="Enter your 3D ECharts configuration here...">
+// Your 3D chart configuration
+var option = {
+    title: {
+        text: 'Custom 3D Visualization',
+        left: 'center'
+    },
+    tooltip: {
+        formatter: function (params) {
+            return params.name + '<br/>' +
+                   'X: ' + params.value[0] + '<br/>' +
+                   'Y: ' + params.value[1] + '<br/>' +
+                   'Z: ' + params.value[2];
+        }
+    },
+    grid3D: {
+        viewControl: {
+            alpha: 20,
+            beta: 40,
+            distance: 200,
+            autoRotate: false
+        },
+        light: {
+            main: {
+                intensity: 1.2,
+                shadow: true
+            },
+            ambient: {
+                intensity: 0.3
+            }
+        }
+    },
+    xAxis3D: {
+        type: 'value'
+    },
+    yAxis3D: {
+        type: 'value'
+    },
+    zAxis3D: {
+        type: 'value'
+    },
+    series: [{
+        type: 'scatter3D',
+        data: [
+            [1, 2, 3],
+            [2, 3, 4],
+            [3, 4, 5],
+            [4, 5, 6],
+            [5, 6, 7]
+        ],
+        symbolSize: 8,
+        itemStyle: {
+            color: '#ff4444',
+            opacity: 0.8
+        }
+    }]
+};
+                </textarea>
+                <button onclick="runExercise()">Run Code</button>
+                <button onclick="resetExercise()">Reset</button>
+            </div>
+            <div id="exercise-result" class="chart3d"></div>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="chapter13-geographic-maps.html">← Chapter 13: Geographic Maps</a>
+            <a href="chapter15-time-series-analysis.html">Chapter 15: Time Series Analysis →</a>
+        </div>
+    </div>
+
+    <script>
+        // 3D Scatter Plot
+        var scatter3D = echarts.init(document.getElementById('3d-scatter'));
+        var scatterOption = {
+            title: {
+                text: '3D Scatter Plot',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return params.name + '<br/>' +
+                           'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'scatter3D',
+                data: generate3DData(100),
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#ff4444',
+                    opacity: 0.8
+                }
+            }]
+        };
+        scatter3D.setOption(scatterOption);
+
+        // Interactive 3D Scatter
+        var interactive3D = echarts.init(document.getElementById('3d-scatter-interactive'));
+        var interactiveOption = {
+            title: {
+                text: 'Interactive 3D Scatter',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return params.name + '<br/>' +
+                           'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200,
+                    autoRotate: false
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'scatter3D',
+                data: generate3DData(50),
+                symbolSize: 10,
+                itemStyle: {
+                    color: '#4444ff',
+                    opacity: 0.8
+                }
+            }]
+        };
+        interactive3D.setOption(interactiveOption);
+
+        // 3D Surface
+        var surface3D = echarts.init(document.getElementById('3d-surface'));
+        var surfaceOption = {
+            title: {
+                text: '3D Surface Plot',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return 'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'surface',
+                data: generateSurfaceData('sine'),
+                shading: 'realistic',
+                wireframe: {
+                    show: false
+                }
+            }]
+        };
+        surface3D.setOption(surfaceOption);
+
+        // 3D Contour
+        var contour3D = echarts.init(document.getElementById('3d-contour'));
+        var contourOption = {
+            title: {
+                text: '3D Contour Surface',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return 'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'surface',
+                data: generateSurfaceData('gaussian'),
+                shading: 'color',
+                wireframe: {
+                    show: true
+                }
+            }]
+        };
+        contour3D.setOption(contourOption);
+
+        // 3D Bar Chart
+        var bar3D = echarts.init(document.getElementById('3d-bar'));
+        var barOption = {
+            title: {
+                text: '3D Bar Chart',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return params.name + '<br/>' +
+                           'Value: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'category',
+                data: ['A', 'B', 'C', 'D', 'E']
+            },
+            yAxis3D: {
+                type: 'category',
+                data: ['X', 'Y', 'Z']
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'bar3D',
+                data: [
+                    [0, 0, 5], [1, 0, 7], [2, 0, 3], [3, 0, 9], [4, 0, 6],
+                    [0, 1, 8], [1, 1, 4], [2, 1, 2], [3, 1, 7], [4, 1, 5],
+                    [0, 2, 3], [1, 2, 6], [2, 2, 9], [3, 2, 4], [4, 2, 8]
+                ],
+                shading: 'realistic',
+                itemStyle: {
+                    color: '#ff4444',
+                    opacity: 0.8
+                }
+            }]
+        };
+        bar3D.setOption(barOption);
+
+        // 3D Stacked Bar
+        var stackedBar3D = echarts.init(document.getElementById('3d-stacked-bar'));
+        var stackedBarOption = {
+            title: {
+                text: '3D Stacked Bar Chart',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return params.name + '<br/>' +
+                           'Value: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'category',
+                data: ['A', 'B', 'C']
+            },
+            yAxis3D: {
+                type: 'category',
+                data: ['Series 1', 'Series 2']
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'bar3D',
+                data: [
+                    [0, 0, 5], [1, 0, 7], [2, 0, 3],
+                    [0, 1, 8], [1, 1, 4], [2, 1, 2]
+                ],
+                shading: 'realistic',
+                itemStyle: {
+                    color: '#4444ff',
+                    opacity: 0.8
+                }
+            }]
+        };
+        stackedBar3D.setOption(stackedBarOption);
+
+        // 3D Line
+        var line3D = echarts.init(document.getElementById('3d-line'));
+        var lineOption = {
+            title: {
+                text: '3D Line Plot',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return 'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'line3D',
+                data: generate3DLineData(),
+                lineStyle: {
+                    width: 3,
+                    color: '#ff4444'
+                }
+            }]
+        };
+        line3D.setOption(lineOption);
+
+        // Multi-Series 3D Scatter
+        var multiScatter3D = echarts.init(document.getElementById('3d-multi-scatter'));
+        var multiScatterOption = {
+            title: {
+                text: 'Multi-Series 3D Scatter',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return params.seriesName + '<br/>' +
+                           'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Series 1',
+                type: 'scatter3D',
+                data: generate3DData(30),
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#ff4444',
+                    opacity: 0.8
+                }
+            }, {
+                name: 'Series 2',
+                type: 'scatter3D',
+                data: generate3DData(30, 5),
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#44ff44',
+                    opacity: 0.8
+                }
+            }, {
+                name: 'Series 3',
+                type: 'scatter3D',
+                data: generate3DData(30, 10),
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#4444ff',
+                    opacity: 0.8
+                }
+            }]
+        };
+        multiScatter3D.setOption(multiScatterOption);
+
+        // 3D Builder
+        var builder3D = echarts.init(document.getElementById('3d-builder'));
+        var builderOption = {
+            title: {
+                text: '3D Chart Builder',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return params.name + '<br/>' +
+                           'X: ' + params.value[0] + '<br/>' +
+                           'Y: ' + params.value[1] + '<br/>' +
+                           'Z: ' + params.value[2];
+                }
+            },
+            grid3D: {
+                viewControl: {
+                    alpha: 20,
+                    beta: 40,
+                    distance: 200,
+                    autoRotate: false
+                },
+                light: {
+                    main: {
+                        intensity: 1.2,
+                        shadow: true
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            xAxis3D: {
+                type: 'value'
+            },
+            yAxis3D: {
+                type: 'value'
+            },
+            zAxis3D: {
+                type: 'value'
+            },
+            series: [{
+                type: 'scatter3D',
+                data: generate3DData(50),
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#ff4444',
+                    opacity: 0.8
+                }
+            }]
+        };
+        builder3D.setOption(builderOption);
+
+        // Exercise Result
+        var exercise3D = echarts.init(document.getElementById('exercise-result'));
+
+        // Helper Functions
+        function generate3DData(count, offset = 0) {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push([
+                    Math.random() * 10 + offset,
+                    Math.random() * 10 + offset,
+                    Math.random() * 10 + offset
+                ]);
+            }
+            return data;
+        }
+
+        function generateSurfaceData(type) {
+            const data = [];
+            const size = 20;
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    const x = (i - size / 2) / 5;
+                    const y = (j - size / 2) / 5;
+                    let z;
+                    
+                    switch (type) {
+                        case 'sine':
+                            z = Math.sin(x) * Math.cos(y);
+                            break;
+                        case 'gaussian':
+                            z = Math.exp(-(x * x + y * y) / 2);
+                            break;
+                        case 'saddle':
+                            z = x * x - y * y;
+                            break;
+                        default:
+                            z = Math.sin(x) * Math.cos(y);
+                    }
+                    
+                    data.push([x, y, z]);
+                }
+            }
+            return data;
+        }
+
+        function generate3DLineData() {
+            const data = [];
+            for (let i = 0; i < 50; i++) {
+                const t = i / 10;
+                data.push([
+                    Math.cos(t),
+                    Math.sin(t),
+                    t
+                ]);
+            }
+            return data;
+        }
+
+        function reset3DView() {
+            interactive3D.dispatchAction({
+                type: 'restore'
+            });
+        }
+
+        function toggleRotation() {
+            const viewControl = interactiveOption.grid3D.viewControl;
+            viewControl.autoRotate = !viewControl.autoRotate;
+            interactive3D.setOption(interactiveOption);
+        }
+
+        function changeColorScheme() {
+            const colors = ['#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            interactiveOption.series[0].itemStyle.color = randomColor;
+            interactive3D.setOption(interactiveOption);
+        }
+
+        function toggleSeries(seriesName) {
+            // Implementation for toggling series visibility
+            console.log(`Toggling ${seriesName}`);
+        }
+
+        function runExercise() {
+            try {
+                const code = document.getElementById('exercise-code').value;
+                const option = eval('(' + code + ')');
+                exercise3D.setOption(option, true);
+            } catch (error) {
+                alert('Error in code: ' + error.message);
+            }
+        }
+
+        function resetExercise() {
+            document.getElementById('exercise-code').value = `// Your 3D chart configuration
+var option = {
+    title: {
+        text: 'Custom 3D Visualization',
+        left: 'center'
+    },
+    tooltip: {
+        formatter: function (params) {
+            return params.name + '<br/>' +
+                   'X: ' + params.value[0] + '<br/>' +
+                   'Y: ' + params.value[1] + '<br/>' +
+                   'Z: ' + params.value[2];
+        }
+    },
+    grid3D: {
+        viewControl: {
+            alpha: 20,
+            beta: 40,
+            distance: 200,
+            autoRotate: false
+        },
+        light: {
+            main: {
+                intensity: 1.2,
+                shadow: true
+            },
+            ambient: {
+                intensity: 0.3
+            }
+        }
+    },
+    xAxis3D: {
+        type: 'value'
+    },
+    yAxis3D: {
+        type: 'value'
+    },
+    zAxis3D: {
+        type: 'value'
+    },
+    series: [{
+        type: 'scatter3D',
+        data: [
+            [1, 2, 3],
+            [2, 3, 4],
+            [3, 4, 5],
+            [4, 5, 6],
+            [5, 6, 7]
+        ],
+        symbolSize: 8,
+        itemStyle: {
+            color: '#ff4444',
+            opacity: 0.8
+        }
+    }]
+};`;
+            exercise3D.clear();
+        }
+
+        // Event Listeners
+        document.getElementById('scatter-size').addEventListener('input', function() {
+            scatterOption.series[0].symbolSize = parseInt(this.value);
+            scatter3D.setOption(scatterOption);
+        });
+
+        document.getElementById('scatter-opacity').addEventListener('input', function() {
+            scatterOption.series[0].itemStyle.opacity = parseFloat(this.value);
+            scatter3D.setOption(scatterOption);
+        });
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            scatter3D.resize();
+            interactive3D.resize();
+            surface3D.resize();
+            contour3D.resize();
+            bar3D.resize();
+            stackedBar3D.resize();
+            line3D.resize();
+            multiScatter3D.resize();
+            builder3D.resize();
+            exercise3D.resize();
+        });
+    </script>
+</body>
+</html>

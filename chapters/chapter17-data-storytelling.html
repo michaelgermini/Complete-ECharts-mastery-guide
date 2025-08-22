@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 17: Data Storytelling - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .story-step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .controls {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .control-group {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+        .narrative-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #17a2b8;
+        }
+        .storyboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .storyboard-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .storyboard-chart {
+            height: 200px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s ease;
+        }
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .practice-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Chapter 17: Data Storytelling</h1>
+            <p>Master the art of narrative visualization and interactive storytelling with ECharts</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🎯 Learning Objectives</h2>
+                <ul>
+                    <li>Understand the principles of data storytelling</li>
+                    <li>Create narrative-driven visualizations</li>
+                    <li>Build interactive storyboards</li>
+                    <li>Implement progressive disclosure techniques</li>
+                    <li>Design engaging data narratives</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>📚 The Art of Data Storytelling</h2>
+                <p>Data storytelling combines the power of data visualization with narrative techniques to create compelling, memorable experiences that drive understanding and action.</p>
+                
+                <div class="narrative-text">
+                    <h3>Key Principles:</h3>
+                    <ul>
+                        <li><strong>Structure:</strong> Beginning, middle, and end with clear progression</li>
+                        <li><strong>Context:</strong> Provide background and meaning to the data</li>
+                        <li><strong>Engagement:</strong> Interactive elements that maintain attention</li>
+                        <li><strong>Clarity:</strong> Simple, focused messages</li>
+                        <li><strong>Emotion:</strong> Connect data to human experiences</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📊 Interactive Story: Climate Change Impact</h2>
+                <p>Let's create an interactive story about climate change data with progressive disclosure:</p>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Story Step:</label>
+                        <button onclick="showStoryStep(1)">1. Global Overview</button>
+                        <button onclick="showStoryStep(2)">2. Regional Analysis</button>
+                        <button onclick="showStoryStep(3)">3. Future Projections</button>
+                        <button onclick="showStoryStep(4)">4. Action Items</button>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="storyProgress"></div>
+                </div>
+                
+                <div class="story-step" id="storyStep1">
+                    <h3>Step 1: Global Temperature Trends</h3>
+                    <p>Global temperatures have been rising steadily over the past century. This chart shows the annual average temperature anomalies from 1880 to 2023.</p>
+                    <div class="chart-container" id="globalTempChart"></div>
+                </div>
+                
+                <div class="story-step" id="storyStep2" style="display: none;">
+                    <h3>Step 2: Regional Impact Analysis</h3>
+                    <p>Different regions are experiencing climate change at varying rates. This map shows temperature changes by region.</p>
+                    <div class="chart-container" id="regionalChart"></div>
+                </div>
+                
+                <div class="story-step" id="storyStep3" style="display: none;">
+                    <h3>Step 3: Future Projections</h3>
+                    <p>Based on current trends and different emission scenarios, here are the projected temperature changes by 2100.</p>
+                    <div class="chart-container" id="projectionChart"></div>
+                </div>
+                
+                <div class="story-step" id="storyStep4" style="display: none;">
+                    <h3>Step 4: What Can We Do?</h3>
+                    <p>Individual and collective actions can make a significant difference in reducing emissions and mitigating climate change.</p>
+                    <div class="chart-container" id="actionChart"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎬 Storyboard Builder</h2>
+                <p>Create your own data story with this interactive storyboard builder:</p>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Story Theme:</label>
+                        <select id="storyTheme" onchange="updateStoryboard()">
+                            <option value="business">Business Growth</option>
+                            <option value="health">Public Health</option>
+                            <option value="education">Education Trends</option>
+                            <option value="technology">Technology Adoption</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Narrative Style:</label>
+                        <select id="narrativeStyle" onchange="updateStoryboard()">
+                            <option value="progressive">Progressive Disclosure</option>
+                            <option value="comparative">Comparative Analysis</option>
+                            <option value="temporal">Temporal Journey</option>
+                            <option value="causal">Cause & Effect</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="storyboard" id="storyboardContainer">
+                    <!-- Storyboard items will be generated here -->
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔧 Advanced Storytelling Techniques</h2>
+                
+                <h3>1. Progressive Disclosure</h3>
+                <div class="code-example">
+                    <pre><code>// Progressive disclosure with ECharts
+function createProgressiveStory(data) {
+    const steps = [
+        { title: "Overview", data: data.summary },
+        { title: "Details", data: data.details },
+        { title: "Insights", data: data.insights }
+    ];
+    
+    steps.forEach((step, index) => {
+        setTimeout(() => {
+            updateChart(step.data);
+            showNarrative(step.title);
+        }, index * 2000);
+    });
+}</code></pre>
+                </div>
+                
+                <h3>2. Interactive Annotations</h3>
+                <div class="chart-container" id="annotationChart"></div>
+                
+                <h3>3. Dynamic Narratives</h3>
+                <div class="chart-container" id="dynamicNarrativeChart"></div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Best Practices for Data Storytelling</h2>
+                <div class="narrative-text">
+                    <h3>Design Principles:</h3>
+                    <ul>
+                        <li><strong>Start with the audience:</strong> Understand who you're telling the story to</li>
+                        <li><strong>Choose the right chart:</strong> Match visualization type to your message</li>
+                        <li><strong>Use color meaningfully:</strong> Consistent color schemes that support the narrative</li>
+                        <li><strong>Include context:</strong> Provide background information and comparisons</li>
+                        <li><strong>Make it interactive:</strong> Allow exploration while maintaining narrative flow</li>
+                        <li><strong>Test and iterate:</strong> Get feedback and refine your story</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="practice-section">
+                <h2>🎯 Practice Exercise: Create Your Data Story</h2>
+                <p>Choose a dataset and create a compelling data story using ECharts. Your story should include:</p>
+                <ul>
+                    <li>At least 3 different chart types</li>
+                    <li>Progressive disclosure of information</li>
+                    <li>Interactive elements</li>
+                    <li>Clear narrative structure</li>
+                    <li>Meaningful annotations and context</li>
+                </ul>
+                
+                <div class="controls">
+                    <button onclick="startPractice()">Start Practice</button>
+                    <button onclick="showSolution()">Show Solution</button>
+                </div>
+                
+                <div id="practiceArea" style="display: none;">
+                    <div class="chart-container" id="practiceChart"></div>
+                    <textarea id="storyText" placeholder="Write your narrative here..." rows="4" style="width: 100%; margin: 10px 0;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStoryStep = 1;
+        let storyData = {
+            globalTemp: [],
+            regional: [],
+            projections: [],
+            actions: []
+        };
+
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStoryCharts();
+            updateStoryboard();
+        });
+
+        function initializeStoryCharts() {
+            // Global temperature chart
+            const globalTempChart = echarts.init(document.getElementById('globalTempChart'));
+            const globalTempOption = {
+                title: {
+                    text: 'Global Temperature Anomalies (1880-2023)',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        return `Year: ${params[0].name}<br/>
+                                Temperature: ${params[0].value}°C<br/>
+                                Trend: ${params[0].value > 0 ? 'Above average' : 'Below average'}`;
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: generateYears(1880, 2023)
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Temperature Anomaly (°C)'
+                },
+                series: [{
+                    name: 'Temperature',
+                    type: 'line',
+                    data: generateTemperatureData(),
+                    smooth: true,
+                    lineStyle: {
+                        color: '#ff6b6b',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(255, 107, 107, 0.3)' },
+                            { offset: 1, color: 'rgba(255, 107, 107, 0.1)' }
+                        ])
+                    }
+                }]
+            };
+            globalTempChart.setOption(globalTempOption);
+
+            // Regional chart
+            const regionalChart = echarts.init(document.getElementById('regionalChart'));
+            const regionalOption = {
+                title: {
+                    text: 'Regional Temperature Changes',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                series: [{
+                    name: 'Temperature Change',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        { value: 2.1, name: 'Arctic' },
+                        { value: 1.8, name: 'Europe' },
+                        { value: 1.5, name: 'Asia' },
+                        { value: 1.2, name: 'North America' },
+                        { value: 1.0, name: 'Africa' },
+                        { value: 0.8, name: 'South America' },
+                        { value: 0.6, name: 'Australia' }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+            regionalChart.setOption(regionalOption);
+
+            // Projection chart
+            const projectionChart = echarts.init(document.getElementById('projectionChart'));
+            const projectionOption = {
+                title: {
+                    text: 'Temperature Projections to 2100',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['Low Emissions', 'Medium Emissions', 'High Emissions'],
+                    top: 30
+                },
+                xAxis: {
+                    type: 'category',
+                    data: generateYears(2020, 2100, 10)
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Temperature Increase (°C)'
+                },
+                series: [
+                    {
+                        name: 'Low Emissions',
+                        type: 'line',
+                        data: generateProjectionData(1.5),
+                        lineStyle: { color: '#28a745' }
+                    },
+                    {
+                        name: 'Medium Emissions',
+                        type: 'line',
+                        data: generateProjectionData(2.5),
+                        lineStyle: { color: '#ffc107' }
+                    },
+                    {
+                        name: 'High Emissions',
+                        type: 'line',
+                        data: generateProjectionData(4.0),
+                        lineStyle: { color: '#dc3545' }
+                    }
+                ]
+            };
+            projectionChart.setOption(projectionOption);
+
+            // Action chart
+            const actionChart = echarts.init(document.getElementById('actionChart'));
+            const actionOption = {
+                title: {
+                    text: 'Impact of Individual Actions',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Reduce Driving', 'Eat Less Meat', 'Use Renewable Energy', 'Reduce Waste', 'Plant Trees']
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'CO2 Reduction (tons/year)'
+                },
+                series: [{
+                    name: 'CO2 Reduction',
+                    type: 'bar',
+                    data: [2.4, 0.8, 1.5, 0.5, 0.2],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#28a745' },
+                            { offset: 1, color: '#20c997' }
+                        ])
+                    }
+                }]
+            };
+            actionChart.setOption(actionOption);
+
+            // Annotation chart
+            const annotationChart = echarts.init(document.getElementById('annotationChart'));
+            const annotationOption = {
+                title: {
+                    text: 'Interactive Annotations Example',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Q1', 'Q2', 'Q3', 'Q4']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: 'Sales',
+                    type: 'line',
+                    data: [120, 200, 150, 80],
+                    markPoint: {
+                        data: [
+                            { type: 'max', name: 'Peak' },
+                            { type: 'min', name: 'Lowest' }
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            { type: 'average', name: 'Average' }
+                        ]
+                    }
+                }]
+            };
+            annotationChart.setOption(annotationOption);
+
+            // Dynamic narrative chart
+            const dynamicChart = echarts.init(document.getElementById('dynamicNarrativeChart'));
+            const dynamicOption = {
+                title: {
+                    text: 'Dynamic Narrative: Company Growth Story',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['Revenue', 'Employees', 'Customers'],
+                    top: 30
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['2019', '2020', '2021', '2022', '2023']
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Revenue ($M)',
+                        position: 'left'
+                    },
+                    {
+                        type: 'value',
+                        name: 'Count',
+                        position: 'right'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Revenue',
+                        type: 'bar',
+                        data: [1, 2.5, 5, 8, 12],
+                        yAxisIndex: 0
+                    },
+                    {
+                        name: 'Employees',
+                        type: 'line',
+                        data: [5, 12, 25, 40, 60],
+                        yAxisIndex: 1
+                    },
+                    {
+                        name: 'Customers',
+                        type: 'line',
+                        data: [100, 250, 500, 800, 1200],
+                        yAxisIndex: 1
+                    }
+                ]
+            };
+            dynamicChart.setOption(dynamicOption);
+        }
+
+        function showStoryStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`storyStep${i}`).style.display = 'none';
+            }
+            
+            // Show selected step
+            document.getElementById(`storyStep${step}`).style.display = 'block';
+            
+            // Update progress bar
+            const progress = (step / 4) * 100;
+            document.getElementById('storyProgress').style.width = progress + '%';
+            
+            currentStoryStep = step;
+        }
+
+        function updateStoryboard() {
+            const theme = document.getElementById('storyTheme').value;
+            const style = document.getElementById('narrativeStyle').value;
+            
+            const storyboardData = {
+                business: {
+                    title: 'Business Growth Story',
+                    steps: ['Market Overview', 'Competitive Analysis', 'Growth Strategy', 'Future Outlook']
+                },
+                health: {
+                    title: 'Public Health Trends',
+                    steps: ['Global Health Overview', 'Disease Patterns', 'Prevention Strategies', 'Healthcare Impact']
+                },
+                education: {
+                    title: 'Education Evolution',
+                    steps: ['Learning Trends', 'Technology Impact', 'Student Performance', 'Future of Education']
+                },
+                technology: {
+                    title: 'Technology Adoption',
+                    steps: ['Adoption Rates', 'Market Penetration', 'User Behavior', 'Future Trends']
+                }
+            };
+            
+            const data = storyboardData[theme];
+            const container = document.getElementById('storyboardContainer');
+            container.innerHTML = '';
+            
+            data.steps.forEach((step, index) => {
+                const item = document.createElement('div');
+                item.className = 'storyboard-item';
+                item.innerHTML = `
+                    <h4>Step ${index + 1}: ${step}</h4>
+                    <div class="storyboard-chart" id="storyboardChart${index}"></div>
+                    <p>This step will show ${step.toLowerCase()} data with ${style} narrative style.</p>
+                `;
+                container.appendChild(item);
+                
+                // Create mini chart
+                setTimeout(() => {
+                    const chart = echarts.init(document.getElementById(`storyboardChart${index}`));
+                    const option = createStoryboardChartOption(theme, index, style);
+                    chart.setOption(option);
+                }, 100);
+            });
+        }
+
+        function createStoryboardChartOption(theme, step, style) {
+            const baseOption = {
+                title: { text: '', left: 'center', textStyle: { fontSize: 12 } },
+                tooltip: { trigger: 'item' },
+                grid: { top: 20, right: 20, bottom: 20, left: 20 }
+            };
+            
+            if (theme === 'business') {
+                const data = [20, 35, 50, 65, 80];
+                return {
+                    ...baseOption,
+                    xAxis: { type: 'category', data: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'] },
+                    yAxis: { type: 'value' },
+                    series: [{ type: 'line', data: data, smooth: true }]
+                };
+            } else if (theme === 'health') {
+                return {
+                    ...baseOption,
+                    series: [{
+                        type: 'pie',
+                        radius: '60%',
+                        data: [
+                            { value: 40, name: 'Prevention' },
+                            { value: 30, name: 'Treatment' },
+                            { value: 20, name: 'Research' },
+                            { value: 10, name: 'Education' }
+                        ]
+                    }]
+                };
+            }
+            
+            return baseOption;
+        }
+
+        function generateYears(start, end, step = 1) {
+            const years = [];
+            for (let year = start; year <= end; year += step) {
+                years.push(year);
+            }
+            return years;
+        }
+
+        function generateTemperatureData() {
+            const data = [];
+            for (let year = 1880; year <= 2023; year++) {
+                // Simulate temperature anomalies with trend
+                const baseTrend = (year - 1880) * 0.01;
+                const noise = (Math.random() - 0.5) * 0.5;
+                data.push(+(baseTrend + noise).toFixed(2));
+            }
+            return data;
+        }
+
+        function generateProjectionData(maxIncrease) {
+            const data = [];
+            for (let year = 2020; year <= 2100; year += 10) {
+                const progress = (year - 2020) / 80;
+                const value = progress * maxIncrease + (Math.random() - 0.5) * 0.2;
+                data.push(+(value).toFixed(1));
+            }
+            return data;
+        }
+
+        function startPractice() {
+            document.getElementById('practiceArea').style.display = 'block';
+            const practiceChart = echarts.init(document.getElementById('practiceChart'));
+            const option = {
+                title: { text: 'Your Data Story', left: 'center' },
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] },
+                yAxis: { type: 'value' },
+                series: [{ type: 'line', data: [10, 20, 15, 25, 30] }]
+            };
+            practiceChart.setOption(option);
+        }
+
+        function showSolution() {
+            alert('Practice solution: Create a story with clear progression, meaningful annotations, and interactive elements that guide the viewer through your data narrative.');
+        }
+    </script>
+</body>
+</html>

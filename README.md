@@ -14,7 +14,7 @@
 Visit the interactive guide: **[https://michaelgermini.github.io/Complete-ECharts-mastery-guide](https://michaelgermini.github.io/Complete-ECharts-mastery-guide)**
 
 ✨ **Features available online:**
-- 📚 All 11 comprehensive chapters with interactive examples
+- 📚 All 20 comprehensive chapters with interactive examples
 - 🏗️ 10 real-world dashboard projects
 - 💻 Live code editors for hands-on practice
 - 📱 Fully responsive design for all devices
@@ -88,6 +88,15 @@ Our structured learning approach ensures you build skills progressively:
 9. **[Chapter 9: Themes & Customization](chapters/chapter9-themes-customization.html)** - Custom themes, brand integration, and responsive design
 10. **[Chapter 10: Performance Optimization](chapters/chapter10-performance-optimization.html)** - Data optimization, rendering techniques, and mobile optimization
 11. **[Chapter 11: Framework Integration](chapters/chapter11-integration-frameworks.html)** - React, Vue.js, and Angular integration patterns
+12. **[Chapter 12: Real-World Applications](chapters/chapter12-real-world-applications.html)** - Apply ECharts to practical scenarios
+13. **[Chapter 13: Geographic Maps](chapters/chapter13-geographic-maps.html)** - Create stunning geographic visualizations
+14. **[Chapter 14: 3D Visualizations](chapters/chapter14-3d-visualizations.html)** - Explore three-dimensional data visualization
+15. **[Chapter 15: Time Series Analysis](chapters/chapter15-time-series-analysis.html)** - Master temporal data visualization
+16. **[Chapter 16: Advanced Interactions](chapters/chapter16-advanced-interactions.html)** - Create dynamic, interactive dashboards
+17. **[Chapter 17: Data Storytelling](chapters/chapter17-data-storytelling.html)** - Master narrative visualization techniques
+18. **[Chapter 18: Mobile Optimization](chapters/chapter18-mobile-optimization.html)** - Optimize charts for mobile devices
+19. **[Chapter 19: Accessibility](chapters/chapter19-accessibility.html)** - Make charts accessible to everyone
+20. **[Chapter 20: Advanced Techniques](chapters/chapter20-advanced-techniques.html)** - Master advanced ECharts features
 
 ### 🎯 Interactive Learning Features
 - **Live Code Editors** - Practice directly in your browser

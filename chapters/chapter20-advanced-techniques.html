@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 20: Advanced Techniques - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .practice-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Chapter 20: Advanced Techniques</h1>
+            <p>Master advanced ECharts features for professional-grade data visualizations</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🎯 Learning Objectives</h2>
+                <ul>
+                    <li>Implement custom renderers and graphics</li>
+                    <li>Create complex animations and transitions</li>
+                    <li>Build advanced data processing pipelines</li>
+                    <li>Design sophisticated interactive features</li>
+                    <li>Optimize performance for large datasets</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>🎨 Custom Graphics & Renderers</h2>
+                <p>ECharts allows you to create custom graphics and renderers for unique visualizations.</p>
+                
+                <div class="chart-container" id="customGraphicsChart"></div>
+            </div>
+
+            <div class="section">
+                <h2>🎬 Advanced Animations</h2>
+                <p>Create sophisticated animations and transitions for engaging user experiences.</p>
+                
+                <div class="chart-container" id="animationChart"></div>
+            </div>
+
+            <div class="section">
+                <h2>📊 Advanced Data Processing</h2>
+                <p>Implement sophisticated data processing techniques for complex visualizations.</p>
+                
+                <div class="chart-container" id="dataProcessingChart"></div>
+            </div>
+
+            <div class="section">
+                <h2>🔧 Advanced Implementation</h2>
+                
+                <h3>1. Custom Graphics API</h3>
+                <div class="code-example">
+                    <pre><code>// Custom shape renderer
+function createCustomShape(shapeType, data) {
+    const graphics = [];
+    data.forEach((item, index) => {
+        const graphic = {
+            type: 'group',
+            children: [{
+                type: 'polygon',
+                shape: generateShape(shapeType, item.value),
+                style: {
+                    fill: item.color,
+                    stroke: '#fff',
+                    lineWidth: 2
+                },
+                position: [item.x, item.y]
+            }]
+        };
+        graphics.push(graphic);
+    });
+    return graphics;
+}</code></pre>
+                </div>
+                
+                <h3>2. Advanced Animation System</h3>
+                <div class="code-example">
+                    <pre><code>// Custom animation system
+class AdvancedAnimation {
+    constructor(chart) {
+        this.chart = chart;
+        this.animations = new Map();
+    }
+    
+    addAnimation(name, config) {
+        this.animations.set(name, {
+            duration: config.duration || 1000,
+            easing: config.easing || 'cubicOut',
+            callback: config.callback
+        });
+    }
+    
+    playAnimation(name, data) {
+        const animation = this.animations.get(name);
+        this.chart.setOption({
+            series: [{
+                data: data,
+                animationDuration: animation.duration,
+                animationEasing: animation.easing
+            }]
+        });
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Best Practices</h2>
+                <ul>
+                    <li><strong>Performance Optimization:</strong> Use data sampling for large datasets</li>
+                    <li><strong>Code Organization:</strong> Separate concerns with modular architecture</li>
+                    <li><strong>User Experience:</strong> Provide loading states for complex operations</li>
+                    <li><strong>Accessibility:</strong> Ensure compliance with accessibility standards</li>
+                </ul>
+            </div>
+
+            <div class="practice-section">
+                <h2>🎯 Practice Exercise: Advanced Dashboard</h2>
+                <p>Create an advanced dashboard using the techniques learned:</p>
+                <ul>
+                    <li>Implement custom graphics and renderers</li>
+                    <li>Create complex animations and transitions</li>
+                    <li>Build advanced data processing pipelines</li>
+                    <li>Design sophisticated interactive features</li>
+                </ul>
+                
+                <div class="chart-container" id="practiceChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdvancedCharts();
+        });
+
+        function initializeAdvancedCharts() {
+            // Custom graphics chart
+            const customGraphicsChart = echarts.init(document.getElementById('customGraphicsChart'));
+            const customGraphicsOption = {
+                title: {
+                    text: 'Custom Graphics Example',
+                    left: 'center'
+                },
+                graphic: [{
+                    type: 'group',
+                    children: [{
+                        type: 'polygon',
+                        shape: [[0, -20], [20, 0], [0, 20], [-20, 0]],
+                        style: {
+                            fill: '#667eea',
+                            stroke: '#fff',
+                            lineWidth: 2
+                        },
+                        position: [100, 100]
+                    }]
+                }],
+                xAxis: {
+                    type: 'value',
+                    min: 0,
+                    max: 200
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 0,
+                    max: 200
+                }
+            };
+            customGraphicsChart.setOption(customGraphicsOption);
+
+            // Animation chart
+            const animationChart = echarts.init(document.getElementById('animationChart'));
+            const animationOption = {
+                title: {
+                    text: 'Advanced Animations',
+                    left: 'center'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['A', 'B', 'C', 'D', 'E', 'F']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: 'Data',
+                    type: 'bar',
+                    data: [10, 20, 15, 25, 30, 35],
+                    animationDuration: 2000,
+                    animationEasing: 'elasticOut'
+                }]
+            };
+            animationChart.setOption(animationOption);
+
+            // Data processing chart
+            const dataProcessingChart = echarts.init(document.getElementById('dataProcessingChart'));
+            const dataProcessingOption = {
+                title: {
+                    text: 'Advanced Data Processing',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['Original', 'Processed'],
+                    top: 30
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: 'Original',
+                        type: 'line',
+                        data: [120, 200, 150, 80, 70, 110]
+                    },
+                    {
+                        name: 'Processed',
+                        type: 'line',
+                        data: [100, 180, 130, 90, 60, 100],
+                        smooth: true
+                    }
+                ]
+            };
+            dataProcessingChart.setOption(dataProcessingOption);
+
+            // Practice chart
+            const practiceChart = echarts.init(document.getElementById('practiceChart'));
+            const practiceOption = {
+                title: {
+                    text: 'Advanced Practice Chart',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Q1', 'Q2', 'Q3', 'Q4']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: 'Practice Data',
+                    type: 'bar',
+                    data: [100, 150, 200, 250],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#667eea' },
+                            { offset: 1, color: '#764ba2' }
+                        ])
+                    }
+                }]
+            };
+            practiceChart.setOption(practiceOption);
+        }
+    </script>
+</body>
+</html>

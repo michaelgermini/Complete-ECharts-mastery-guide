@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 19: Accessibility - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="../assets/js/add-menu.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .accessibility-demo {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .controls {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .control-group {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+        .accessibility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .accessibility-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .wcag-level {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .wcag-a {
+            background: #28a745;
+            color: white;
+        }
+        .wcag-aa {
+            background: #ffc107;
+            color: black;
+        }
+        .wcag-aaa {
+            background: #dc3545;
+            color: white;
+        }
+        .color-contrast-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .contrast-sample {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .contrast-good {
+            background: #28a745;
+            color: white;
+        }
+        .contrast-poor {
+            background: #ffc107;
+            color: #f8f9fa;
+        }
+        .screen-reader-demo {
+            background: #f8f9fa;
+            border: 2px solid #17a2b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .keyboard-nav {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .keyboard-indicator {
+            background: #17a2b8;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 5px;
+            font-size: 12px;
+        }
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .practice-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .accessibility-checklist {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .checklist-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+        }
+        .checklist-item.incomplete {
+            border-left-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>♿ Chapter 19: Accessibility</h1>
+            <p>Make your ECharts visualizations accessible to everyone with WCAG compliance and inclusive design</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🎯 Learning Objectives</h2>
+                <ul>
+                    <li>Understand WCAG guidelines and compliance levels</li>
+                    <li>Implement screen reader support for charts</li>
+                    <li>Add keyboard navigation and focus management</li>
+                    <li>Design with color contrast and visual accessibility</li>
+                    <li>Create inclusive data visualization experiences</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>♿ Understanding Accessibility</h2>
+                <p>Accessibility ensures that your data visualizations can be used by people with disabilities, including those with visual, motor, cognitive, and hearing impairments.</p>
+                
+                <div class="accessibility-grid">
+                    <div class="accessibility-item">
+                        <h3>Visual Accessibility</h3>
+                        <ul>
+                            <li>Color contrast compliance</li>
+                            <li>Alternative text for images</li>
+                            <li>Screen reader compatibility</li>
+                            <li>Text size and readability</li>
+                        </ul>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3>Motor Accessibility</h3>
+                        <ul>
+                            <li>Keyboard navigation</li>
+                            <li>Large click targets</li>
+                            <li>Voice control support</li>
+                            <li>Alternative input methods</li>
+                        </ul>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3>Cognitive Accessibility</h3>
+                        <ul>
+                            <li>Clear and simple language</li>
+                            <li>Consistent navigation</li>
+                            <li>Error prevention</li>
+                            <li>Logical content structure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📋 WCAG Compliance Levels</h2>
+                <p>The Web Content Accessibility Guidelines (WCAG) define three levels of compliance:</p>
+                
+                <div class="accessibility-grid">
+                    <div class="accessibility-item">
+                        <h3><span class="wcag-level wcag-a">Level A</span> Basic Accessibility</h3>
+                        <ul>
+                            <li>Alternative text for images</li>
+                            <li>Keyboard navigation</li>
+                            <li>Color is not the only way to convey information</li>
+                            <li>Text alternatives for non-text content</li>
+                        </ul>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3><span class="wcag-level wcag-aa">Level AA</span> Enhanced Accessibility</h3>
+                        <ul>
+                            <li>4.5:1 contrast ratio for normal text</li>
+                            <li>3:1 contrast ratio for large text</li>
+                            <li>Resizable text up to 200%</li>
+                            <li>Focus indicators visible</li>
+                        </ul>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3><span class="wcag-level wcag-aaa">Level AAA</span> Maximum Accessibility</h3>
+                        <ul>
+                            <li>7:1 contrast ratio for normal text</li>
+                            <li>4.5:1 contrast ratio for large text</li>
+                            <li>No background audio</li>
+                            <li>Enhanced keyboard navigation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎨 Color Contrast & Visual Accessibility</h2>
+                <p>Proper color contrast ensures that text and chart elements are readable for users with visual impairments.</p>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Chart Theme:</label>
+                        <button onclick="setAccessibilityTheme('high-contrast')">High Contrast</button>
+                        <button onclick="setAccessibilityTheme('colorblind-friendly')">Colorblind Friendly</button>
+                        <button onclick="setAccessibilityTheme('standard')">Standard</button>
+                    </div>
+                    <div class="control-group">
+                        <label>Text Size:</label>
+                        <button onclick="setTextSize('small')">Small</button>
+                        <button onclick="setTextSize('medium')">Medium</button>
+                        <button onclick="setTextSize('large')">Large</button>
+                    </div>
+                </div>
+                
+                <div class="color-contrast-demo">
+                    <div class="contrast-sample contrast-good">
+                        Good Contrast (4.5:1)<br>
+                        <small>WCAG AA Compliant</small>
+                    </div>
+                    <div class="contrast-sample contrast-poor">
+                        Poor Contrast (2.1:1)<br>
+                        <small>Not Accessible</small>
+                    </div>
+                    <div class="contrast-sample" style="background: #000; color: #fff;">
+                        Excellent Contrast (21:1)<br>
+                        <small>WCAG AAA Compliant</small>
+                    </div>
+                </div>
+                
+                <div class="chart-container" id="accessibleChart"></div>
+            </div>
+
+            <div class="section">
+                <h2>🔊 Screen Reader Support</h2>
+                <p>Screen readers need structured information to describe charts to users with visual impairments.</p>
+                
+                <div class="screen-reader-demo">
+                    <h3>Screen Reader Demo</h3>
+                    <p>This chart includes proper ARIA labels and descriptions for screen readers:</p>
+                    
+                    <div class="chart-container" id="screenReaderChart" 
+                         role="img" 
+                         aria-label="Sales data chart showing monthly revenue from January to December"
+                         aria-describedby="chart-description"></div>
+                    
+                    <div id="chart-description" class="sr-only">
+                        This chart displays monthly sales data for the year 2023. 
+                        The highest sales occurred in December with $15,000, 
+                        followed by November with $12,000. 
+                        The lowest sales were in February with $5,000.
+                    </div>
+                    
+                    <div class="controls">
+                        <button onclick="announceChartData()">Announce Chart Data</button>
+                        <button onclick="toggleScreenReaderMode()">Toggle Screen Reader Mode</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⌨️ Keyboard Navigation</h2>
+                <p>Keyboard navigation allows users to interact with charts using only the keyboard.</p>
+                
+                <div class="keyboard-nav">
+                    <h3>Keyboard Controls:</h3>
+                    <div class="keyboard-indicator">Tab - Navigate between elements</div>
+                    <div class="keyboard-indicator">Enter/Space - Activate elements</div>
+                    <div class="keyboard-indicator">Arrow Keys - Navigate chart data</div>
+                    <div class="keyboard-indicator">Escape - Close tooltips/modals</div>
+                    
+                    <div class="chart-container" id="keyboardChart" tabindex="0"></div>
+                    
+                    <div id="keyboardLog" style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: monospace; font-size: 12px;">
+                        Keyboard events will appear here...
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔧 Accessibility Implementation</h2>
+                
+                <h3>1. ARIA Labels and Descriptions</h3>
+                <div class="code-example">
+                    <pre><code>// Adding ARIA support to ECharts
+const accessibleOption = {
+    aria: {
+        enabled: true,
+        decal: {
+            show: true
+        }
+    },
+    title: {
+        text: 'Monthly Sales Data',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function(params) {
+            // Provide detailed descriptions for screen readers
+            return `${params[0].name}: ${params[0].value} units sold`;
+        }
+    },
+    series: [{
+        name: 'Sales',
+        type: 'bar',
+        data: [120, 200, 150, 80, 70, 110, 130],
+        // Add data labels for better accessibility
+        label: {
+            show: true,
+            position: 'top'
+        }
+    }]
+};
+
+// Set ARIA attributes on chart container
+chartContainer.setAttribute('role', 'img');
+chartContainer.setAttribute('aria-label', 'Monthly sales bar chart');
+chartContainer.setAttribute('aria-describedby', 'chart-description');</code></pre>
+                </div>
+                
+                <h3>2. Keyboard Event Handling</h3>
+                <div class="code-example">
+                    <pre><code>// Keyboard navigation for charts
+chartContainer.addEventListener('keydown', function(event) {
+    switch(event.key) {
+        case 'ArrowRight':
+            navigateToNextDataPoint();
+            break;
+        case 'ArrowLeft':
+            navigateToPreviousDataPoint();
+            break;
+        case 'Enter':
+        case ' ':
+            activateCurrentElement();
+            break;
+        case 'Escape':
+            closeTooltip();
+            break;
+    }
+});
+
+function navigateToNextDataPoint() {
+    // Implementation for navigating to next data point
+    const currentIndex = getCurrentDataIndex();
+    const nextIndex = Math.min(currentIndex + 1, data.length - 1);
+    highlightDataPoint(nextIndex);
+    announceDataPoint(data[nextIndex]);
+}</code></pre>
+                </div>
+                
+                <h3>3. High Contrast Themes</h3>
+                <div class="chart-container" id="highContrastChart"></div>
+            </div>
+
+            <div class="section">
+                <h2>📊 Accessible Chart Examples</h2>
+                <p>Examples of charts designed with accessibility in mind:</p>
+                
+                <div class="accessibility-grid">
+                    <div class="accessibility-item">
+                        <h3>Bar Chart with Labels</h3>
+                        <div class="chart-container" id="accessibleBarChart"></div>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3>Pie Chart with Descriptions</h3>
+                        <div class="chart-container" id="accessiblePieChart"></div>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3>Line Chart with Data Table</h3>
+                        <div class="chart-container" id="accessibleLineChart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>✅ Accessibility Checklist</h2>
+                <div class="accessibility-checklist">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check1"> <label for="check1">All images have alternative text</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check2"> <label for="check2">Color is not the only way to convey information</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check3"> <label for="check3">Text has sufficient contrast ratio (4.5:1 minimum)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check4"> <label for="check4">All interactive elements are keyboard accessible</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check5"> <label for="check5">Focus indicators are visible and clear</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check6"> <label for="check6">Charts have proper ARIA labels and descriptions</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check7"> <label for="check7">Data tables are provided for complex charts</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check8"> <label for="check8">Text can be resized up to 200% without loss of functionality</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Best Practices for Accessible Charts</h2>
+                <div class="accessibility-grid">
+                    <div class="accessibility-item">
+                        <h3>Design Principles</h3>
+                        <ul>
+                            <li>Use semantic HTML and ARIA attributes</li>
+                            <li>Provide text alternatives for all visual content</li>
+                            <li>Ensure sufficient color contrast</li>
+                            <li>Make all interactions keyboard accessible</li>
+                        </ul>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3>Content Strategy</h3>
+                        <ul>
+                            <li>Write clear, descriptive chart titles</li>
+                            <li>Provide context and explanations</li>
+                            <li>Use consistent terminology</li>
+                            <li>Include data tables when appropriate</li>
+                        </ul>
+                    </div>
+                    <div class="accessibility-item">
+                        <h3>Testing & Validation</h3>
+                        <ul>
+                            <li>Test with screen readers</li>
+                            <li>Use keyboard-only navigation</li>
+                            <li>Validate color contrast ratios</li>
+                            <li>Get feedback from users with disabilities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="practice-section">
+                <h2>🎯 Practice Exercise: Accessible Dashboard</h2>
+                <p>Create an accessible dashboard that meets WCAG AA standards:</p>
+                <ul>
+                    <li>Implement proper ARIA labels and descriptions</li>
+                    <li>Add keyboard navigation support</li>
+                    <li>Use accessible color schemes</li>
+                    <li>Provide alternative text and data tables</li>
+                    <li>Test with accessibility tools</li>
+                </ul>
+                
+                <div class="controls">
+                    <button onclick="startAccessibilityPractice()">Start Practice</button>
+                    <button onclick="showAccessibilitySolution()">Show Solution</button>
+                </div>
+                
+                <div id="accessibilityPracticeArea" style="display: none;">
+                    <div class="chart-container" id="accessibilityPracticeChart"></div>
+                    <div class="controls">
+                        <button onclick="testKeyboardNav()">Test Keyboard Navigation</button>
+                        <button onclick="testScreenReader()">Test Screen Reader</button>
+                        <button onclick="testColorContrast()">Test Color Contrast</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'standard';
+        let currentTextSize = 'medium';
+        let screenReaderMode = false;
+
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAccessibleCharts();
+        });
+
+        function initializeAccessibleCharts() {
+            // Main accessible chart
+            const accessibleChart = echarts.init(document.getElementById('accessibleChart'));
+            const accessibleOption = createAccessibleChartOption();
+            accessibleChart.setOption(accessibleOption);
+
+            // Screen reader chart
+            const screenReaderChart = echarts.init(document.getElementById('screenReaderChart'));
+            const screenReaderOption = {
+                title: {
+                    text: 'Monthly Sales Data 2023',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        return `${params[0].name}: ${params[0].value} units sold`;
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Sales (units)'
+                },
+                series: [{
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [5000, 6000, 7500, 8000, 9000, 8500, 10000, 11000, 12000, 13000, 12000, 15000],
+                    label: {
+                        show: true,
+                        position: 'top'
+                    },
+                    itemStyle: {
+                        color: '#667eea'
+                    }
+                }]
+            };
+            screenReaderChart.setOption(screenReaderOption);
+
+            // Keyboard chart
+            const keyboardChart = echarts.init(document.getElementById('keyboardChart'));
+            const keyboardOption = {
+                title: {
+                    text: 'Keyboard Navigable Chart',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                series: [{
+                    name: 'Data',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        { value: 335, name: 'Direct' },
+                        { value: 310, name: 'Email' },
+                        { value: 234, name: 'Affiliate' },
+                        { value: 135, name: 'Video' },
+                        { value: 1548, name: 'Search' }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+            keyboardChart.setOption(keyboardOption);
+
+            // High contrast chart
+            const highContrastChart = echarts.init(document.getElementById('highContrastChart'));
+            const highContrastOption = {
+                title: {
+                    text: 'High Contrast Theme',
+                    left: 'center',
+                    textStyle: {
+                        color: '#000000'
+                    }
+                },
+                backgroundColor: '#ffffff',
+                textStyle: {
+                    color: '#000000'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['A', 'B', 'C', 'D', 'E'],
+                    axisLabel: {
+                        color: '#000000'
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        color: '#000000'
+                    }
+                },
+                series: [{
+                    name: 'Value',
+                    type: 'line',
+                    data: [10, 20, 15, 25, 30],
+                    lineStyle: {
+                        color: '#000000',
+                        width: 3
+                    },
+                    itemStyle: {
+                        color: '#000000'
+                    }
+                }]
+            };
+            highContrastChart.setOption(highContrastOption);
+
+            // Accessible bar chart
+            const accessibleBarChart = echarts.init(document.getElementById('accessibleBarChart'));
+            const accessibleBarOption = {
+                title: {
+                    text: 'Sales by Region',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['North', 'South', 'East', 'West']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: 'Sales',
+                    type: 'bar',
+                    data: [120, 200, 150, 80],
+                    label: {
+                        show: true,
+                        position: 'top'
+                    }
+                }]
+            };
+            accessibleBarChart.setOption(accessibleBarOption);
+
+            // Accessible pie chart
+            const accessiblePieChart = echarts.init(document.getElementById('accessiblePieChart'));
+            const accessiblePieOption = {
+                title: {
+                    text: 'Market Share',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                series: [{
+                    name: 'Market Share',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        { value: 1048, name: 'Company A' },
+                        { value: 735, name: 'Company B' },
+                        { value: 580, name: 'Company C' },
+                        { value: 484, name: 'Company D' }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+            accessiblePieChart.setOption(accessiblePieOption);
+
+            // Accessible line chart
+            const accessibleLineChart = echarts.init(document.getElementById('accessibleLineChart'));
+            const accessibleLineOption = {
+                title: {
+                    text: 'Revenue Trend',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Q1', 'Q2', 'Q3', 'Q4']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: 'Revenue',
+                    type: 'line',
+                    data: [100, 150, 200, 250],
+                    markPoint: {
+                        data: [
+                            { type: 'max', name: 'Maximum' },
+                            { type: 'min', name: 'Minimum' }
+                        ]
+                    }
+                }]
+            };
+            accessibleLineChart.setOption(accessibleLineOption);
+
+            // Add keyboard event listeners
+            document.getElementById('keyboardChart').addEventListener('keydown', function(event) {
+                logKeyboardEvent(event);
+            });
+        }
+
+        function createAccessibleChartOption() {
+            return {
+                title: {
+                    text: 'Accessible Chart Example',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        return `${params[0].name}: ${params[0].value}`;
+                    }
+                },
+                legend: {
+                    data: ['Series 1', 'Series 2'],
+                    bottom: 10
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: 'Series 1',
+                        type: 'bar',
+                        data: [120, 200, 150, 80, 70],
+                        label: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                    {
+                        name: 'Series 2',
+                        type: 'line',
+                        data: [100, 180, 130, 90, 60],
+                        label: {
+                            show: true,
+                            position: 'top'
+                        }
+                    }
+                ]
+            };
+        }
+
+        function setAccessibilityTheme(theme) {
+            currentTheme = theme;
+            updateAccessibleChart();
+        }
+
+        function setTextSize(size) {
+            currentTextSize = size;
+            updateAccessibleChart();
+        }
+
+        function updateAccessibleChart() {
+            const chart = echarts.init(document.getElementById('accessibleChart'));
+            const option = createAccessibleChartOption();
+            
+            // Apply theme-specific modifications
+            if (currentTheme === 'high-contrast') {
+                option.backgroundColor = '#ffffff';
+                option.textStyle = { color: '#000000' };
+                option.xAxis.axisLabel = { color: '#000000' };
+                option.yAxis.axisLabel = { color: '#000000' };
+            } else if (currentTheme === 'colorblind-friendly') {
+                option.color = ['#000000', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'];
+            }
+            
+            // Apply text size modifications
+            const fontSize = currentTextSize === 'small' ? 12 : currentTextSize === 'large' ? 18 : 14;
+            option.textStyle = { ...option.textStyle, fontSize: fontSize };
+            
+            chart.setOption(option);
+        }
+
+        function announceChartData() {
+            const chart = echarts.getInstanceByDom(document.getElementById('screenReaderChart'));
+            const data = chart.getOption().series[0].data;
+            const announcement = `Chart shows ${data.length} data points. Highest value is ${Math.max(...data)} in ${getMonthName(data.indexOf(Math.max(...data)))}.`;
+            
+            // Create a temporary element for screen reader announcement
+            const announcementElement = document.createElement('div');
+            announcementElement.setAttribute('aria-live', 'polite');
+            announcementElement.className = 'sr-only';
+            announcementElement.textContent = announcement;
+            document.body.appendChild(announcementElement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcementElement);
+            }, 1000);
+        }
+
+        function toggleScreenReaderMode() {
+            screenReaderMode = !screenReaderMode;
+            const chart = echarts.getInstanceByDom(document.getElementById('screenReaderChart'));
+            
+            if (screenReaderMode) {
+                chart.setOption({
+                    series: [{
+                        label: {
+                            show: true,
+                            position: 'top',
+                            formatter: function(params) {
+                                return `${params.name}\n${params.value}`;
+                            }
+                        }
+                    }]
+                });
+            } else {
+                chart.setOption({
+                    series: [{
+                        label: {
+                            show: false
+                        }
+                    }]
+                });
+            }
+        }
+
+        function logKeyboardEvent(event) {
+            const log = document.getElementById('keyboardLog');
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `<div>[${timestamp}] Key pressed: ${event.key} (${event.code})</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function getMonthName(index) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            return months[index];
+        }
+
+        function startAccessibilityPractice() {
+            document.getElementById('accessibilityPracticeArea').style.display = 'block';
+            const practiceChart = echarts.init(document.getElementById('accessibilityPracticeChart'));
+            const option = createAccessibleChartOption();
+            practiceChart.setOption(option);
+        }
+
+        function testKeyboardNav() {
+            alert('Keyboard navigation test: Use Tab to focus on the chart, then use arrow keys to navigate between data points.');
+        }
+
+        function testScreenReader() {
+            alert('Screen reader test: Use a screen reader to navigate the chart and verify that all data is properly announced.');
+        }
+
+        function testColorContrast() {
+            alert('Color contrast test: Use browser dev tools or accessibility tools to check color contrast ratios.');
+        }
+
+        function showAccessibilitySolution() {
+            alert('Accessibility solution: Focus on semantic HTML, ARIA attributes, keyboard navigation, and proper color contrast for inclusive design.');
+        }
+    </script>
+</body>
+</html>

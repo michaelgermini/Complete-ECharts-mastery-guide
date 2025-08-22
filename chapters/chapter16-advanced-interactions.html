@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 16: Advanced Interactions - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/add-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .interaction-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .interaction-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .interaction-chart {
+            width: 100%;
+            height: 400px;
+            margin: 10px 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .control-group select, .control-group input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .code-example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .practice-section {
+            background: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .practice-section h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .live-editor {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .live-editor textarea {
+            width: 100%;
+            height: 200px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            resize: vertical;
+        }
+        
+        .live-editor button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        
+        .live-editor button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chapter 16: Advanced Interactions</h1>
+        <p class="lead">Master advanced interactive features in ECharts, including linked charts, dynamic data updates, custom events, and interactive dashboards.</p>
+
+        <div class="chapter-nav">
+            <a href="chapter15-time-series-analysis.html">← Chapter 15: Time Series Analysis</a>
+            <a href="chapter17-mobile-optimization.html">Chapter 17: Mobile Optimization →</a>
+        </div>
+
+        <h2>Introduction to Advanced Interactions</h2>
+        <p>Advanced interactions in ECharts enable you to create dynamic, responsive visualizations that respond to user input and provide rich interactive experiences.</p>
+
+        <h3>Key Concepts</h3>
+        <ul>
+            <li><strong>Linked Charts:</strong> Multiple charts that respond to each other's interactions</li>
+            <li><strong>Dynamic Data Updates:</strong> Real-time data changes and animations</li>
+            <li><strong>Custom Events:</strong> User-defined interaction handlers</li>
+            <li><strong>Interactive Dashboards:</strong> Complex multi-chart interfaces</li>
+            <li><strong>Data Brushing:</strong> Selection and filtering across charts</li>
+        </ul>
+
+        <h2>Linked Charts</h2>
+        <p>Create multiple charts that interact with each other, allowing users to explore data relationships.</p>
+        
+        <div class="interaction-container">
+            <div class="interaction-card">
+                <h3>Master Chart</h3>
+                <div id="master-chart" class="interaction-chart"></div>
+                <div class="controls">
+                    <button onclick="highlightSelection()">Highlight Selection</button>
+                    <button onclick="clearSelection()">Clear Selection</button>
+                </div>
+            </div>
+            
+            <div class="interaction-card">
+                <h3>Detail Chart</h3>
+                <div id="detail-chart" class="interaction-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Detail Level:</label>
+                        <select id="detail-level">
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Dynamic Data Updates</h2>
+        <p>Update chart data dynamically based on user interactions or external data sources.</p>
+        
+        <div class="interaction-container">
+            <div class="interaction-card">
+                <h3>Real-time Updates</h3>
+                <div id="realtime-chart" class="interaction-chart"></div>
+                <div class="controls">
+                    <button onclick="startRealtimeUpdates()">Start Updates</button>
+                    <button onclick="stopRealtimeUpdates()">Stop Updates</button>
+                    <button onclick="addDataPoint()">Add Point</button>
+                </div>
+            </div>
+            
+            <div class="interaction-card">
+                <h3>Data Filtering</h3>
+                <div id="filter-chart" class="interaction-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Filter Range:</label>
+                        <input type="range" id="filter-range" min="0" max="100" value="50">
+                    </div>
+                    <button onclick="applyFilter()">Apply Filter</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>Advanced Configuration</h2>
+        
+        <div class="code-example">
+// Advanced interaction configuration
+var option = {
+    // Enable data zoom for interaction
+    dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 100
+    }, {
+        type: 'slider',
+        start: 0,
+        end: 100
+    }],
+    
+    // Custom tooltip
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return customTooltipFormatter(params);
+        }
+    },
+    
+    // Series with custom events
+    series: [{
+        type: 'line',
+        data: data,
+        // Custom event handlers
+        emphasis: {
+            focus: 'series'
+        },
+        select: {
+            disabled: false
+        }
+    }]
+};
+
+// Event listeners
+chart.on('click', function(params) {
+    handleChartClick(params);
+});
+
+chart.on('legendselectchanged', function(params) {
+    handleLegendChange(params);
+});
+        </div>
+
+        <h2>Interactive Chart Builder</h2>
+        <p>Experiment with different interaction configurations in real-time.</p>
+        
+        <div class="practice-section">
+            <h3>Interaction Configuration Tool</h3>
+            <div class="live-editor">
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Chart Type:</label>
+                        <select id="interaction-chart-type">
+                            <option value="line">Line Chart</option>
+                            <option value="bar">Bar Chart</option>
+                            <option value="scatter">Scatter Plot</option>
+                            <option value="pie">Pie Chart</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Enable Zoom:</label>
+                        <input type="checkbox" id="enable-zoom" checked>
+                    </div>
+                    <div class="control-group">
+                        <label>Enable Selection:</label>
+                        <input type="checkbox" id="enable-selection" checked>
+                    </div>
+                </div>
+                <div id="interaction-builder" class="interaction-chart"></div>
+            </div>
+        </div>
+
+        <h2>Best Practices</h2>
+        <ul>
+            <li><strong>Performance optimization:</strong> Limit the number of simultaneous interactions</li>
+            <li><strong>User feedback:</strong> Provide clear visual feedback for interactions</li>
+            <li><strong>Accessibility:</strong> Ensure interactions work with keyboard navigation</li>
+            <li><strong>Mobile considerations:</strong> Adapt interactions for touch devices</li>
+            <li><strong>Error handling:</strong> Gracefully handle interaction errors</li>
+        </ul>
+
+        <h2>Practice Exercise</h2>
+        <div class="practice-section">
+            <h3>Create an Interactive Chart</h3>
+            <p>Build an interactive chart with the following features:</p>
+            <ul>
+                <li>Dynamic data updates</li>
+                <li>Custom event handlers</li>
+                <li>Data zoom and panning</li>
+                <li>Interactive tooltips</li>
+            </ul>
+            
+            <div class="live-editor">
+                <textarea id="exercise-code" placeholder="Enter your interactive chart configuration here...">
+// Your interactive chart configuration
+var option = {
+    title: {
+        text: 'Interactive Chart',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
+    },
+    legend: {
+        data: ['Data Series 1', 'Data Series 2']
+    },
+    xAxis: {
+        type: 'category',
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        name: 'Data Series 1',
+        type: 'line',
+        data: [120, 132, 101, 134, 90, 230],
+        smooth: true
+    }, {
+        name: 'Data Series 2',
+        type: 'bar',
+        data: [220, 182, 191, 234, 290, 330]
+    }],
+    dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 100
+    }]
+};
+                </textarea>
+                <button onclick="runExercise()">Run Code</button>
+                <button onclick="resetExercise()">Reset</button>
+            </div>
+            <div id="exercise-result" class="interaction-chart"></div>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="chapter15-time-series-analysis.html">← Chapter 15: Time Series Analysis</a>
+            <a href="chapter17-mobile-optimization.html">Chapter 17: Mobile Optimization →</a>
+        </div>
+    </div>
+
+    <script>
+        // Master Chart
+        var masterChart = echarts.init(document.getElementById('master-chart'));
+        var masterOption = {
+            title: {
+                text: 'Master Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                type: 'bar',
+                data: [120, 200, 150, 80, 70, 110, 130],
+                itemStyle: {
+                    color: '#5470c6'
+                }
+            }]
+        };
+        masterChart.setOption(masterOption);
+
+        // Detail Chart
+        var detailChart = echarts.init(document.getElementById('detail-chart'));
+        var detailOption = {
+            title: {
+                text: 'Detail Chart',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                type: 'line',
+                data: [30, 40, 50, 60, 70, 80, 45, 55, 65],
+                smooth: true
+            }]
+        };
+        detailChart.setOption(detailOption);
+
+        // Real-time Chart
+        var realtimeChart = echarts.init(document.getElementById('realtime-chart'));
+        var realtimeOption = {
+            title: {
+                text: 'Real-time Updates',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('HH:mm:ss', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                type: 'line',
+                data: [],
+                smooth: true
+            }]
+        };
+        realtimeChart.setOption(realtimeOption);
+
+        // Filter Chart
+        var filterChart = echarts.init(document.getElementById('filter-chart'));
+        var filterOption = {
+            title: {
+                text: 'Data Filtering',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                type: 'bar',
+                data: [120, 200, 150, 80, 70, 110, 130, 90, 160, 140],
+                itemStyle: {
+                    color: '#91cc75'
+                }
+            }]
+        };
+        filterChart.setOption(filterOption);
+
+        // Interaction Builder
+        var interactionBuilder = echarts.init(document.getElementById('interaction-builder'));
+        var builderOption = {
+            title: {
+                text: 'Interaction Builder',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['A', 'B', 'C', 'D', 'E', 'F']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                type: 'line',
+                data: [120, 200, 150, 80, 70, 110],
+                smooth: true
+            }]
+        };
+        interactionBuilder.setOption(builderOption);
+
+        // Exercise Result
+        var exerciseChart = echarts.init(document.getElementById('exercise-result'));
+
+        // Real-time update variables
+        let realtimeInterval;
+        let realtimeData = [];
+
+        function startRealtimeUpdates() {
+            realtimeData = [];
+            realtimeInterval = setInterval(() => {
+                const now = new Date();
+                const value = Math.random() * 100;
+                realtimeData.push([now.getTime(), value]);
+                
+                if (realtimeData.length > 50) {
+                    realtimeData.shift();
+                }
+                
+                realtimeOption.series[0].data = realtimeData;
+                realtimeChart.setOption(realtimeOption);
+            }, 1000);
+        }
+
+        function stopRealtimeUpdates() {
+            if (realtimeInterval) {
+                clearInterval(realtimeInterval);
+            }
+        }
+
+        function addDataPoint() {
+            const now = new Date();
+            const value = Math.random() * 100;
+            realtimeData.push([now.getTime(), value]);
+            
+            if (realtimeData.length > 50) {
+                realtimeData.shift();
+            }
+            
+            realtimeOption.series[0].data = realtimeData;
+            realtimeChart.setOption(realtimeOption);
+        }
+
+        function applyFilter() {
+            const filterValue = document.getElementById('filter-range').value;
+            const filteredData = filterOption.series[0].data.filter(value => value >= filterValue);
+            
+            filterOption.series[0].data = filteredData;
+            filterOption.xAxis.data = filterOption.xAxis.data.slice(0, filteredData.length);
+            filterChart.setOption(filterOption);
+        }
+
+        function highlightSelection() {
+            masterOption.series[0].itemStyle.color = '#ff4444';
+            masterChart.setOption(masterOption);
+        }
+
+        function clearSelection() {
+            masterOption.series[0].itemStyle.color = '#5470c6';
+            masterChart.setOption(masterOption);
+        }
+
+        function runExercise() {
+            try {
+                const code = document.getElementById('exercise-code').value;
+                const option = eval('(' + code + ')');
+                exerciseChart.setOption(option, true);
+            } catch (error) {
+                alert('Error in code: ' + error.message);
+            }
+        }
+
+        function resetExercise() {
+            document.getElementById('exercise-code').value = `// Your interactive chart configuration
+var option = {
+    title: {
+        text: 'Interactive Chart',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
+    },
+    legend: {
+        data: ['Data Series 1', 'Data Series 2']
+    },
+    xAxis: {
+        type: 'category',
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        name: 'Data Series 1',
+        type: 'line',
+        data: [120, 132, 101, 134, 90, 230],
+        smooth: true
+    }, {
+        name: 'Data Series 2',
+        type: 'bar',
+        data: [220, 182, 191, 234, 290, 330]
+    }],
+    dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 100
+    }]
+};`;
+            exerciseChart.clear();
+        }
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            masterChart.resize();
+            detailChart.resize();
+            realtimeChart.resize();
+            filterChart.resize();
+            interactionBuilder.resize();
+            exerciseChart.resize();
+        });
+    </script>
+</body>
+</html>

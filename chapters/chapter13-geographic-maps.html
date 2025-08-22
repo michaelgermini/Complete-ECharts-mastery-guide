@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 13: Geographic Maps - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/add-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .map-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .map-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .map-chart {
+            width: 100%;
+            height: 400px;
+            margin: 10px 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .control-group select, .control-group input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .code-example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .practice-section {
+            background: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .practice-section h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .live-editor {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .live-editor textarea {
+            width: 100%;
+            height: 200px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            resize: vertical;
+        }
+        
+        .live-editor button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        
+        .live-editor button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chapter 13: Geographic Maps</h1>
+        <p class="lead">Learn how to create stunning geographic visualizations with ECharts, including world maps, regional maps, heatmaps, and interactive geographic features.</p>
+
+        <div class="chapter-nav">
+            <a href="chapter12-real-world-applications.html">← Chapter 12: Real-World Applications</a>
+            <a href="chapter14-3d-visualizations.html">Chapter 14: 3D Visualizations →</a>
+        </div>
+
+        <h2>Introduction to Geographic Maps</h2>
+        <p>Geographic maps are powerful tools for visualizing location-based data. ECharts provides comprehensive support for creating interactive maps with various projection types, zoom capabilities, and rich styling options.</p>
+
+        <h3>Key Concepts</h3>
+        <ul>
+            <li><strong>Map Projections:</strong> Different ways to represent the Earth's surface on a 2D plane</li>
+            <li><strong>GeoJSON:</strong> Standard format for geographic data</li>
+            <li><strong>Heatmaps:</strong> Color-coded representations of data density</li>
+            <li><strong>Markers:</strong> Points of interest on maps</li>
+            <li><strong>Regions:</strong> Geographic boundaries and areas</li>
+        </ul>
+
+        <h2>Basic World Map</h2>
+        <p>Let's start with a simple world map showing population data by country.</p>
+        
+        <div class="map-container">
+            <div class="map-card">
+                <h3>World Population Map</h3>
+                <div id="world-map" class="map-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Projection:</label>
+                        <select id="projection-select">
+                            <option value="mercator">Mercator</option>
+                            <option value="equalEarth">Equal Earth</option>
+                            <option value="orthographic">Orthographic</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Zoom Level:</label>
+                        <input type="range" id="zoom-slider" min="1" max="5" step="0.5" value="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-card">
+                <h3>Interactive Features</h3>
+                <div id="interactive-map" class="map-chart"></div>
+                <div class="controls">
+                    <button onclick="toggleMarkers()">Toggle Markers</button>
+                    <button onclick="toggleLabels()">Toggle Labels</button>
+                    <button onclick="resetView()">Reset View</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>Regional Maps</h2>
+        <p>ECharts supports detailed regional maps for countries, states, and custom regions.</p>
+        
+        <div class="map-container">
+            <div class="map-card">
+                <h3>United States Map</h3>
+                <div id="us-map" class="map-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Data Type:</label>
+                        <select id="us-data-select">
+                            <option value="population">Population</option>
+                            <option value="gdp">GDP</option>
+                            <option value="temperature">Temperature</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-card">
+                <h3>Europe Map</h3>
+                <div id="europe-map" class="map-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Color Scheme:</label>
+                        <select id="europe-color-select">
+                            <option value="viridis">Viridis</option>
+                            <option value="plasma">Plasma</option>
+                            <option value="inferno">Inferno</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Heatmaps and Density Maps</h2>
+        <p>Heatmaps are excellent for showing data density and patterns across geographic areas.</p>
+        
+        <div class="map-container">
+            <div class="map-card">
+                <h3>Population Density Heatmap</h3>
+                <div id="density-heatmap" class="map-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Blur Radius:</label>
+                        <input type="range" id="blur-slider" min="0" max="20" value="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Min Opacity:</label>
+                        <input type="range" id="opacity-slider" min="0" max="1" step="0.1" value="0.3">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-card">
+                <h3>Point Density Map</h3>
+                <div id="point-density" class="map-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Point Size:</label>
+                        <input type="range" id="point-size-slider" min="2" max="20" value="8">
+                    </div>
+                    <div class="control-group">
+                        <label>Point Count:</label>
+                        <input type="range" id="point-count-slider" min="100" max="2000" step="100" value="500">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Advanced Geographic Features</h2>
+        
+        <h3>Custom GeoJSON</h3>
+        <p>You can use custom GeoJSON data to create maps for any region or custom boundaries.</p>
+        
+        <div class="code-example">
+// Loading custom GeoJSON
+echarts.registerMap('custom-region', geoJsonData);
+
+var option = {
+    geo: {
+        map: 'custom-region',
+        roam: true,
+        label: {
+            show: true
+        }
+    },
+    series: [{
+        type: 'map',
+        map: 'custom-region',
+        data: yourData
+    }]
+};
+        </div>
+
+        <h3>Multiple Map Layers</h3>
+        <p>Combine different map layers for complex geographic visualizations.</p>
+        
+        <div class="map-card">
+            <h3>Multi-Layer Map</h3>
+            <div id="multi-layer-map" class="map-chart"></div>
+            <div class="controls">
+                <button onclick="toggleLayer('base')">Toggle Base Map</button>
+                <button onclick="toggleLayer('data')">Toggle Data Layer</button>
+                <button onclick="toggleLayer('markers')">Toggle Markers</button>
+            </div>
+        </div>
+
+        <h2>Interactive Map Builder</h2>
+        <p>Experiment with different map configurations in real-time.</p>
+        
+        <div class="practice-section">
+            <h3>Map Configuration Tool</h3>
+            <div class="live-editor">
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Map Type:</label>
+                        <select id="map-type-select">
+                            <option value="world">World</option>
+                            <option value="usa">United States</option>
+                            <option value="europe">Europe</option>
+                            <option value="asia">Asia</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Visual Map:</label>
+                        <select id="visual-map-select">
+                            <option value="continuous">Continuous</option>
+                            <option value="piecewise">Piecewise</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Show Labels:</label>
+                        <input type="checkbox" id="show-labels-checkbox" checked>
+                    </div>
+                    <div class="control-group">
+                        <label>Enable Zoom:</label>
+                        <input type="checkbox" id="enable-zoom-checkbox" checked>
+                    </div>
+                </div>
+                <div id="builder-map" class="map-chart"></div>
+            </div>
+        </div>
+
+        <h2>Best Practices</h2>
+        <ul>
+            <li><strong>Choose the right projection:</strong> Consider your data and audience when selecting map projections</li>
+            <li><strong>Optimize performance:</strong> Use data sampling for large datasets</li>
+            <li><strong>Provide context:</strong> Include legends, scales, and reference information</li>
+            <li><strong>Consider accessibility:</strong> Use colorblind-friendly palettes and provide alternative text</li>
+            <li><strong>Mobile optimization:</strong> Ensure maps work well on touch devices</li>
+        </ul>
+
+        <h2>Practice Exercise</h2>
+        <div class="practice-section">
+            <h3>Create a Custom Regional Map</h3>
+            <p>Build a map visualization for your region of interest. Include the following features:</p>
+            <ul>
+                <li>Custom color scheme</li>
+                <li>Interactive tooltips with detailed information</li>
+                <li>Zoom and pan controls</li>
+                <li>Data-driven styling</li>
+                <li>Legend and scale information</li>
+            </ul>
+            
+            <div class="live-editor">
+                <textarea id="exercise-code" placeholder="Enter your ECharts configuration here...">
+// Your map configuration
+var option = {
+    title: {
+        text: 'Custom Regional Map',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    visualMap: {
+        min: 0,
+        max: 100,
+        left: 'left',
+        top: 'bottom',
+        text: ['High', 'Low'],
+        calculable: true
+    },
+    series: [{
+        type: 'map',
+        map: 'world',
+        roam: true,
+        emphasis: {
+            label: {
+                show: true
+            }
+        },
+        data: [
+            {name: 'United States', value: 85},
+            {name: 'China', value: 75},
+            {name: 'Germany', value: 65}
+        ]
+    }]
+};
+                </textarea>
+                <button onclick="runExercise()">Run Code</button>
+                <button onclick="resetExercise()">Reset</button>
+            </div>
+            <div id="exercise-result" class="map-chart"></div>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="chapter12-real-world-applications.html">← Chapter 12: Real-World Applications</a>
+            <a href="chapter14-3d-visualizations.html">Chapter 14: 3D Visualizations →</a>
+        </div>
+    </div>
+
+    <script>
+        // World Map
+        var worldMap = echarts.init(document.getElementById('world-map'));
+        var worldOption = {
+            title: {
+                text: 'World Population',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} million people'
+            },
+            visualMap: {
+                min: 0,
+                max: 1400,
+                left: 'left',
+                top: 'bottom',
+                text: ['High', 'Low'],
+                calculable: true,
+                inRange: {
+                    color: ['#e0f3f8', '#045a8d']
+                }
+            },
+            series: [{
+                type: 'map',
+                map: 'world',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'China', value: 1400},
+                    {name: 'India', value: 1350},
+                    {name: 'United States', value: 330},
+                    {name: 'Indonesia', value: 270},
+                    {name: 'Pakistan', value: 220},
+                    {name: 'Brazil', value: 210},
+                    {name: 'Nigeria', value: 200},
+                    {name: 'Bangladesh', value: 160},
+                    {name: 'Russia', value: 145},
+                    {name: 'Mexico', value: 130}
+                ]
+            }]
+        };
+        worldMap.setOption(worldOption);
+
+        // Interactive Map
+        var interactiveMap = echarts.init(document.getElementById('interactive-map'));
+        var interactiveOption = {
+            title: {
+                text: 'Interactive World Map',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [{
+                type: 'map',
+                map: 'world',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'United States', value: 100},
+                    {name: 'United Kingdom', value: 80},
+                    {name: 'Germany', value: 70},
+                    {name: 'France', value: 60},
+                    {name: 'Japan', value: 50}
+                ]
+            }, {
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: [
+                    {name: 'New York', value: [74.006, 40.7128, 100]},
+                    {name: 'London', value: [-0.1276, 51.5074, 80]},
+                    {name: 'Tokyo', value: [139.6917, 35.6895, 50]}
+                ],
+                symbolSize: function (val) {
+                    return val[2] / 10;
+                }
+            }]
+        };
+        interactiveMap.setOption(interactiveOption);
+
+        // US Map
+        var usMap = echarts.init(document.getElementById('us-map'));
+        var usOption = {
+            title: {
+                text: 'United States Data',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                left: 'left',
+                top: 'bottom',
+                text: ['High', 'Low'],
+                calculable: true
+            },
+            series: [{
+                type: 'map',
+                map: 'USA',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'California', value: 85},
+                    {name: 'Texas', value: 75},
+                    {name: 'Florida', value: 65},
+                    {name: 'New York', value: 60},
+                    {name: 'Illinois', value: 55}
+                ]
+            }]
+        };
+        usMap.setOption(usOption);
+
+        // Europe Map
+        var europeMap = echarts.init(document.getElementById('europe-map'));
+        var europeOption = {
+            title: {
+                text: 'Europe Data',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                left: 'left',
+                top: 'bottom',
+                text: ['High', 'Low'],
+                calculable: true,
+                inRange: {
+                    color: ['#fee5d9', '#a50f15']
+                }
+            },
+            series: [{
+                type: 'map',
+                map: 'europe',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'Germany', value: 85},
+                    {name: 'France', value: 75},
+                    {name: 'United Kingdom', value: 70},
+                    {name: 'Italy', value: 65},
+                    {name: 'Spain', value: 60}
+                ]
+            }]
+        };
+        europeMap.setOption(europeOption);
+
+        // Density Heatmap
+        var densityMap = echarts.init(document.getElementById('density-heatmap'));
+        var densityOption = {
+            title: {
+                text: 'Population Density Heatmap',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                left: 'left',
+                top: 'bottom',
+                text: ['High', 'Low'],
+                calculable: true,
+                inRange: {
+                    color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffcc', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                }
+            },
+            series: [{
+                type: 'map',
+                map: 'world',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'China', value: 95},
+                    {name: 'India', value: 90},
+                    {name: 'United States', value: 75},
+                    {name: 'Indonesia', value: 70},
+                    {name: 'Brazil', value: 65},
+                    {name: 'Pakistan', value: 60},
+                    {name: 'Nigeria', value: 55},
+                    {name: 'Bangladesh', value: 50},
+                    {name: 'Russia', value: 45},
+                    {name: 'Mexico', value: 40}
+                ]
+            }]
+        };
+        densityMap.setOption(densityOption);
+
+        // Point Density
+        var pointMap = echarts.init(document.getElementById('point-density'));
+        var pointOption = {
+            title: {
+                text: 'Point Density Map',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [{
+                type: 'map',
+                map: 'world',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                }
+            }, {
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: generateRandomPoints(500),
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#ff4444',
+                    opacity: 0.6
+                }
+            }]
+        };
+        pointMap.setOption(pointOption);
+
+        // Multi-layer Map
+        var multiLayerMap = echarts.init(document.getElementById('multi-layer-map'));
+        var multiLayerOption = {
+            title: {
+                text: 'Multi-Layer Geographic Visualization',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                left: 'left',
+                top: 'bottom',
+                text: ['High', 'Low'],
+                calculable: true
+            },
+            series: [{
+                type: 'map',
+                map: 'world',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'United States', value: 85},
+                    {name: 'China', value: 75},
+                    {name: 'Germany', value: 65}
+                ]
+            }, {
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: [
+                    {name: 'New York', value: [74.006, 40.7128, 100]},
+                    {name: 'Beijing', value: [116.4074, 39.9042, 80]},
+                    {name: 'Berlin', value: [13.4050, 52.5200, 60]}
+                ],
+                symbolSize: function (val) {
+                    return val[2] / 10;
+                },
+                itemStyle: {
+                    color: '#ff4444'
+                }
+            }]
+        };
+        multiLayerMap.setOption(multiLayerOption);
+
+        // Builder Map
+        var builderMap = echarts.init(document.getElementById('builder-map'));
+        var builderOption = {
+            title: {
+                text: 'Interactive Map Builder',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                left: 'left',
+                top: 'bottom',
+                text: ['High', 'Low'],
+                calculable: true
+            },
+            series: [{
+                type: 'map',
+                map: 'world',
+                roam: true,
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                data: [
+                    {name: 'United States', value: 85},
+                    {name: 'China', value: 75},
+                    {name: 'Germany', value: 65},
+                    {name: 'Japan', value: 60},
+                    {name: 'United Kingdom', value: 55}
+                ]
+            }]
+        };
+        builderMap.setOption(builderOption);
+
+        // Exercise Result
+        var exerciseMap = echarts.init(document.getElementById('exercise-result'));
+
+        // Helper Functions
+        function generateRandomPoints(count) {
+            const points = [];
+            for (let i = 0; i < count; i++) {
+                points.push({
+                    name: `Point ${i}`,
+                    value: [
+                        Math.random() * 360 - 180,
+                        Math.random() * 180 - 90,
+                        Math.random() * 100
+                    ]
+                });
+            }
+            return points;
+        }
+
+        function toggleMarkers() {
+            const series = interactiveOption.series[1];
+            series.silent = !series.silent;
+            interactiveMap.setOption(interactiveOption);
+        }
+
+        function toggleLabels() {
+            const emphasis = interactiveOption.series[0].emphasis;
+            emphasis.label.show = !emphasis.label.show;
+            interactiveMap.setOption(interactiveOption);
+        }
+
+        function resetView() {
+            interactiveMap.dispatchAction({
+                type: 'restore'
+            });
+        }
+
+        function toggleLayer(layerType) {
+            // Implementation for toggling map layers
+            console.log(`Toggling ${layerType} layer`);
+        }
+
+        function runExercise() {
+            try {
+                const code = document.getElementById('exercise-code').value;
+                const option = eval('(' + code + ')');
+                exerciseMap.setOption(option, true);
+            } catch (error) {
+                alert('Error in code: ' + error.message);
+            }
+        }
+
+        function resetExercise() {
+            document.getElementById('exercise-code').value = `// Your map configuration
+var option = {
+    title: {
+        text: 'Custom Regional Map',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    visualMap: {
+        min: 0,
+        max: 100,
+        left: 'left',
+        top: 'bottom',
+        text: ['High', 'Low'],
+        calculable: true
+    },
+    series: [{
+        type: 'map',
+        map: 'world',
+        roam: true,
+        emphasis: {
+            label: {
+                show: true
+            }
+        },
+        data: [
+            {name: 'United States', value: 85},
+            {name: 'China', value: 75},
+            {name: 'Germany', value: 65}
+        ]
+    }]
+};`;
+            exerciseMap.clear();
+        }
+
+        // Event Listeners
+        document.getElementById('projection-select').addEventListener('change', function() {
+            // Update projection logic
+            console.log('Projection changed to:', this.value);
+        });
+
+        document.getElementById('zoom-slider').addEventListener('input', function() {
+            // Update zoom logic
+            console.log('Zoom level:', this.value);
+        });
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            worldMap.resize();
+            interactiveMap.resize();
+            usMap.resize();
+            europeMap.resize();
+            densityMap.resize();
+            pointMap.resize();
+            multiLayerMap.resize();
+            builderMap.resize();
+            exerciseMap.resize();
+        });
+    </script>
+</body>
+</html>

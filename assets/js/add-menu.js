@@ -35,6 +35,19 @@ function addEChartsMenu() {
                         <a href="${basePath}chapters/chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a>
                         <a href="${basePath}chapters/chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a>
                         <a href="${basePath}chapters/chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a>
+                        <a href="${basePath}chapters/chapter8-advanced-features.html">Chapter 8: Advanced Features</a>
+                        <a href="${basePath}chapters/chapter9-themes-customization.html">Chapter 9: Themes & Customization</a>
+                        <a href="${basePath}chapters/chapter10-performance-optimization.html">Chapter 10: Performance Optimization</a>
+                        <a href="${basePath}chapters/chapter11-integration-frameworks.html">Chapter 11: Framework Integration</a>
+                        <a href="${basePath}chapters/chapter12-real-world-applications.html">Chapter 12: Real-World Applications</a>
+                        <a href="${basePath}chapters/chapter13-geographic-maps.html">Chapter 13: Geographic Maps</a>
+                        <a href="${basePath}chapters/chapter14-3d-visualizations.html">Chapter 14: 3D Visualizations</a>
+                        <a href="${basePath}chapters/chapter15-time-series-analysis.html">Chapter 15: Time Series Analysis</a>
+                        <a href="${basePath}chapters/chapter16-advanced-interactions.html">Chapter 16: Advanced Interactions</a>
+                        <a href="${basePath}chapters/chapter17-data-storytelling.html">Chapter 17: Data Storytelling</a>
+                        <a href="${basePath}chapters/chapter18-mobile-optimization.html">Chapter 18: Mobile Optimization</a>
+                        <a href="${basePath}chapters/chapter19-accessibility.html">Chapter 19: Accessibility</a>
+                        <a href="${basePath}chapters/chapter20-advanced-techniques.html">Chapter 20: Advanced Techniques</a>
                     </div>
                 </li>
                 <li class="echarts-dropdown">
@@ -70,6 +83,19 @@ function addEChartsMenu() {
             <li><a href="${basePath}chapters/chapter5-pie-donut.html">Chapter 5: Pie & Donut Charts</a></li>
             <li><a href="${basePath}chapters/chapter6-scatter-bubble.html">Chapter 6: Scatter & Bubble Charts</a></li>
             <li><a href="${basePath}chapters/chapter7-radar-gauge.html">Chapter 7: Radar & Gauge Charts</a></li>
+            <li><a href="${basePath}chapters/chapter8-advanced-features.html">Chapter 8: Advanced Features</a></li>
+            <li><a href="${basePath}chapters/chapter9-themes-customization.html">Chapter 9: Themes & Customization</a></li>
+            <li><a href="${basePath}chapters/chapter10-performance-optimization.html">Chapter 10: Performance Optimization</a></li>
+            <li><a href="${basePath}chapters/chapter11-integration-frameworks.html">Chapter 11: Framework Integration</a></li>
+            <li><a href="${basePath}chapters/chapter12-real-world-applications.html">Chapter 12: Real-World Applications</a></li>
+            <li><a href="${basePath}chapters/chapter13-geographic-maps.html">Chapter 13: Geographic Maps</a></li>
+            <li><a href="${basePath}chapters/chapter14-3d-visualizations.html">Chapter 14: 3D Visualizations</a></li>
+            <li><a href="${basePath}chapters/chapter15-time-series-analysis.html">Chapter 15: Time Series Analysis</a></li>
+            <li><a href="${basePath}chapters/chapter16-advanced-interactions.html">Chapter 16: Advanced Interactions</a></li>
+            <li><a href="${basePath}chapters/chapter17-data-storytelling.html">Chapter 17: Data Storytelling</a></li>
+            <li><a href="${basePath}chapters/chapter18-mobile-optimization.html">Chapter 18: Mobile Optimization</a></li>
+            <li><a href="${basePath}chapters/chapter19-accessibility.html">Chapter 19: Accessibility</a></li>
+            <li><a href="${basePath}chapters/chapter20-advanced-techniques.html">Chapter 20: Advanced Techniques</a></li>
                                <li><a href="${basePath}projects/business-dashboard.html">Business Analytics</a></li>
                    <li><a href="${basePath}projects/iot-monitoring.html">IoT Monitoring</a></li>
                    <li><a href="${basePath}projects/sales-analytics.html">Sales Analytics</a></li>

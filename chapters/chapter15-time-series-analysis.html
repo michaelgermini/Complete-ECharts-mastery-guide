@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 15: Time Series Analysis - ECharts Mastery Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/add-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .time-series-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .time-series-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .time-series-chart {
+            width: 100%;
+            height: 400px;
+            margin: 10px 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .control-group select, .control-group input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .code-example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .practice-section {
+            background: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .practice-section h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .live-editor {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .live-editor textarea {
+            width: 100%;
+            height: 200px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            resize: vertical;
+        }
+        
+        .live-editor button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        
+        .live-editor button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chapter 15: Time Series Analysis</h1>
+        <p class="lead">Master time series visualization and analysis with ECharts, including trend detection, seasonality analysis, forecasting, and real-time data monitoring.</p>
+
+        <div class="chapter-nav">
+            <a href="chapter14-3d-visualizations.html">← Chapter 14: 3D Visualizations</a>
+            <a href="chapter16-advanced-interactions.html">Chapter 16: Advanced Interactions →</a>
+        </div>
+
+        <h2>Introduction to Time Series Analysis</h2>
+        <p>Time series analysis involves studying data points collected over time to identify patterns, trends, and seasonal variations. ECharts provides powerful tools for visualizing and analyzing temporal data.</p>
+
+        <h3>Key Concepts</h3>
+        <ul>
+            <li><strong>Trend Analysis:</strong> Identifying long-term patterns in data</li>
+            <li><strong>Seasonality:</strong> Recurring patterns at regular intervals</li>
+            <li><strong>Forecasting:</strong> Predicting future values based on historical data</li>
+            <li><strong>Real-time Monitoring:</strong> Live data visualization and updates</li>
+            <li><strong>Anomaly Detection:</strong> Identifying unusual patterns or outliers</li>
+        </ul>
+
+        <h2>Basic Time Series Chart</h2>
+        <p>Start with fundamental time series visualization techniques.</p>
+        
+        <div class="time-series-container">
+            <div class="time-series-card">
+                <h3>Simple Time Series</h3>
+                <div id="basic-time-series" class="time-series-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Time Range:</label>
+                        <select id="time-range-select">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="time-series-card">
+                <h3>Multiple Series</h3>
+                <div id="multi-time-series" class="time-series-chart"></div>
+                <div class="controls">
+                    <button onclick="toggleSeries('sales')">Toggle Sales</button>
+                    <button onclick="toggleSeries('revenue')">Toggle Revenue</button>
+                    <button onclick="toggleSeries('profit')">Toggle Profit</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>Trend Analysis</h2>
+        <p>Visualize and analyze trends in your time series data.</p>
+        
+        <div class="time-series-container">
+            <div class="time-series-card">
+                <h3>Trend Line</h3>
+                <div id="trend-analysis" class="time-series-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Trend Type:</label>
+                        <select id="trend-type">
+                            <option value="linear">Linear</option>
+                            <option value="polynomial">Polynomial</option>
+                            <option value="exponential">Exponential</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="time-series-card">
+                <h3>Moving Average</h3>
+                <div id="moving-average" class="time-series-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Window Size:</label>
+                        <input type="range" id="window-size" min="3" max="20" value="7">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Seasonality Detection</h2>
+        <p>Identify and visualize seasonal patterns in your data.</p>
+        
+        <div class="time-series-card">
+            <h3>Seasonal Decomposition</h3>
+            <div id="seasonal-decomposition" class="time-series-chart"></div>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Seasonal Period:</label>
+                    <select id="seasonal-period">
+                        <option value="7">Weekly</option>
+                        <option value="30">Monthly</option>
+                        <option value="365">Yearly</option>
+                    </select>
+                </div>
+                <button onclick="showSeasonalPattern()">Show Seasonal Pattern</button>
+            </div>
+        </div>
+
+        <h2>Forecasting</h2>
+        <p>Predict future values using various forecasting methods.</p>
+        
+        <div class="time-series-container">
+            <div class="time-series-card">
+                <h3>Simple Forecasting</h3>
+                <div id="forecast-chart" class="time-series-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Forecast Periods:</label>
+                        <input type="range" id="forecast-periods" min="5" max="30" value="10">
+                    </div>
+                    <button onclick="updateForecast()">Update Forecast</button>
+                </div>
+            </div>
+            
+            <div class="time-series-card">
+                <h3>Confidence Intervals</h3>
+                <div id="confidence-intervals" class="time-series-chart"></div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Confidence Level:</label>
+                        <select id="confidence-level">
+                            <option value="0.90">90%</option>
+                            <option value="0.95">95%</option>
+                            <option value="0.99">99%</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Real-time Data Visualization</h2>
+        <p>Monitor live data streams with real-time updates.</p>
+        
+        <div class="time-series-card">
+            <h3>Live Data Stream</h3>
+            <div id="real-time-chart" class="time-series-chart"></div>
+            <div class="controls">
+                <button onclick="startLiveData()">Start Live Data</button>
+                <button onclick="stopLiveData()">Stop Live Data</button>
+                <button onclick="clearLiveData()">Clear Data</button>
+            </div>
+        </div>
+
+        <h2>Advanced Time Series Features</h2>
+        
+        <h3>Anomaly Detection</h3>
+        <p>Identify and highlight unusual patterns in your time series data.</p>
+        
+        <div class="time-series-card">
+            <h3>Anomaly Detection Chart</h3>
+            <div id="anomaly-detection" class="time-series-chart"></div>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Sensitivity:</label>
+                    <input type="range" id="anomaly-sensitivity" min="1" max="5" value="3">
+                </div>
+                <button onclick="detectAnomalies()">Detect Anomalies</button>
+            </div>
+        </div>
+
+        <h2>Time Series Configuration</h2>
+        
+        <div class="code-example">
+// Basic time series configuration
+var option = {
+    xAxis: {
+        type: 'time',
+        axisLabel: {
+            formatter: function (value) {
+                return echarts.format.formatTime('yyyy-MM-dd', value);
+            }
+        }
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        type: 'line',
+        data: timeSeriesData,
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+            width: 2
+        }
+    }],
+    tooltip: {
+        trigger: 'axis',
+        formatter: function (params) {
+            return echarts.format.formatTime('yyyy-MM-dd HH:mm', params[0].value[0]) +
+                   '<br/>' + params[0].seriesName + ': ' + params[0].value[1];
+        }
+    }
+};
+        </div>
+
+        <h2>Interactive Time Series Builder</h2>
+        <p>Experiment with different time series configurations in real-time.</p>
+        
+        <div class="practice-section">
+            <h3>Time Series Configuration Tool</h3>
+            <div class="live-editor">
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Chart Type:</label>
+                        <select id="ts-chart-type">
+                            <option value="line">Line Chart</option>
+                            <option value="area">Area Chart</option>
+                            <option value="bar">Bar Chart</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Show Trend:</label>
+                        <input type="checkbox" id="show-trend">
+                    </div>
+                    <div class="control-group">
+                        <label>Show Moving Average:</label>
+                        <input type="checkbox" id="show-ma">
+                    </div>
+                </div>
+                <div id="ts-builder" class="time-series-chart"></div>
+            </div>
+        </div>
+
+        <h2>Best Practices</h2>
+        <ul>
+            <li><strong>Choose appropriate time scales:</strong> Match the time axis to your data granularity</li>
+            <li><strong>Handle missing data:</strong> Use interpolation or gap handling techniques</li>
+            <li><strong>Consider seasonality:</strong> Account for recurring patterns in your analysis</li>
+            <li><strong>Use appropriate smoothing:</strong> Balance between noise reduction and detail preservation</li>
+            <li><strong>Provide context:</strong> Include reference lines, annotations, and legends</li>
+        </ul>
+
+        <h2>Practice Exercise</h2>
+        <div class="practice-section">
+            <h3>Create a Comprehensive Time Series Analysis</h3>
+            <p>Build a time series visualization that includes the following features:</p>
+            <ul>
+                <li>Multiple data series with different colors</li>
+                <li>Trend line overlay</li>
+                <li>Moving average calculation</li>
+                <li>Seasonal pattern highlighting</li>
+                <li>Forecasting with confidence intervals</li>
+            </ul>
+            
+            <div class="live-editor">
+                <textarea id="exercise-code" placeholder="Enter your time series configuration here...">
+// Your time series configuration
+var option = {
+    title: {
+        text: 'Time Series Analysis',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function (params) {
+            return echarts.format.formatTime('yyyy-MM-dd', params[0].value[0]) +
+                   '<br/>' + params[0].seriesName + ': ' + params[0].value[1];
+        }
+    },
+    xAxis: {
+        type: 'time',
+        axisLabel: {
+            formatter: function (value) {
+                return echarts.format.formatTime('MM-dd', value);
+            }
+        }
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        name: 'Data',
+        type: 'line',
+        data: generateTimeSeriesData(),
+        smooth: true,
+        lineStyle: {
+            width: 2
+        }
+    }]
+};
+                </textarea>
+                <button onclick="runExercise()">Run Code</button>
+                <button onclick="resetExercise()">Reset</button>
+            </div>
+            <div id="exercise-result" class="time-series-chart"></div>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="chapter14-3d-visualizations.html">← Chapter 14: 3D Visualizations</a>
+            <a href="chapter16-advanced-interactions.html">Chapter 16: Advanced Interactions →</a>
+        </div>
+    </div>
+
+    <script>
+        // Basic Time Series
+        var basicTS = echarts.init(document.getElementById('basic-time-series'));
+        var basicTSOption = {
+            title: {
+                text: 'Basic Time Series',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    return echarts.format.formatTime('yyyy-MM-dd', params[0].value[0]) +
+                           '<br/>' + params[0].seriesName + ': ' + params[0].value[1];
+                }
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Sales',
+                type: 'line',
+                data: generateTimeSeriesData(30),
+                smooth: true,
+                lineStyle: {
+                    width: 2
+                }
+            }]
+        };
+        basicTS.setOption(basicTSOption);
+
+        // Multi Time Series
+        var multiTS = echarts.init(document.getElementById('multi-time-series'));
+        var multiTSOption = {
+            title: {
+                text: 'Multiple Time Series',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['Sales', 'Revenue', 'Profit']
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Sales',
+                type: 'line',
+                data: generateTimeSeriesData(30),
+                smooth: true
+            }, {
+                name: 'Revenue',
+                type: 'line',
+                data: generateTimeSeriesData(30, 1000, 500),
+                smooth: true
+            }, {
+                name: 'Profit',
+                type: 'line',
+                data: generateTimeSeriesData(30, 200, 100),
+                smooth: true
+            }]
+        };
+        multiTS.setOption(multiTSOption);
+
+        // Trend Analysis
+        var trendChart = echarts.init(document.getElementById('trend-analysis'));
+        var trendOption = {
+            title: {
+                text: 'Trend Analysis',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Data',
+                type: 'line',
+                data: generateTimeSeriesData(30),
+                smooth: true
+            }, {
+                name: 'Trend',
+                type: 'line',
+                data: generateTrendData(30),
+                smooth: true,
+                lineStyle: {
+                    type: 'dashed'
+                }
+            }]
+        };
+        trendChart.setOption(trendOption);
+
+        // Moving Average
+        var maChart = echarts.init(document.getElementById('moving-average'));
+        var maOption = {
+            title: {
+                text: 'Moving Average',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Original Data',
+                type: 'line',
+                data: generateTimeSeriesData(30),
+                smooth: true
+            }, {
+                name: 'Moving Average',
+                type: 'line',
+                data: generateMovingAverageData(30, 7),
+                smooth: true,
+                lineStyle: {
+                    width: 3
+                }
+            }]
+        };
+        maChart.setOption(maOption);
+
+        // Seasonal Decomposition
+        var seasonalChart = echarts.init(document.getElementById('seasonal-decomposition'));
+        var seasonalOption = {
+            title: {
+                text: 'Seasonal Decomposition',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Original',
+                type: 'line',
+                data: generateSeasonalData(90),
+                smooth: true
+            }, {
+                name: 'Trend',
+                type: 'line',
+                data: generateTrendData(90),
+                smooth: true
+            }, {
+                name: 'Seasonal',
+                type: 'line',
+                data: generateSeasonalPattern(90),
+                smooth: true
+            }]
+        };
+        seasonalChart.setOption(seasonalOption);
+
+        // Forecast Chart
+        var forecastChart = echarts.init(document.getElementById('forecast-chart'));
+        var forecastOption = {
+            title: {
+                text: 'Forecasting',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Historical',
+                type: 'line',
+                data: generateTimeSeriesData(30),
+                smooth: true
+            }, {
+                name: 'Forecast',
+                type: 'line',
+                data: generateForecastData(30, 10),
+                smooth: true,
+                lineStyle: {
+                    type: 'dashed'
+                }
+            }]
+        };
+        forecastChart.setOption(forecastOption);
+
+        // Confidence Intervals
+        var confidenceChart = echarts.init(document.getElementById('confidence-intervals'));
+        var confidenceOption = {
+            title: {
+                text: 'Confidence Intervals',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Forecast',
+                type: 'line',
+                data: generateForecastData(30, 10),
+                smooth: true
+            }, {
+                name: 'Upper Bound',
+                type: 'line',
+                data: generateConfidenceBounds(30, 10, 'upper'),
+                smooth: true,
+                lineStyle: {
+                    type: 'dashed',
+                    opacity: 0.5
+                }
+            }, {
+                name: 'Lower Bound',
+                type: 'line',
+                data: generateConfidenceBounds(30, 10, 'lower'),
+                smooth: true,
+                lineStyle: {
+                    type: 'dashed',
+                    opacity: 0.5
+                }
+            }]
+        };
+        confidenceChart.setOption(confidenceOption);
+
+        // Real-time Chart
+        var realTimeChart = echarts.init(document.getElementById('real-time-chart'));
+        var realTimeOption = {
+            title: {
+                text: 'Real-time Data Stream',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('HH:mm:ss', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Live Data',
+                type: 'line',
+                data: [],
+                smooth: true
+            }]
+        };
+        realTimeChart.setOption(realTimeOption);
+
+        // Anomaly Detection
+        var anomalyChart = echarts.init(document.getElementById('anomaly-detection'));
+        var anomalyOption = {
+            title: {
+                text: 'Anomaly Detection',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Data',
+                type: 'line',
+                data: generateTimeSeriesDataWithAnomalies(50),
+                smooth: true
+            }, {
+                name: 'Anomalies',
+                type: 'scatter',
+                data: detectAnomaliesInData(generateTimeSeriesDataWithAnomalies(50)),
+                symbolSize: 10,
+                itemStyle: {
+                    color: '#ff4444'
+                }
+            }]
+        };
+        anomalyChart.setOption(anomalyOption);
+
+        // TS Builder
+        var tsBuilder = echarts.init(document.getElementById('ts-builder'));
+        var tsBuilderOption = {
+            title: {
+                text: 'Time Series Builder',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    formatter: function (value) {
+                        return echarts.format.formatTime('MM-dd', value);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Data',
+                type: 'line',
+                data: generateTimeSeriesData(30),
+                smooth: true
+            }]
+        };
+        tsBuilder.setOption(tsBuilderOption);
+
+        // Exercise Result
+        var exerciseTS = echarts.init(document.getElementById('exercise-result'));
+
+        // Helper Functions
+        function generateTimeSeriesData(days = 30, base = 100, variance = 50) {
+            const data = [];
+            const now = new Date();
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const value = base + Math.random() * variance;
+                data.push([date.getTime(), value]);
+            }
+            return data;
+        }
+
+        function generateTrendData(days = 30) {
+            const data = [];
+            const now = new Date();
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const value = 100 + i * 2; // Linear trend
+                data.push([date.getTime(), value]);
+            }
+            return data;
+        }
+
+        function generateMovingAverageData(days = 30, window = 7) {
+            const originalData = generateTimeSeriesData(days);
+            const maData = [];
+            
+            for (let i = window - 1; i < originalData.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < window; j++) {
+                    sum += originalData[i - j][1];
+                }
+                maData.push([originalData[i][0], sum / window]);
+            }
+            
+            return maData;
+        }
+
+        function generateSeasonalData(days = 90) {
+            const data = [];
+            const now = new Date();
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const seasonal = Math.sin(i * 2 * Math.PI / 7) * 20; // Weekly seasonality
+                const trend = i * 0.5;
+                const noise = (Math.random() - 0.5) * 10;
+                const value = 100 + trend + seasonal + noise;
+                data.push([date.getTime(), value]);
+            }
+            return data;
+        }
+
+        function generateSeasonalPattern(days = 90) {
+            const data = [];
+            const now = new Date();
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const seasonal = Math.sin(i * 2 * Math.PI / 7) * 20;
+                data.push([date.getTime(), seasonal]);
+            }
+            return data;
+        }
+
+        function generateForecastData(historicalDays = 30, forecastDays = 10) {
+            const data = [];
+            const now = new Date();
+            const startDate = new Date(now.getTime() - historicalDays * 24 * 60 * 60 * 1000);
+            
+            for (let i = 0; i < historicalDays + forecastDays; i++) {
+                const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+                let value;
+                
+                if (i < historicalDays) {
+                    value = 100 + i * 2 + Math.random() * 20;
+                } else {
+                    // Forecast with some uncertainty
+                    value = 100 + i * 2 + (Math.random() - 0.5) * 30;
+                }
+                
+                data.push([date.getTime(), value]);
+            }
+            
+            return data;
+        }
+
+        function generateConfidenceBounds(historicalDays = 30, forecastDays = 10, bound = 'upper') {
+            const data = [];
+            const now = new Date();
+            const startDate = new Date(now.getTime() - historicalDays * 24 * 60 * 60 * 1000);
+            
+            for (let i = 0; i < historicalDays + forecastDays; i++) {
+                const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+                let value;
+                
+                if (i < historicalDays) {
+                    value = 100 + i * 2 + Math.random() * 20;
+                } else {
+                    const baseValue = 100 + i * 2;
+                    const uncertainty = 15;
+                    value = bound === 'upper' ? baseValue + uncertainty : baseValue - uncertainty;
+                }
+                
+                data.push([date.getTime(), value]);
+            }
+            
+            return data;
+        }
+
+        function generateTimeSeriesDataWithAnomalies(days = 50) {
+            const data = generateTimeSeriesData(days);
+            
+            // Add some anomalies
+            const anomalyIndices = [10, 25, 40];
+            anomalyIndices.forEach(index => {
+                if (data[index]) {
+                    data[index][1] += Math.random() > 0.5 ? 100 : -100;
+                }
+            });
+            
+            return data;
+        }
+
+        function detectAnomaliesInData(data) {
+            const anomalies = [];
+            const values = data.map(d => d[1]);
+            const mean = values.reduce((a, b) => a + b, 0) / values.length;
+            const std = Math.sqrt(values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length);
+            
+            data.forEach((point, index) => {
+                if (Math.abs(point[1] - mean) > 2 * std) {
+                    anomalies.push(point);
+                }
+            });
+            
+            return anomalies;
+        }
+
+        // Live data variables
+        let liveDataInterval;
+        let liveDataPoints = [];
+
+        function startLiveData() {
+            liveDataPoints = [];
+            liveDataInterval = setInterval(() => {
+                const now = new Date();
+                const value = 100 + Math.random() * 50;
+                liveDataPoints.push([now.getTime(), value]);
+                
+                if (liveDataPoints.length > 50) {
+                    liveDataPoints.shift();
+                }
+                
+                realTimeOption.series[0].data = liveDataPoints;
+                realTimeChart.setOption(realTimeOption);
+            }, 1000);
+        }
+
+        function stopLiveData() {
+            if (liveDataInterval) {
+                clearInterval(liveDataInterval);
+            }
+        }
+
+        function clearLiveData() {
+            liveDataPoints = [];
+            realTimeOption.series[0].data = [];
+            realTimeChart.setOption(realTimeOption);
+        }
+
+        function toggleSeries(seriesName) {
+            // Implementation for toggling series visibility
+            console.log(`Toggling ${seriesName}`);
+        }
+
+        function showSeasonalPattern() {
+            // Implementation for showing seasonal pattern
+            console.log('Showing seasonal pattern');
+        }
+
+        function updateForecast() {
+            const periods = document.getElementById('forecast-periods').value;
+            forecastOption.series[1].data = generateForecastData(30, parseInt(periods));
+            forecastChart.setOption(forecastOption);
+        }
+
+        function detectAnomalies() {
+            const sensitivity = document.getElementById('anomaly-sensitivity').value;
+            // Implementation for anomaly detection with sensitivity
+            console.log(`Detecting anomalies with sensitivity: ${sensitivity}`);
+        }
+
+        function runExercise() {
+            try {
+                const code = document.getElementById('exercise-code').value;
+                const option = eval('(' + code + ')');
+                exerciseTS.setOption(option, true);
+            } catch (error) {
+                alert('Error in code: ' + error.message);
+            }
+        }
+
+        function resetExercise() {
+            document.getElementById('exercise-code').value = `// Your time series configuration
+var option = {
+    title: {
+        text: 'Time Series Analysis',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function (params) {
+            return echarts.format.formatTime('yyyy-MM-dd', params[0].value[0]) +
+                   '<br/>' + params[0].seriesName + ': ' + params[0].value[1];
+        }
+    },
+    xAxis: {
+        type: 'time',
+        axisLabel: {
+            formatter: function (value) {
+                return echarts.format.formatTime('MM-dd', value);
+            }
+        }
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        name: 'Data',
+        type: 'line',
+        data: generateTimeSeriesData(),
+        smooth: true,
+        lineStyle: {
+            width: 2
+        }
+    }]
+};`;
+            exerciseTS.clear();
+        }
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            basicTS.resize();
+            multiTS.resize();
+            trendChart.resize();
+            maChart.resize();
+            seasonalChart.resize();
+            forecastChart.resize();
+            confidenceChart.resize();
+            realTimeChart.resize();
+            anomalyChart.resize();
+            tsBuilder.resize();
+            exerciseTS.resize();
+        });
+    </script>
+</body>
+</html>

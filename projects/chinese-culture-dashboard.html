@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Culture Dashboard - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,20 Q30,10 40,20 Q50,30 60,20 Q70,10 80,20" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1"/><path d="M10,40 Q20,30 30,40 Q40,50 50,40 Q60,30 70,40 Q80,50 90,40" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="1"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c41e3a, #ffd700, #c41e3a);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: #c41e3a;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c41e3a, #ffd700, #c41e3a);
+        }
+
+        .chart-container:hover {
+            transform: translateY(-3px);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chart-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #c41e3a, #ffd700);
+        }
+
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+
+        .culture-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(196, 30, 58, 0.2);
+        }
+
+        .culture-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .culture-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #495057;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇨🇳 Chinese Culture Dashboard</h1>
+            <p>Ancient wisdom meets modern data visualization</p>
+        </div>
+
+        <div class="culture-section">
+            <h2 class="culture-title">Chinese Cultural Elements</h2>
+            <p class="culture-description">
+                This dashboard incorporates traditional Chinese design principles including the use of red (symbolizing good fortune and joy), 
+                gold (representing wealth and prosperity), and the concept of harmony (和谐) in layout and color balance. 
+                The design reflects the balance of yin and yang principles.
+            </p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="totalTourists">3,456</div>
+                <div class="metric-label">Great Wall Visitors</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="teaProduction">2,847</div>
+                <div class="metric-label">Tea Production (tons)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="calligraphy">234</div>
+                <div class="metric-label">Calligraphy Classes</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="festivals">45</div>
+                <div class="metric-label">Traditional Festivals</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Provincial Cultural Heritage</h3>
+                <div id="heritageChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Traditional Arts Distribution</h3>
+                <div id="artsChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Festival Tourism Trends</h3>
+                <div id="festivalChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Tea Culture Regions</h3>
+                <div id="teaChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Traditional Medicine Usage</h3>
+                <div id="medicineChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Cultural Tourism Growth</h3>
+                <div id="tourismChart" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Initialize charts
+        const heritageChart = echarts.init(document.getElementById('heritageChart'));
+        const artsChart = echarts.init(document.getElementById('artsChart'));
+        const festivalChart = echarts.init(document.getElementById('festivalChart'));
+        const teaChart = echarts.init(document.getElementById('teaChart'));
+        const medicineChart = echarts.init(document.getElementById('medicineChart'));
+        const tourismChart = echarts.init(document.getElementById('tourismChart'));
+
+        // Provincial Cultural Heritage
+        const heritageOption = {
+            title: {
+                text: 'Provincial Cultural Heritage',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#c41e3a',
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Beijing', 'Shanghai', 'Guangdong', 'Sichuan', 'Shaanxi', 'Henan', 'Jiangsu', 'Zhejiang'],
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50', rotate: 45 }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Heritage Sites',
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'UNESCO Sites',
+                    type: 'bar',
+                    data: [7, 3, 5, 4, 8, 6, 4, 3],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#c41e3a' },
+                            { offset: 1, color: '#8b0000' }
+                        ])
+                    }
+                }
+            ]
+        };
+
+        // Traditional Arts Distribution
+        const artsOption = {
+            title: {
+                text: 'Traditional Arts Distribution',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#c41e3a',
+                textStyle: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Traditional Arts',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['50%', '60%'],
+                    data: [
+                        { value: 30, name: 'Calligraphy', itemStyle: { color: '#c41e3a' } },
+                        { value: 25, name: 'Painting', itemStyle: { color: '#ffd700' } },
+                        { value: 20, name: 'Opera', itemStyle: { color: '#8b0000' } },
+                        { value: 15, name: 'Martial Arts', itemStyle: { color: '#006400' } },
+                        { value: 10, name: 'Other Arts', itemStyle: { color: '#6c757d' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Festival Tourism Trends
+        const festivalOption = {
+            title: {
+                text: 'Festival Tourism Trends',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#c41e3a',
+                textStyle: { color: '#2c3e50' }
+            },
+            legend: {
+                data: ['Spring Festival', 'Dragon Boat', 'Mid-Autumn', 'National Day'],
+                bottom: 10,
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['2019', '2020', '2021', '2022', '2023'],
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Tourists (millions)',
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Spring Festival',
+                    type: 'line',
+                    data: [415, 280, 320, 380, 420],
+                    smooth: true,
+                    lineStyle: { color: '#c41e3a', width: 3 },
+                    itemStyle: { color: '#c41e3a' }
+                },
+                {
+                    name: 'Dragon Boat',
+                    type: 'line',
+                    data: [120, 85, 95, 110, 125],
+                    smooth: true,
+                    lineStyle: { color: '#ffd700', width: 3 },
+                    itemStyle: { color: '#ffd700' }
+                },
+                {
+                    name: 'Mid-Autumn',
+                    type: 'line',
+                    data: [180, 120, 140, 160, 185],
+                    smooth: true,
+                    lineStyle: { color: '#8b0000', width: 3 },
+                    itemStyle: { color: '#8b0000' }
+                },
+                {
+                    name: 'National Day',
+                    type: 'line',
+                    data: [780, 520, 580, 680, 750],
+                    smooth: true,
+                    lineStyle: { color: '#006400', width: 3 },
+                    itemStyle: { color: '#006400' }
+                }
+            ]
+        };
+
+        // Tea Culture Regions
+        const teaOption = {
+            title: {
+                text: 'Tea Culture Regions',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#c41e3a',
+                textStyle: { color: '#2c3e50' }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Longjing', max: 100 },
+                    { name: 'Tieguanyin', max: 100 },
+                    { name: 'Pu-erh', max: 100 },
+                    { name: 'Biluochun', max: 100 },
+                    { name: 'Dahongpao', max: 100 },
+                    { name: 'Jasmine', max: 100 }
+                ],
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(196, 30, 58, 0.1)', 'rgba(196, 30, 58, 0.05)']
+                    }
+                },
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                splitLine: { lineStyle: { color: '#c41e3a' } },
+                name: { textStyle: { color: '#2c3e50' } }
+            },
+            series: [
+                {
+                    name: 'Tea Production',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [90, 85, 80, 75, 70, 65],
+                            name: 'Production Volume',
+                            itemStyle: { color: '#c41e3a' },
+                            areaStyle: { color: 'rgba(196, 30, 58, 0.3)' }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Traditional Medicine Usage
+        const medicineOption = {
+            title: {
+                text: 'Traditional Medicine Usage',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#c41e3a',
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Usage Rate (%)',
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Acupuncture',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80],
+                    itemStyle: { color: '#c41e3a' }
+                },
+                {
+                    name: 'Herbal Medicine',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90],
+                    itemStyle: { color: '#ffd700' }
+                },
+                {
+                    name: 'Qigong',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70],
+                    itemStyle: { color: '#8b0000' }
+                }
+            ]
+        };
+
+        // Cultural Tourism Growth
+        const tourismOption = {
+            title: {
+                text: 'Cultural Tourism Growth',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#c41e3a',
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Cultural Significance',
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Tourist Growth (%)',
+                axisLine: { lineStyle: { color: '#c41e3a' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Cultural Sites',
+                    type: 'scatter',
+                    data: [
+                        [95, 85, 'Forbidden City'],
+                        [90, 90, 'Great Wall'],
+                        [85, 75, 'Terracotta Army'],
+                        [80, 70, 'West Lake'],
+                        [75, 65, 'Potala Palace'],
+                        [70, 60, 'Suzhou Gardens']
+                    ],
+                    symbolSize: function (data) {
+                        return data[1] / 10;
+                    },
+                    itemStyle: {
+                        color: '#c41e3a',
+                        opacity: 0.8
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: function (param) {
+                            return param.data[2];
+                        },
+                        color: '#2c3e50'
+                    }
+                }
+            ]
+        };
+
+        // Set chart options
+        heritageChart.setOption(heritageOption);
+        artsChart.setOption(artsOption);
+        festivalChart.setOption(festivalOption);
+        teaChart.setOption(teaOption);
+        medicineChart.setOption(medicineOption);
+        tourismChart.setOption(tourismOption);
+
+        // Real-time updates
+        function updateMetrics() {
+            const totalTourists = document.getElementById('totalTourists');
+            const teaProduction = document.getElementById('teaProduction');
+            const calligraphy = document.getElementById('calligraphy');
+            const festivals = document.getElementById('festivals');
+
+            setInterval(() => {
+                const newTotal = Math.floor(Math.random() * 300) + 3400;
+                const newTea = Math.floor(Math.random() * 200) + 2800;
+                const newCalligraphy = Math.floor(Math.random() * 30) + 220;
+                const newFestivals = Math.floor(Math.random() * 8) + 40;
+
+                totalTourists.textContent = newTotal.toLocaleString();
+                teaProduction.textContent = newTea.toLocaleString();
+                calligraphy.textContent = newCalligraphy;
+                festivals.textContent = newFestivals;
+            }, 4000);
+        }
+
+        updateMetrics();
+
+        // Responsive charts
+        window.addEventListener('resize', function() {
+            heritageChart.resize();
+            artsChart.resize();
+            festivalChart.resize();
+            teaChart.resize();
+            medicineChart.resize();
+            tourismChart.resize();
+        });
+    </script>
+</body>
+</html>

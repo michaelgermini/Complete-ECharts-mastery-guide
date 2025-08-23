@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trading Dashboard - ECharts Guide</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e1a;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid #2d3748;
+        }
+
+        .dashboard-title {
+            margin: 0 0 10px 0;
+            color: #00d4aa;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .dashboard-subtitle {
+            color: #a0aec0;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .price-ticker {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ticker-item {
+            background: rgba(45, 55, 72, 0.8);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 1px solid #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ticker-symbol {
+            font-weight: bold;
+            color: #00d4aa;
+        }
+
+        .ticker-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .ticker-change {
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+
+        .ticker-change.positive {
+            background: rgba(0, 212, 170, 0.2);
+            color: #00d4aa;
+        }
+
+        .ticker-change.negative {
+            background: rgba(245, 101, 101, 0.2);
+            color: #f56565;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid #2d3748;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4aa, #3182ce);
+        }
+
+        .metric-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4aa;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #a0aec0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-trend {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .metric-trend.positive {
+            background: rgba(0, 212, 170, 0.2);
+            color: #00d4aa;
+        }
+
+        .metric-trend.negative {
+            background: rgba(245, 101, 101, 0.2);
+            color: #f56565;
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2d3748;
+        }
+
+        .chart-title {
+            margin: 0 0 20px 0;
+            color: #00d4aa;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .chart {
+            width: 100%;
+            height: 350px;
+        }
+
+        .full-width-chart {
+            grid-column: 1 / -1;
+        }
+
+        .full-width-chart .chart {
+            height: 450px;
+        }
+
+        .portfolio-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .portfolio-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2d3748;
+        }
+
+        .portfolio-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .portfolio-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .portfolio-info h4 {
+            margin: 0;
+            color: #00d4aa;
+        }
+
+        .portfolio-info p {
+            margin: 5px 0 0 0;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .portfolio-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .portfolio-metric {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 10px;
+            border: 1px solid #2d3748;
+        }
+
+        .portfolio-metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00d4aa;
+        }
+
+        .portfolio-metric-label {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            text-transform: uppercase;
+        }
+
+        .trading-pairs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .pair-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #2d3748;
+            text-align: center;
+        }
+
+        .pair-symbol {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00d4aa;
+            margin-bottom: 10px;
+        }
+
+        .pair-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .pair-change {
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .price-ticker {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">₿ Crypto Trading Dashboard</h1>
+            <p class="dashboard-subtitle">Surveillance en temps réel des marchés cryptographiques et analyse des tendances</p>
+            
+            <!-- Price Ticker -->
+            <div class="price-ticker">
+                <div class="ticker-item">
+                    <span class="ticker-symbol">BTC</span>
+                    <span class="ticker-price">$43,250.67</span>
+                    <span class="ticker-change positive">+2.34%</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-symbol">ETH</span>
+                    <span class="ticker-price">$2,845.12</span>
+                    <span class="ticker-change positive">+1.87%</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-symbol">ADA</span>
+                    <span class="ticker-price">$0.4856</span>
+                    <span class="ticker-change negative">-0.92%</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-symbol">SOL</span>
+                    <span class="ticker-price">$98.45</span>
+                    <span class="ticker-change positive">+5.67%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">💰</div>
+                <div class="metric-value">$2.4M</div>
+                <div class="metric-label">Portfolio Total</div>
+                <div class="metric-trend positive">↗️ +8.7% vs hier</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">📈</div>
+                <div class="metric-value">$156K</div>
+                <div class="metric-label">Profit du Jour</div>
+                <div class="metric-trend positive">↗️ +12.3% vs hier</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">⚡</div>
+                <div class="metric-value">247</div>
+                <div class="metric-label">Trades Aujourd'hui</div>
+                <div class="metric-trend positive">↗️ +15 trades</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">🎯</div>
+                <div class="metric-value">87.3%</div>
+                <div class="metric-label">Taux de Réussite</div>
+                <div class="metric-trend positive">↗️ +2.1% vs semaine</div>
+            </div>
+        </div>
+
+        <!-- Portfolio Overview -->
+        <div class="portfolio-section">
+            <div class="portfolio-card">
+                <div class="portfolio-header">
+                    <div class="portfolio-icon">💎</div>
+                    <div class="portfolio-info">
+                        <h4>Portfolio Bitcoin</h4>
+                        <p>Dernière mise à jour: il y a 30s</p>
+                    </div>
+                </div>
+                <div class="portfolio-metrics">
+                    <div class="portfolio-metric">
+                        <div class="portfolio-metric-value">$1.2M</div>
+                        <div class="portfolio-metric-label">Valeur</div>
+                    </div>
+                    <div class="portfolio-metric">
+                        <div class="portfolio-metric-value">+15.2%</div>
+                        <div class="portfolio-metric-label">Performance</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card">
+                <div class="portfolio-header">
+                    <div class="portfolio-icon">🔷</div>
+                    <div class="portfolio-info">
+                        <h4>Portfolio Ethereum</h4>
+                        <p>Dernière mise à jour: il y a 45s</p>
+                    </div>
+                </div>
+                <div class="portfolio-metrics">
+                    <div class="portfolio-metric">
+                        <div class="portfolio-metric-value">$850K</div>
+                        <div class="portfolio-metric-label">Valeur</div>
+                    </div>
+                    <div class="portfolio-metric">
+                        <div class="portfolio-metric-value">+8.7%</div>
+                        <div class="portfolio-metric-label">Performance</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card">
+                <div class="portfolio-header">
+                    <div class="portfolio-icon">💎</div>
+                    <div class="portfolio-info">
+                        <h4>Portfolio Altcoins</h4>
+                        <p>Dernière mise à jour: il y a 1min</p>
+                    </div>
+                </div>
+                <div class="portfolio-metrics">
+                    <div class="portfolio-metric">
+                        <div class="portfolio-metric-value">$350K</div>
+                        <div class="portfolio-metric-label">Valeur</div>
+                    </div>
+                    <div class="portfolio-metric">
+                        <div class="portfolio-metric-value">+22.1%</div>
+                        <div class="portfolio-metric-label">Performance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Pairs -->
+        <div class="trading-pairs">
+            <div class="pair-card">
+                <div class="pair-symbol">BTC/USDT</div>
+                <div class="pair-price">$43,250.67</div>
+                <div class="pair-change positive">+2.34%</div>
+            </div>
+            <div class="pair-card">
+                <div class="pair-symbol">ETH/USDT</div>
+                <div class="pair-price">$2,845.12</div>
+                <div class="pair-change positive">+1.87%</div>
+            </div>
+            <div class="pair-card">
+                <div class="pair-symbol">ADA/USDT</div>
+                <div class="pair-price">$0.4856</div>
+                <div class="pair-change negative">-0.92%</div>
+            </div>
+            <div class="pair-card">
+                <div class="pair-symbol">SOL/USDT</div>
+                <div class="pair-price">$98.45</div>
+                <div class="pair-change positive">+5.67%</div>
+            </div>
+            <div class="pair-card">
+                <div class="pair-symbol">DOT/USDT</div>
+                <div class="pair-price">$7.23</div>
+                <div class="pair-change positive">+3.45%</div>
+            </div>
+            <div class="pair-card">
+                <div class="pair-symbol">LINK/USDT</div>
+                <div class="pair-price">$15.67</div>
+                <div class="pair-change negative">-1.23%</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3 class="chart-title">Prix Bitcoin (24h)</h3>
+                <div id="btcChart" class="chart"></div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Volume des Échanges</h3>
+                <div id="volumeChart" class="chart"></div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3 class="chart-title">Répartition du Portfolio</h3>
+                <div id="portfolioChart" class="chart"></div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Performance des Cryptos</h3>
+                <div id="performanceChart" class="chart"></div>
+            </div>
+        </div>
+
+        <!-- 3D Visualization -->
+        <div class="chart-card full-width-chart">
+            <h3 class="chart-title">🌍 Visualisation 3D - Corrélation des Marchés</h3>
+            <div id="3dChart" class="chart"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Bitcoin Price Chart
+        const btcChart = echarts.init(document.getElementById('btcChart'));
+        const btcOption = {
+            title: {
+                text: 'Prix Bitcoin (24h)',
+                left: 'center',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 14
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: '{b}<br/>Prix: ${c}'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['00h', '04h', '08h', '12h', '16h', '20h', '24h'],
+                axisLine: {
+                    lineStyle: { color: '#4a5568' }
+                },
+                axisLabel: {
+                    color: '#a0aec0'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Prix ($)',
+                axisLine: {
+                    lineStyle: { color: '#4a5568' }
+                },
+                axisLabel: {
+                    color: '#a0aec0'
+                }
+            },
+            series: [{
+                data: [42150, 42500, 42800, 43250, 43500, 43100, 43250],
+                type: 'line',
+                smooth: true,
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(0, 212, 170, 0.8)' },
+                        { offset: 1, color: 'rgba(0, 212, 170, 0.1)' }
+                    ])
+                },
+                lineStyle: {
+                    color: '#00d4aa',
+                    width: 3
+                },
+                itemStyle: {
+                    color: '#00d4aa'
+                }
+            }]
+        };
+        btcChart.setOption(btcOption);
+
+        // Volume Chart
+        const volumeChart = echarts.init(document.getElementById('volumeChart'));
+        const volumeOption = {
+            title: {
+                text: 'Volume des Échanges',
+                left: 'center',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 14
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: '{b}<br/>Volume: {c}M'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['BTC', 'ETH', 'ADA', 'SOL', 'DOT', 'LINK'],
+                axisLine: {
+                    lineStyle: { color: '#4a5568' }
+                },
+                axisLabel: {
+                    color: '#a0aec0'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Volume (M$)',
+                axisLine: {
+                    lineStyle: { color: '#4a5568' }
+                },
+                axisLabel: {
+                    color: '#a0aec0'
+                }
+            },
+            series: [{
+                data: [1250, 890, 320, 450, 180, 280],
+                type: 'bar',
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#3182ce' },
+                        { offset: 1, color: '#2c5282' }
+                    ])
+                }
+            }]
+        };
+        volumeChart.setOption(volumeOption);
+
+        // Portfolio Chart
+        const portfolioChart = echarts.init(document.getElementById('portfolioChart'));
+        const portfolioOption = {
+            title: {
+                text: 'Répartition du Portfolio',
+                left: 'center',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 14
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: ${c}K ({d}%)'
+            },
+            series: [{
+                type: 'pie',
+                radius: ['40%', '70%'],
+                data: [
+                    { value: 1200, name: 'Bitcoin', itemStyle: { color: '#f7931a' } },
+                    { value: 850, name: 'Ethereum', itemStyle: { color: '#627eea' } },
+                    { value: 350, name: 'Altcoins', itemStyle: { color: '#00d4aa' } }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        portfolioChart.setOption(portfolioOption);
+
+        // Performance Chart
+        const performanceChart = echarts.init(document.getElementById('performanceChart'));
+        const performanceOption = {
+            title: {
+                text: 'Performance des Cryptos',
+                left: 'center',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 14
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: '{b}<br/>Performance: {c}%'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['BTC', 'ETH', 'ADA', 'SOL', 'DOT', 'LINK'],
+                axisLine: {
+                    lineStyle: { color: '#4a5568' }
+                },
+                axisLabel: {
+                    color: '#a0aec0'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Performance (%)',
+                axisLine: {
+                    lineStyle: { color: '#4a5568' }
+                },
+                axisLabel: {
+                    color: '#a0aec0'
+                }
+            },
+            series: [{
+                data: [15.2, 8.7, 22.1, 5.67, 3.45, -1.23],
+                type: 'bar',
+                itemStyle: {
+                    color: function(params) {
+                        const value = params.data;
+                        return value >= 0 ? '#00d4aa' : '#f56565';
+                    }
+                }
+            }]
+        };
+        performanceChart.setOption(performanceOption);
+
+        // 3D Chart
+        const chart3d = echarts.init(document.getElementById('3dChart'));
+        const option3d = {
+            title: {
+                text: 'Corrélation des Marchés 3D',
+                left: 'center',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16
+                }
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return `Crypto: ${params.data[0]}, ${params.data[1]}<br/>Corrélation: ${params.data[2]}`;
+                }
+            },
+            visualMap: {
+                max: 1,
+                min: -1,
+                inRange: {
+                    color: ['#f56565', '#a0aec0', '#00d4aa']
+                }
+            },
+            xAxis3D: {
+                type: 'value',
+                name: 'Volatilité'
+            },
+            yAxis3D: {
+                type: 'value',
+                name: 'Volume'
+            },
+            zAxis3D: {
+                type: 'value',
+                name: 'Corrélation'
+            },
+            grid3D: {
+                viewControl: {
+                    projection: 'orthographic',
+                    autoRotate: true,
+                    autoRotateSpeed: 10
+                },
+                light: {
+                    main: {
+                        intensity: 1.2
+                    },
+                    ambient: {
+                        intensity: 0.3
+                    }
+                }
+            },
+            series: [{
+                type: 'scatter3D',
+                data: [
+                    [0.8, 0.9, 0.7], [0.6, 0.7, 0.8], [0.9, 0.5, 0.3], [0.7, 0.8, 0.6],
+                    [0.5, 0.6, 0.4], [0.8, 0.4, 0.2], [0.6, 0.9, 0.5], [0.4, 0.7, 0.8],
+                    [0.9, 0.3, 0.1], [0.7, 0.5, 0.9], [0.5, 0.8, 0.3], [0.8, 0.6, 0.7]
+                ],
+                symbolSize: 8,
+                itemStyle: {
+                    opacity: 0.8
+                }
+            }]
+        };
+        chart3d.setOption(option3d);
+
+        // Responsive charts
+        window.addEventListener('resize', function() {
+            btcChart.resize();
+            volumeChart.resize();
+            portfolioChart.resize();
+            performanceChart.resize();
+            chart3d.resize();
+        });
+
+        // Real-time data updates simulation
+        setInterval(() => {
+            // Update ticker prices
+            const tickerPrices = document.querySelectorAll('.ticker-price');
+            tickerPrices.forEach((price, index) => {
+                const currentPrice = parseFloat(price.textContent.replace(/[$,]/g, ''));
+                const variation = (Math.random() - 0.5) * 0.02; // ±1% variation
+                const newPrice = currentPrice * (1 + variation);
+                
+                if (index === 0) price.textContent = '$' + newPrice.toFixed(2);
+                else if (index === 1) price.textContent = '$' + newPrice.toFixed(2);
+                else if (index === 2) price.textContent = '$' + newPrice.toFixed(4);
+                else price.textContent = '$' + newPrice.toFixed(2);
+            });
+
+            // Update ticker changes
+            const tickerChanges = document.querySelectorAll('.ticker-change');
+            tickerChanges.forEach((change) => {
+                const isPositive = Math.random() > 0.5;
+                const changeValue = (Math.random() * 5).toFixed(2);
+                change.textContent = (isPositive ? '+' : '-') + changeValue + '%';
+                change.className = 'ticker-change ' + (isPositive ? 'positive' : 'negative');
+            });
+
+            // Update metric values
+            const metricValues = document.querySelectorAll('.metric-value');
+            metricValues.forEach((metric, index) => {
+                const currentValue = parseFloat(metric.textContent.replace(/[$,%]/g, ''));
+                const variation = (Math.random() - 0.5) * 0.05;
+                const newValue = Math.max(0, currentValue * (1 + variation));
+                
+                if (index === 0) metric.textContent = '$' + (newValue / 1000000).toFixed(1) + 'M';
+                else if (index === 1) metric.textContent = '$' + Math.round(newValue / 1000) + 'K';
+                else if (index === 2) metric.textContent = Math.round(newValue);
+                else metric.textContent = newValue.toFixed(1) + '%';
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

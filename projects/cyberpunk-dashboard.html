@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Analytics Dashboard - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #00ff41;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 195, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00ff41 0%, #00d4aa 50%, #ff0080 100%);
+            color: #000;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.5),
+                0 0 40px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);
+            border: 2px solid #00ff41;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 15px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(0, 255, 65, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 25px rgba(0, 255, 65, 0.5),
+                0 0 50px rgba(0, 255, 65, 0.2),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff41, #00d4aa, #ff0080, #00ff41);
+            animation: flow 2s linear infinite;
+        }
+
+        @keyframes flow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .metric-title {
+            font-size: 1.1em;
+            color: #00d4aa;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .metric-change {
+            font-size: 0.9em;
+            color: #ff0080;
+            font-weight: bold;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.05) 0%, rgba(0, 212, 170, 0.05) 100%);
+            border: 2px solid #00ff41;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.2),
+                inset 0 0 20px rgba(0, 255, 65, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            box-shadow: 
+                0 0 30px rgba(0, 255, 65, 0.3),
+                0 0 60px rgba(0, 255, 65, 0.1),
+                inset 0 0 20px rgba(0, 255, 65, 0.05);
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff41, #00d4aa, #ff0080, #00ff41);
+            animation: flow 3s linear infinite;
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            color: #00d4aa;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(0, 212, 170, 0.5);
+        }
+
+        .chart {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        /* Glitch effect for cyberpunk feel */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 2s infinite linear alternate-reverse;
+            color: #ff0080;
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 3s infinite linear alternate-reverse;
+            color: #00d4aa;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate(0); }
+            15%, 49% { transform: translate(-2px, 2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate(0); }
+            21%, 62% { transform: translate(2px, -2px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="glitch" data-text="CYBERPUNK ANALYTICS">CYBERPUNK ANALYTICS</h1>
+        <p>Neon-powered data visualization for the digital age</p>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-title">Network Traffic</div>
+            <div class="metric-value" id="network-traffic">2.4TB</div>
+            <div class="metric-change">+12.5% ↑</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Processing Power</div>
+            <div class="metric-value" id="processing-power">98.7%</div>
+            <div class="metric-change">+3.2% ↑</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Memory Usage</div>
+            <div class="metric-value" id="memory-usage">76.3%</div>
+            <div class="metric-change">-2.1% ↓</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Active Users</div>
+            <div class="metric-value" id="active-users">47.2K</div>
+            <div class="metric-change">+8.9% ↑</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-container">
+            <div class="chart-title">Network Performance Over Time</div>
+            <div id="network-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">System Resource Distribution</div>
+            <div id="resource-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">User Activity Heatmap</div>
+            <div id="activity-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Security Threat Analysis</div>
+            <div id="security-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Data Flow Visualization</div>
+            <div id="dataflow-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Performance Metrics Radar</div>
+            <div id="radar-chart" class="chart"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Initialize charts
+        const networkChart = echarts.init(document.getElementById('network-chart'));
+        const resourceChart = echarts.init(document.getElementById('resource-chart'));
+        const activityChart = echarts.init(document.getElementById('activity-chart'));
+        const securityChart = echarts.init(document.getElementById('security-chart'));
+        const dataflowChart = echarts.init(document.getElementById('dataflow-chart'));
+        const radarChart = echarts.init(document.getElementById('radar-chart'));
+
+        // Cyberpunk color palette
+        const cyberpunkColors = ['#00ff41', '#00d4aa', '#ff0080', '#00c3ff', '#ff6b35', '#9d4edd'];
+
+        // Network Performance Chart
+        const networkOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Real-time Network Performance',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#00ff41',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#00ff41'
+                }
+            },
+            legend: {
+                data: ['Bandwidth', 'Latency', 'Packet Loss'],
+                textStyle: {
+                    color: '#00d4aa'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#00ff41'
+                    }
+                },
+                axisLabel: {
+                    color: '#00d4aa'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#00ff41'
+                    }
+                },
+                axisLabel: {
+                    color: '#00d4aa'
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(0, 255, 65, 0.2)'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Bandwidth',
+                    type: 'line',
+                    smooth: true,
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    lineStyle: {
+                        color: '#00ff41',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                {offset: 0, color: 'rgba(0, 255, 65, 0.3)'},
+                                {offset: 1, color: 'rgba(0, 255, 65, 0.05)'}
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Latency',
+                    type: 'line',
+                    smooth: true,
+                    data: [120, 132, 101, 134, 90, 230, 210],
+                    lineStyle: {
+                        color: '#ff0080',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                {offset: 0, color: 'rgba(255, 0, 128, 0.3)'},
+                                {offset: 1, color: 'rgba(255, 0, 128, 0.05)'}
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Packet Loss',
+                    type: 'line',
+                    smooth: true,
+                    data: [20, 32, 11, 34, 10, 30, 20],
+                    lineStyle: {
+                        color: '#00c3ff',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                {offset: 0, color: 'rgba(0, 195, 255, 0.3)'},
+                                {offset: 1, color: 'rgba(0, 195, 255, 0.05)'}
+                            ]
+                        }
+                    }
+                }
+            ]
+        };
+
+        // System Resource Distribution
+        const resourceOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'System Resource Allocation',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#00ff41',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#00ff41'
+                }
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: {
+                    color: '#00d4aa'
+                }
+            },
+            series: [
+                {
+                    name: 'Resource Usage',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        {value: 35, name: 'CPU', itemStyle: {color: '#00ff41'}},
+                        {value: 25, name: 'Memory', itemStyle: {color: '#00d4aa'}},
+                        {value: 20, name: 'Storage', itemStyle: {color: '#ff0080'}},
+                        {value: 15, name: 'Network', itemStyle: {color: '#00c3ff'}},
+                        {value: 5, name: 'GPU', itemStyle: {color: '#ff6b35'}}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 255, 65, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // User Activity Heatmap
+        const activityOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'User Activity Patterns',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                position: 'top',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#00ff41',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#00ff41'
+                }
+            },
+            grid: {
+                height: '50%',
+                top: '10%'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                splitArea: {
+                    show: true
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#00ff41'
+                    }
+                },
+                axisLabel: {
+                    color: '#00d4aa'
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                splitArea: {
+                    show: true
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#00ff41'
+                    }
+                },
+                axisLabel: {
+                    color: '#00d4aa'
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                calculable: true,
+                orient: 'horizontal',
+                left: 'center',
+                bottom: '15%',
+                inRange: {
+                    color: ['#0a0a0a', '#00ff41']
+                },
+                textStyle: {
+                    color: '#00d4aa'
+                }
+            },
+            series: [{
+                name: 'Activity',
+                type: 'heatmap',
+                data: [
+                    [0, 0, 5], [0, 1, 7], [0, 2, 3], [0, 3, 5], [0, 4, 2], [0, 5, 6], [0, 6, 5],
+                    [1, 0, 6], [1, 1, 9], [1, 2, 4], [1, 3, 8], [1, 4, 3], [1, 5, 7], [1, 6, 6],
+                    [2, 0, 8], [2, 1, 12], [2, 2, 15], [2, 3, 20], [2, 4, 18], [2, 5, 14], [2, 6, 10],
+                    [3, 0, 15], [3, 1, 18], [3, 2, 22], [3, 3, 25], [3, 4, 23], [3, 5, 19], [3, 6, 16],
+                    [4, 0, 12], [4, 1, 15], [4, 2, 18], [4, 3, 22], [4, 4, 20], [4, 5, 17], [4, 6, 14],
+                    [5, 0, 8], [5, 1, 10], [5, 2, 12], [5, 3, 15], [5, 4, 13], [5, 5, 11], [5, 6, 9]
+                ],
+                label: {
+                    show: true,
+                    color: '#000'
+                },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0, 255, 65, 0.5)'
+                    }
+                }
+            }]
+        };
+
+        // Security Threat Analysis
+        const securityOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Security Threat Distribution',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#00ff41',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#00ff41'
+                }
+            },
+            legend: {
+                data: ['Malware', 'DDoS', 'Phishing', 'SQL Injection'],
+                textStyle: {
+                    color: '#00d4aa'
+                }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Severity', max: 100 },
+                    { name: 'Frequency', max: 100 },
+                    { name: 'Impact', max: 100 },
+                    { name: 'Detection', max: 100 },
+                    { name: 'Response', max: 100 }
+                ],
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(0, 255, 65, 0.3)'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(0, 255, 65, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(0, 255, 65, 0.02)', 'rgba(0, 212, 170, 0.02)']
+                    }
+                },
+                name: {
+                    textStyle: {
+                        color: '#00d4aa'
+                    }
+                }
+            },
+            series: [{
+                name: 'Threat Analysis',
+                type: 'radar',
+                data: [
+                    {
+                        value: [85, 90, 80, 75, 70],
+                        name: 'Malware',
+                        itemStyle: {color: '#ff0080'},
+                        areaStyle: {color: 'rgba(255, 0, 128, 0.3)'}
+                    },
+                    {
+                        value: [70, 85, 75, 80, 85],
+                        name: 'DDoS',
+                        itemStyle: {color: '#00c3ff'},
+                        areaStyle: {color: 'rgba(0, 195, 255, 0.3)'}
+                    },
+                    {
+                        value: [60, 70, 65, 90, 80],
+                        name: 'Phishing',
+                        itemStyle: {color: '#ff6b35'},
+                        areaStyle: {color: 'rgba(255, 107, 53, 0.3)'}
+                    },
+                    {
+                        value: [75, 60, 70, 85, 75],
+                        name: 'SQL Injection',
+                        itemStyle: {color: '#9d4edd'},
+                        areaStyle: {color: 'rgba(157, 78, 221, 0.3)'}
+                    }
+                ]
+            }]
+        };
+
+        // Data Flow Visualization
+        const dataflowOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Data Flow Network',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#00ff41',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#00ff41'
+                }
+            },
+            series: [{
+                type: 'graph',
+                layout: 'force',
+                data: [
+                    {name: 'API Gateway', value: 20, category: 0, itemStyle: {color: '#00ff41'}},
+                    {name: 'Database', value: 15, category: 1, itemStyle: {color: '#00d4aa'}},
+                    {name: 'Cache', value: 10, category: 2, itemStyle: {color: '#ff0080'}},
+                    {name: 'Load Balancer', value: 12, category: 3, itemStyle: {color: '#00c3ff'}},
+                    {name: 'Web Server', value: 18, category: 4, itemStyle: {color: '#ff6b35'}},
+                    {name: 'CDN', value: 8, category: 5, itemStyle: {color: '#9d4edd'}}
+                ],
+                links: [
+                    {source: 'API Gateway', target: 'Load Balancer', value: 5},
+                    {source: 'Load Balancer', target: 'Web Server', value: 3},
+                    {source: 'Web Server', target: 'Database', value: 4},
+                    {source: 'Web Server', target: 'Cache', value: 2},
+                    {source: 'API Gateway', target: 'CDN', value: 1},
+                    {source: 'Cache', target: 'Database', value: 2}
+                ],
+                categories: [
+                    {name: 'Gateway'},
+                    {name: 'Storage'},
+                    {name: 'Cache'},
+                    {name: 'Network'},
+                    {name: 'Server'},
+                    {name: 'CDN'}
+                ],
+                roam: true,
+                label: {
+                    show: true,
+                    position: 'right',
+                    color: '#00d4aa'
+                },
+                force: {
+                    repulsion: 100,
+                    edgeLength: 100
+                },
+                lineStyle: {
+                    color: '#00ff41',
+                    width: 2,
+                    curveness: 0.3
+                }
+            }]
+        };
+
+        // Performance Metrics Radar
+        const radarOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'System Performance Metrics',
+                textStyle: {
+                    color: '#00d4aa',
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#00ff41',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#00ff41'
+                }
+            },
+            legend: {
+                data: ['Current', 'Target', 'Baseline'],
+                textStyle: {
+                    color: '#00d4aa'
+                }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Uptime', max: 100 },
+                    { name: 'Response Time', max: 100 },
+                    { name: 'Throughput', max: 100 },
+                    { name: 'Error Rate', max: 100 },
+                    { name: 'Scalability', max: 100 },
+                    { name: 'Security', max: 100 }
+                ],
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(0, 255, 65, 0.3)'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(0, 255, 65, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(0, 255, 65, 0.02)', 'rgba(0, 212, 170, 0.02)']
+                    }
+                },
+                name: {
+                    textStyle: {
+                        color: '#00d4aa'
+                    }
+                }
+            },
+            series: [{
+                name: 'Performance',
+                type: 'radar',
+                data: [
+                    {
+                        value: [95, 85, 90, 92, 88, 94],
+                        name: 'Current',
+                        itemStyle: {color: '#00ff41'},
+                        areaStyle: {color: 'rgba(0, 255, 65, 0.3)'}
+                    },
+                    {
+                        value: [99, 95, 95, 98, 95, 98],
+                        name: 'Target',
+                        itemStyle: {color: '#00d4aa'},
+                        areaStyle: {color: 'rgba(0, 212, 170, 0.3)'}
+                    },
+                    {
+                        value: [90, 80, 85, 88, 82, 90],
+                        name: 'Baseline',
+                        itemStyle: {color: '#ff0080'},
+                        areaStyle: {color: 'rgba(255, 0, 128, 0.3)'}
+                    }
+                ]
+            }]
+        };
+
+        // Set options
+        networkChart.setOption(networkOption);
+        resourceChart.setOption(resourceOption);
+        activityChart.setOption(activityOption);
+        securityChart.setOption(securityOption);
+        dataflowChart.setOption(dataflowOption);
+        radarChart.setOption(radarOption);
+
+        // Real-time updates
+        function updateMetrics() {
+            const networkTraffic = document.getElementById('network-traffic');
+            const processingPower = document.getElementById('processing-power');
+            const memoryUsage = document.getElementById('memory-usage');
+            const activeUsers = document.getElementById('active-users');
+
+            // Simulate real-time data
+            const networkValue = (Math.random() * 3 + 1).toFixed(1);
+            const processingValue = (Math.random() * 10 + 90).toFixed(1);
+            const memoryValue = (Math.random() * 20 + 60).toFixed(1);
+            const usersValue = (Math.random() * 20 + 40).toFixed(1);
+
+            networkTraffic.textContent = networkValue + 'TB';
+            processingPower.textContent = processingValue + '%';
+            memoryUsage.textContent = memoryValue + '%';
+            activeUsers.textContent = (parseFloat(usersValue) * 1000).toFixed(0) + 'K';
+
+            // Add glitch effect randomly
+            if (Math.random() < 0.1) {
+                networkTraffic.style.textShadow = '0 0 20px #ff0080';
+                setTimeout(() => {
+                    networkTraffic.style.textShadow = '0 0 10px rgba(0, 255, 65, 0.5)';
+                }, 200);
+            }
+        }
+
+        // Update metrics every 3 seconds
+        setInterval(updateMetrics, 3000);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            networkChart.resize();
+            resourceChart.resize();
+            activityChart.resize();
+            securityChart.resize();
+            dataflowChart.resize();
+            radarChart.resize();
+        });
+    </script>
+</body>
+</html>

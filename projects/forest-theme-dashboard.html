@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Theme Dashboard - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c59 25%, #6b8e23 50%, #8fbc8f 75%, #98fb98 100%); /* Forest gradient */
+            color: #f5f5dc; /* Beige */
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before { /* Animated leaves */
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 139, 34, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(85, 107, 47, 0.1) 0%, transparent 50%);
+            animation: forestFloat 15s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes forestFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(1deg); }
+            66% { transform: translateY(5px) rotate(-1deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.2) 0%, rgba(85, 107, 47, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(34, 139, 34, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #f5f5dc;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.15) 0%, rgba(85, 107, 47, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 139, 34, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 139, 34, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .metric-card:hover::before {
+            left: 100%;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .metric-card::after { /* Leaf effect */
+            content: '🍃';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            font-size: 2em;
+            opacity: 0.3;
+            animation: leafFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes leafFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #90ee90; /* Light green */
+            text-shadow: 0 0 10px rgba(144, 238, 144, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            color: #f5f5dc;
+            opacity: 0.9;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.1) 0%, rgba(85, 107, 47, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 139, 34, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #228b22, #556b2f, #6b8e23, #8fbc8f);
+        }
+
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: #f5f5dc;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart {
+            width: 100%;
+            height: calc(100% - 50px);
+        }
+
+        .forest-pulse {
+            animation: forestPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes forestPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(34, 139, 34, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(34, 139, 34, 0.4); }
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌲 Forest Analytics Dashboard</h1>
+        <p>Natural insights with organic data visualization</p>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card forest-pulse">
+            <div class="metric-value" id="metric1">2,847</div>
+            <div class="metric-label">Trees Planted</div>
+        </div>
+        <div class="metric-card forest-pulse">
+            <div class="metric-value" id="metric2">94.2%</div>
+            <div class="metric-label">Survival Rate</div>
+        </div>
+        <div class="metric-card forest-pulse">
+            <div class="metric-value" id="metric3">156.8</div>
+            <div class="metric-label">CO₂ Tons Absorbed</div>
+        </div>
+        <div class="metric-card forest-pulse">
+            <div class="metric-value" id="metric4">89.5%</div>
+            <div class="metric-label">Biodiversity Index</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-container">
+            <div class="chart-title">🌳 Tree Growth Trends</div>
+            <div id="chart1" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🍂 Species Distribution</div>
+            <div id="chart2" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌿 Seasonal Growth Patterns</div>
+            <div id="chart3" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌱 Carbon Sequestration</div>
+            <div id="chart4" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🦋 Wildlife Activity</div>
+            <div id="chart5" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">💧 Water Retention</div>
+            <div id="chart6" class="chart"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Initialize charts
+        const chart1 = echarts.init(document.getElementById('chart1'));
+        const chart2 = echarts.init(document.getElementById('chart2'));
+        const chart3 = echarts.init(document.getElementById('chart3'));
+        const chart4 = echarts.init(document.getElementById('chart4'));
+        const chart5 = echarts.init(document.getElementById('chart5'));
+        const chart6 = echarts.init(document.getElementById('chart6'));
+
+        // Forest color palette
+        const forestColors = ['#228b22', '#556b2f', '#6b8e23', '#8fbc8f', '#98fb98', '#90ee90', '#32cd32', '#228b22'];
+
+        // Chart 1: Tree Growth Trends
+        const growthOption = {
+            title: {
+                text: 'Annual Growth Rate',
+                textStyle: { color: '#f5f5dc', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(34, 139, 34, 0.9)',
+                borderColor: '#556b2f',
+                textStyle: { color: '#f5f5dc' }
+            },
+            legend: {
+                data: ['Oak', 'Maple', 'Pine', 'Birch'],
+                textStyle: { color: '#f5f5dc' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Height (meters)',
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } },
+                splitLine: { lineStyle: { color: 'rgba(85, 107, 47, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Oak',
+                    type: 'line',
+                    data: [2.1, 3.8, 5.2, 6.8, 8.1],
+                    smooth: true,
+                    lineStyle: { color: '#228b22', width: 3 },
+                    itemStyle: { color: '#228b22' }
+                },
+                {
+                    name: 'Maple',
+                    type: 'line',
+                    data: [1.8, 3.2, 4.5, 5.9, 7.2],
+                    smooth: true,
+                    lineStyle: { color: '#556b2f', width: 3 },
+                    itemStyle: { color: '#556b2f' }
+                },
+                {
+                    name: 'Pine',
+                    type: 'line',
+                    data: [2.5, 4.1, 5.8, 7.3, 8.7],
+                    smooth: true,
+                    lineStyle: { color: '#6b8e23', width: 3 },
+                    itemStyle: { color: '#6b8e23' }
+                },
+                {
+                    name: 'Birch',
+                    type: 'line',
+                    data: [1.5, 2.8, 4.1, 5.3, 6.5],
+                    smooth: true,
+                    lineStyle: { color: '#8fbc8f', width: 3 },
+                    itemStyle: { color: '#8fbc8f' }
+                }
+            ]
+        };
+
+        // Chart 2: Species Distribution
+        const speciesOption = {
+            title: {
+                text: 'Forest Composition',
+                textStyle: { color: '#f5f5dc', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(34, 139, 34, 0.9)',
+                borderColor: '#556b2f',
+                textStyle: { color: '#f5f5dc' }
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: { color: '#f5f5dc' }
+            },
+            series: [
+                {
+                    name: 'Tree Species',
+                    type: 'pie',
+                    radius: '60%',
+                    data: [
+                        { value: 35, name: 'Oak Trees', itemStyle: { color: '#228b22' } },
+                        { value: 25, name: 'Maple Trees', itemStyle: { color: '#556b2f' } },
+                        { value: 20, name: 'Pine Trees', itemStyle: { color: '#6b8e23' } },
+                        { value: 15, name: 'Birch Trees', itemStyle: { color: '#8fbc8f' } },
+                        { value: 5, name: 'Other', itemStyle: { color: '#98fb98' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(34, 139, 34, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Chart 3: Seasonal Growth Patterns
+        const seasonalOption = {
+            title: {
+                text: 'Monthly Growth Patterns',
+                textStyle: { color: '#f5f5dc', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(34, 139, 34, 0.9)',
+                borderColor: '#556b2f',
+                textStyle: { color: '#f5f5dc' }
+            },
+            legend: {
+                data: ['Spring', 'Summer', 'Autumn', 'Winter'],
+                textStyle: { color: '#f5f5dc' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Growth Rate (%)',
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } },
+                splitLine: { lineStyle: { color: 'rgba(85, 107, 47, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Spring',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [0, 0, 15, 25, 30, 20, 0, 0, 0, 0, 0, 0],
+                    itemStyle: { color: '#90ee90' }
+                },
+                {
+                    name: 'Summer',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [0, 0, 0, 0, 10, 25, 35, 30, 15, 0, 0, 0],
+                    itemStyle: { color: '#32cd32' }
+                },
+                {
+                    name: 'Autumn',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [0, 0, 0, 0, 0, 0, 5, 10, 20, 25, 15, 0],
+                    itemStyle: { color: '#556b2f' }
+                },
+                {
+                    name: 'Winter',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [5, 8, 10, 5, 0, 0, 0, 0, 0, 0, 5, 8],
+                    itemStyle: { color: '#6b8e23' }
+                }
+            ]
+        };
+
+        // Chart 4: Carbon Sequestration
+        const carbonOption = {
+            title: {
+                text: 'CO₂ Absorption Over Time',
+                textStyle: { color: '#f5f5dc', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(34, 139, 34, 0.9)',
+                borderColor: '#556b2f',
+                textStyle: { color: '#f5f5dc' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Q1', 'Q2', 'Q3', 'Q4'],
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Tons CO₂',
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } },
+                splitLine: { lineStyle: { color: 'rgba(85, 107, 47, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Carbon Absorbed',
+                    type: 'area',
+                    data: [12.5, 18.3, 22.1, 28.7],
+                    smooth: true,
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(34, 139, 34, 0.6)' },
+                            { offset: 1, color: 'rgba(34, 139, 34, 0.1)' }
+                        ])
+                    },
+                    lineStyle: { color: '#228b22', width: 3 },
+                    itemStyle: { color: '#228b22' }
+                }
+            ]
+        };
+
+        // Chart 5: Wildlife Activity
+        const wildlifeOption = {
+            title: {
+                text: 'Animal Sightings',
+                textStyle: { color: '#f5f5dc', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(34, 139, 34, 0.9)',
+                borderColor: '#556b2f',
+                textStyle: { color: '#f5f5dc' }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Birds', max: 100 },
+                    { name: 'Deer', max: 100 },
+                    { name: 'Squirrels', max: 100 },
+                    { name: 'Rabbits', max: 100 },
+                    { name: 'Foxes', max: 100 },
+                    { name: 'Bears', max: 100 }
+                ],
+                axisName: { color: '#f5f5dc' },
+                splitLine: { lineStyle: { color: 'rgba(85, 107, 47, 0.3)' } },
+                splitArea: { show: false },
+                axisLine: { lineStyle: { color: '#556b2f' } }
+            },
+            series: [
+                {
+                    name: 'Wildlife Activity',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [85, 65, 90, 75, 45, 25],
+                            name: 'Current Month',
+                            itemStyle: { color: '#228b22' },
+                            areaStyle: { color: 'rgba(34, 139, 34, 0.3)' }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Chart 6: Water Retention
+        const waterOption = {
+            title: {
+                text: 'Soil Moisture Levels',
+                textStyle: { color: '#f5f5dc', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(34, 139, 34, 0.9)',
+                borderColor: '#556b2f',
+                textStyle: { color: '#f5f5dc' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Moisture (%)',
+                axisLabel: { color: '#f5f5dc' },
+                axisLine: { lineStyle: { color: '#556b2f' } },
+                splitLine: { lineStyle: { color: 'rgba(85, 107, 47, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Surface Level',
+                    type: 'line',
+                    data: [45, 52, 48, 55],
+                    smooth: true,
+                    lineStyle: { color: '#8fbc8f', width: 3 },
+                    itemStyle: { color: '#8fbc8f' }
+                },
+                {
+                    name: 'Deep Level',
+                    type: 'line',
+                    data: [65, 68, 72, 70],
+                    smooth: true,
+                    lineStyle: { color: '#556b2f', width: 3 },
+                    itemStyle: { color: '#556b2f' }
+                }
+            ]
+        };
+
+        // Set chart options
+        chart1.setOption(growthOption);
+        chart2.setOption(speciesOption);
+        chart3.setOption(seasonalOption);
+        chart4.setOption(carbonOption);
+        chart5.setOption(wildlifeOption);
+        chart6.setOption(waterOption);
+
+        // Real-time updates
+        setInterval(() => {
+            // Update metrics
+            document.getElementById('metric1').textContent = Math.floor(2000 + Math.random() * 2000);
+            document.getElementById('metric2').textContent = (90 + Math.random() * 8).toFixed(1) + '%';
+            document.getElementById('metric3').textContent = (150 + Math.random() * 20).toFixed(1);
+            document.getElementById('metric4').textContent = (85 + Math.random() * 10).toFixed(1) + '%';
+        }, 3000);
+
+        // Responsive charts
+        window.addEventListener('resize', () => {
+            chart1.resize();
+            chart2.resize();
+            chart3.resize();
+            chart4.resize();
+            chart5.resize();
+            chart6.resize();
+        });
+    </script>
+</body>
+</html>

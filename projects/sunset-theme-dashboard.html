@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunset Theme Dashboard - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 25%, #ff7043 50%, #ec407a 75%, #ab47bc 100%);
+            color: #fff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 64, 122, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(171, 71, 188, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa726, #ff7043, #ec407a, #ab47bc);
+            animation: flow 4s ease-in-out infinite;
+        }
+
+        @keyframes flow {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .metric-title {
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 3em;
+            font-weight: 200;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .metric-change {
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa726, #ff7043, #ec407a, #ab47bc);
+            animation: flow 5s ease-in-out infinite;
+        }
+
+        .chart-title {
+            font-size: 1.4em;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart {
+            width: 100%;
+            height: 400px;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+        }
+
+        /* Floating animation for cards */
+        .metric-card, .chart-container {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .metric-card:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .metric-card:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        .metric-card:nth-child(4) {
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sunset Analytics</h1>
+        <p>Warm insights in the golden hour</p>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-title">Daily Revenue</div>
+            <div class="metric-value" id="daily-revenue">$24.7K</div>
+            <div class="metric-change">+15.3% ↑</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Customer Satisfaction</div>
+            <div class="metric-value" id="satisfaction">94.8%</div>
+            <div class="metric-change">+2.1% ↑</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Active Sessions</div>
+            <div class="metric-value" id="active-sessions">1.2K</div>
+            <div class="metric-change">+8.7% ↑</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Conversion Rate</div>
+            <div class="metric-value" id="conversion-rate">3.2%</div>
+            <div class="metric-change">+0.5% ↑</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-container">
+            <div class="chart-title">Revenue Trends</div>
+            <div id="revenue-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Customer Demographics</div>
+            <div id="demographics-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Product Performance</div>
+            <div id="product-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Geographic Distribution</div>
+            <div id="geo-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Seasonal Patterns</div>
+            <div id="seasonal-chart" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Performance Metrics</div>
+            <div id="performance-chart" class="chart"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Initialize charts
+        const revenueChart = echarts.init(document.getElementById('revenue-chart'));
+        const demographicsChart = echarts.init(document.getElementById('demographics-chart'));
+        const productChart = echarts.init(document.getElementById('product-chart'));
+        const geoChart = echarts.init(document.getElementById('geo-chart'));
+        const seasonalChart = echarts.init(document.getElementById('seasonal-chart'));
+        const performanceChart = echarts.init(document.getElementById('performance-chart'));
+
+        // Sunset color palette
+        const sunsetColors = ['#ff6b6b', '#ffa726', '#ff7043', '#ec407a', '#ab47bc', '#7e57c2'];
+
+        // Revenue Trends Chart
+        const revenueOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Monthly Revenue Growth',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16,
+                    fontWeight: 300
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff6b6b',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            legend: {
+                data: ['Revenue', 'Growth Rate'],
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                },
+                axisLabel: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Revenue ($K)',
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.3)'
+                        }
+                    },
+                    axisLabel: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                },
+                {
+                    type: 'value',
+                    name: 'Growth Rate (%)',
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.3)'
+                        }
+                    },
+                    axisLabel: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: 'Revenue',
+                    type: 'bar',
+                    data: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330],
+                    itemStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                {offset: 0, color: '#ff6b6b'},
+                                {offset: 1, color: '#ffa726'}
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Growth Rate',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [10, 15, 8, 20, 12, 25, 18, 22, 16, 28, 24, 30],
+                    lineStyle: {
+                        color: '#ec407a',
+                        width: 3
+                    },
+                    itemStyle: {
+                        color: '#ec407a'
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                {offset: 0, color: 'rgba(236, 64, 122, 0.3)'},
+                                {offset: 1, color: 'rgba(236, 64, 122, 0.05)'}
+                            ]
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Customer Demographics Chart
+        const demographicsOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Age Group Distribution',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16,
+                    fontWeight: 300
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff6b6b',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            series: [
+                {
+                    name: 'Age Groups',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['60%', '50%'],
+                    data: [
+                        {value: 25, name: '18-24', itemStyle: {color: '#ff6b6b'}},
+                        {value: 30, name: '25-34', itemStyle: {color: '#ffa726'}},
+                        {value: 20, name: '35-44', itemStyle: {color: '#ff7043'}},
+                        {value: 15, name: '45-54', itemStyle: {color: '#ec407a'}},
+                        {value: 10, name: '55+', itemStyle: {color: '#ab47bc'}}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(255, 107, 107, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Product Performance Chart
+        const productOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Product Category Sales',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16,
+                    fontWeight: 300
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff6b6b',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            legend: {
+                data: ['Q1', 'Q2', 'Q3', 'Q4'],
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Electronics', 'Clothing', 'Home', 'Sports', 'Books', 'Beauty'],
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                },
+                axisLabel: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                },
+                axisLabel: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Q1',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [320, 302, 301, 334, 390, 330],
+                    itemStyle: {color: '#ff6b6b'}
+                },
+                {
+                    name: 'Q2',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [120, 132, 101, 134, 190, 230],
+                    itemStyle: {color: '#ffa726'}
+                },
+                {
+                    name: 'Q3',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [220, 182, 191, 234, 290, 330],
+                    itemStyle: {color: '#ff7043'}
+                },
+                {
+                    name: 'Q4',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [150, 212, 201, 154, 190, 330],
+                    itemStyle: {color: '#ec407a'}
+                }
+            ]
+        };
+
+        // Geographic Distribution Chart
+        const geoOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Regional Sales Distribution',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16,
+                    fontWeight: 300
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff6b6b',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            series: [{
+                name: 'Sales',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    {value: 35, name: 'North America', itemStyle: {color: '#ff6b6b'}},
+                    {value: 25, name: 'Europe', itemStyle: {color: '#ffa726'}},
+                    {value: 20, name: 'Asia Pacific', itemStyle: {color: '#ff7043'}},
+                    {value: 15, name: 'Latin America', itemStyle: {color: '#ec407a'}},
+                    {value: 5, name: 'Africa', itemStyle: {color: '#ab47bc'}}
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(255, 107, 107, 0.5)'
+                    }
+                }
+            }]
+        };
+
+        // Seasonal Patterns Chart
+        const seasonalOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Seasonal Sales Patterns',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16,
+                    fontWeight: 300
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff6b6b',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            legend: {
+                data: ['Spring', 'Summer', 'Autumn', 'Winter'],
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Q1', max: 100 },
+                    { name: 'Q2', max: 100 },
+                    { name: 'Q3', max: 100 },
+                    { name: 'Q4', max: 100 }
+                ],
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.02)']
+                    }
+                },
+                name: {
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            },
+            series: [{
+                name: 'Seasonal Performance',
+                type: 'radar',
+                data: [
+                    {
+                        value: [80, 90, 70, 85],
+                        name: 'Spring',
+                        itemStyle: {color: '#ff6b6b'},
+                        areaStyle: {color: 'rgba(255, 107, 107, 0.3)'}
+                    },
+                    {
+                        value: [90, 85, 95, 80],
+                        name: 'Summer',
+                        itemStyle: {color: '#ffa726'},
+                        areaStyle: {color: 'rgba(255, 167, 38, 0.3)'}
+                    },
+                    {
+                        value: [75, 80, 85, 90],
+                        name: 'Autumn',
+                        itemStyle: {color: '#ff7043'},
+                        areaStyle: {color: 'rgba(255, 112, 67, 0.3)'}
+                    },
+                    {
+                        value: [85, 75, 80, 95],
+                        name: 'Winter',
+                        itemStyle: {color: '#ec407a'},
+                        areaStyle: {color: 'rgba(236, 64, 122, 0.3)'}
+                    }
+                ]
+            }]
+        };
+
+        // Performance Metrics Chart
+        const performanceOption = {
+            backgroundColor: 'transparent',
+            title: {
+                text: 'Key Performance Indicators',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16,
+                    fontWeight: 300
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff6b6b',
+                borderWidth: 2,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            legend: {
+                data: ['Current', 'Target', 'Previous'],
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Revenue', max: 100 },
+                    { name: 'Satisfaction', max: 100 },
+                    { name: 'Retention', max: 100 },
+                    { name: 'Growth', max: 100 },
+                    { name: 'Efficiency', max: 100 },
+                    { name: 'Innovation', max: 100 }
+                ],
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.02)']
+                    }
+                },
+                name: {
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            },
+            series: [{
+                name: 'Performance',
+                type: 'radar',
+                data: [
+                    {
+                        value: [85, 90, 88, 92, 87, 89],
+                        name: 'Current',
+                        itemStyle: {color: '#ff6b6b'},
+                        areaStyle: {color: 'rgba(255, 107, 107, 0.3)'}
+                    },
+                    {
+                        value: [95, 95, 95, 95, 95, 95],
+                        name: 'Target',
+                        itemStyle: {color: '#ffa726'},
+                        areaStyle: {color: 'rgba(255, 167, 38, 0.3)'}
+                    },
+                    {
+                        value: [80, 85, 82, 88, 83, 85],
+                        name: 'Previous',
+                        itemStyle: {color: '#ec407a'},
+                        areaStyle: {color: 'rgba(236, 64, 122, 0.3)'}
+                    }
+                ]
+            }]
+        };
+
+        // Set options
+        revenueChart.setOption(revenueOption);
+        demographicsChart.setOption(demographicsOption);
+        productChart.setOption(productOption);
+        geoChart.setOption(geoOption);
+        seasonalChart.setOption(seasonalOption);
+        performanceChart.setOption(performanceOption);
+
+        // Real-time updates
+        function updateMetrics() {
+            const dailyRevenue = document.getElementById('daily-revenue');
+            const satisfaction = document.getElementById('satisfaction');
+            const activeSessions = document.getElementById('active-sessions');
+            const conversionRate = document.getElementById('conversion-rate');
+
+            // Simulate real-time data
+            const revenueValue = (Math.random() * 10 + 20).toFixed(1);
+            const satisfactionValue = (Math.random() * 5 + 90).toFixed(1);
+            const sessionsValue = (Math.random() * 500 + 1000).toFixed(0);
+            const conversionValue = (Math.random() * 2 + 2.5).toFixed(1);
+
+            dailyRevenue.textContent = '$' + revenueValue + 'K';
+            satisfaction.textContent = satisfactionValue + '%';
+            activeSessions.textContent = sessionsValue;
+            conversionRate.textContent = conversionValue + '%';
+        }
+
+        // Update metrics every 4 seconds
+        setInterval(updateMetrics, 4000);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            revenueChart.resize();
+            demographicsChart.resize();
+            productChart.resize();
+            geoChart.resize();
+            seasonalChart.resize();
+            performanceChart.resize();
+        });
+    </script>
+</body>
+</html>

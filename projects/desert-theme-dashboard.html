@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert Theme Dashboard - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #8b4513 0%, #cd853f 25%, #daa520 50%, #f4a460 75%, #deb887 100%); /* Desert gradient */
+            color: #2f1b14; /* Dark brown */
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before { /* Animated sand dunes */
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(139, 69, 19, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(205, 133, 63, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 40%, rgba(218, 165, 32, 0.1) 0%, transparent 50%);
+            animation: sandShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes sandShift {
+            0%, 100% { transform: translateX(0px) scale(1); }
+            33% { transform: translateX(-15px) scale(1.02); }
+            66% { transform: translateX(10px) scale(0.98); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(205, 133, 63, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #2f1b14;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.15) 0%, rgba(205, 133, 63, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .metric-card:hover::before {
+            left: 100%;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .metric-card::after { /* Cactus effect */
+            content: '🌵';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            font-size: 2em;
+            opacity: 0.3;
+            animation: cactusGrow 8s ease-in-out infinite;
+        }
+
+        @keyframes cactusGrow {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.1); }
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #8b4513; /* Saddle brown */
+            text-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            color: #2f1b14;
+            opacity: 0.9;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(205, 133, 63, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(218, 165, 32, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b4513, #cd853f, #daa520, #f4a460);
+        }
+
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: #2f1b14;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .chart {
+            width: 100%;
+            height: calc(100% - 50px);
+        }
+
+        .desert-pulse {
+            animation: desertPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes desertPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(218, 165, 32, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(218, 165, 32, 0.4); }
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏜️ Desert Analytics Dashboard</h1>
+        <p>Hot insights from the arid landscape</p>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card desert-pulse">
+            <div class="metric-value" id="metric1">42.3°C</div>
+            <div class="metric-label">Average Temperature</div>
+        </div>
+        <div class="metric-card desert-pulse">
+            <div class="metric-value" id="metric2">8.5%</div>
+            <div class="metric-label">Humidity Level</div>
+        </div>
+        <div class="metric-card desert-pulse">
+            <div class="metric-value" id="metric3">156</div>
+            <div class="metric-label">Rainfall (mm/year)</div>
+        </div>
+        <div class="metric-card desert-pulse">
+            <div class="metric-value" id="metric4">12.8</div>
+            <div class="metric-label">Wind Speed (km/h)</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-container">
+            <div class="chart-title">🌡️ Temperature Trends</div>
+            <div id="chart1" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">💧 Water Resources</div>
+            <div id="chart2" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌪️ Wind Patterns</div>
+            <div id="chart3" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">☀️ Solar Radiation</div>
+            <div id="chart4" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🏜️ Desert Life</div>
+            <div id="chart5" class="chart"></div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌵 Vegetation Index</div>
+            <div id="chart6" class="chart"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Initialize charts
+        const chart1 = echarts.init(document.getElementById('chart1'));
+        const chart2 = echarts.init(document.getElementById('chart2'));
+        const chart3 = echarts.init(document.getElementById('chart3'));
+        const chart4 = echarts.init(document.getElementById('chart4'));
+        const chart5 = echarts.init(document.getElementById('chart5'));
+        const chart6 = echarts.init(document.getElementById('chart6'));
+
+        // Desert color palette
+        const desertColors = ['#8b4513', '#cd853f', '#daa520', '#f4a460', '#deb887', '#d2691e', '#b8860b', '#ff8c00'];
+
+        // Chart 1: Temperature Trends
+        const tempOption = {
+            title: {
+                text: 'Daily Temperature Variation',
+                textStyle: { color: '#2f1b14', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(218, 165, 32, 0.9)',
+                borderColor: '#8b4513',
+                textStyle: { color: '#2f1b14' }
+            },
+            legend: {
+                data: ['Day', 'Night'],
+                textStyle: { color: '#2f1b14' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['6AM', '9AM', '12PM', '3PM', '6PM', '9PM', '12AM', '3AM'],
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Temperature (°C)',
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } },
+                splitLine: { lineStyle: { color: 'rgba(139, 69, 19, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Day',
+                    type: 'line',
+                    data: [25, 32, 42, 45, 38, 30, 28, 26],
+                    smooth: true,
+                    lineStyle: { color: '#daa520', width: 3 },
+                    itemStyle: { color: '#daa520' }
+                },
+                {
+                    name: 'Night',
+                    type: 'line',
+                    data: [18, 15, 12, 10, 15, 20, 22, 20],
+                    smooth: true,
+                    lineStyle: { color: '#8b4513', width: 3 },
+                    itemStyle: { color: '#8b4513' }
+                }
+            ]
+        };
+
+        // Chart 2: Water Resources
+        const waterOption = {
+            title: {
+                text: 'Water Availability',
+                textStyle: { color: '#2f1b14', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(218, 165, 32, 0.9)',
+                borderColor: '#8b4513',
+                textStyle: { color: '#2f1b14' }
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: { color: '#2f1b14' }
+            },
+            series: [
+                {
+                    name: 'Water Sources',
+                    type: 'pie',
+                    radius: '60%',
+                    data: [
+                        { value: 45, name: 'Underground Wells', itemStyle: { color: '#8b4513' } },
+                        { value: 25, name: 'Oasis', itemStyle: { color: '#cd853f' } },
+                        { value: 20, name: 'Rainwater', itemStyle: { color: '#daa520' } },
+                        { value: 10, name: 'Desalination', itemStyle: { color: '#f4a460' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(218, 165, 32, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Chart 3: Wind Patterns
+        const windOption = {
+            title: {
+                text: 'Wind Direction & Speed',
+                textStyle: { color: '#2f1b14', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(218, 165, 32, 0.9)',
+                borderColor: '#8b4513',
+                textStyle: { color: '#2f1b14' }
+            },
+            legend: {
+                data: ['Wind Speed', 'Dust Level'],
+                textStyle: { color: '#2f1b14' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'],
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Speed (km/h)',
+                    axisLabel: { color: '#2f1b14' },
+                    axisLine: { lineStyle: { color: '#8b4513' } },
+                    splitLine: { lineStyle: { color: 'rgba(139, 69, 19, 0.3)' } }
+                },
+                {
+                    type: 'value',
+                    name: 'Dust Level',
+                    axisLabel: { color: '#2f1b14' },
+                    axisLine: { lineStyle: { color: '#cd853f' } },
+                    splitLine: { show: false }
+                }
+            ],
+            series: [
+                {
+                    name: 'Wind Speed',
+                    type: 'bar',
+                    data: [8, 12, 15, 18, 10, 14, 9, 11],
+                    itemStyle: { color: '#daa520' }
+                },
+                {
+                    name: 'Dust Level',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [2, 4, 6, 8, 3, 5, 2, 3],
+                    smooth: true,
+                    lineStyle: { color: '#8b4513', width: 3 },
+                    itemStyle: { color: '#8b4513' }
+                }
+            ]
+        };
+
+        // Chart 4: Solar Radiation
+        const solarOption = {
+            title: {
+                text: 'Daily Solar Exposure',
+                textStyle: { color: '#2f1b14', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(218, 165, 32, 0.9)',
+                borderColor: '#8b4513',
+                textStyle: { color: '#2f1b14' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'kWh/m²',
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } },
+                splitLine: { lineStyle: { color: 'rgba(139, 69, 19, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Solar Radiation',
+                    type: 'area',
+                    data: [6.2, 7.1, 8.3, 9.5, 10.2, 10.8, 10.5, 9.8, 8.7, 7.4, 6.5, 6.0],
+                    smooth: true,
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(218, 165, 32, 0.6)' },
+                            { offset: 1, color: 'rgba(218, 165, 32, 0.1)' }
+                        ])
+                    },
+                    lineStyle: { color: '#daa520', width: 3 },
+                    itemStyle: { color: '#daa520' }
+                }
+            ]
+        };
+
+        // Chart 5: Desert Life
+        const lifeOption = {
+            title: {
+                text: 'Wildlife Activity',
+                textStyle: { color: '#2f1b14', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(218, 165, 32, 0.9)',
+                borderColor: '#8b4513',
+                textStyle: { color: '#2f1b14' }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Lizards', max: 100 },
+                    { name: 'Snakes', max: 100 },
+                    { name: 'Birds', max: 100 },
+                    { name: 'Insects', max: 100 },
+                    { name: 'Mammals', max: 100 },
+                    { name: 'Reptiles', max: 100 }
+                ],
+                axisName: { color: '#2f1b14' },
+                splitLine: { lineStyle: { color: 'rgba(139, 69, 19, 0.3)' } },
+                splitArea: { show: false },
+                axisLine: { lineStyle: { color: '#8b4513' } }
+            },
+            series: [
+                {
+                    name: 'Wildlife Activity',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [85, 65, 70, 90, 45, 75],
+                            name: 'Current Month',
+                            itemStyle: { color: '#daa520' },
+                            areaStyle: { color: 'rgba(218, 165, 32, 0.3)' }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Chart 6: Vegetation Index
+        const vegOption = {
+            title: {
+                text: 'Plant Growth Index',
+                textStyle: { color: '#2f1b14', fontSize: 14 }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(218, 165, 32, 0.9)',
+                borderColor: '#8b4513',
+                textStyle: { color: '#2f1b14' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Cactus', 'Succulents', 'Desert Shrubs', 'Grasses', 'Wildflowers'],
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Growth Index',
+                axisLabel: { color: '#2f1b14' },
+                axisLine: { lineStyle: { color: '#8b4513' } },
+                splitLine: { lineStyle: { color: 'rgba(139, 69, 19, 0.3)' } }
+            },
+            series: [
+                {
+                    name: 'Growth Rate',
+                    type: 'bar',
+                    data: [85, 72, 68, 45, 38],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#daa520' },
+                            { offset: 1, color: '#8b4513' }
+                        ])
+                    }
+                }
+            ]
+        };
+
+        // Set chart options
+        chart1.setOption(tempOption);
+        chart2.setOption(waterOption);
+        chart3.setOption(windOption);
+        chart4.setOption(solarOption);
+        chart5.setOption(lifeOption);
+        chart6.setOption(vegOption);
+
+        // Real-time updates
+        setInterval(() => {
+            // Update metrics
+            document.getElementById('metric1').textContent = (40 + Math.random() * 5).toFixed(1) + '°C';
+            document.getElementById('metric2').textContent = (5 + Math.random() * 10).toFixed(1) + '%';
+            document.getElementById('metric3').textContent = Math.floor(100 + Math.random() * 200);
+            document.getElementById('metric4').textContent = (10 + Math.random() * 8).toFixed(1);
+        }, 3000);
+
+        // Responsive charts
+        window.addEventListener('resize', () => {
+            chart1.resize();
+            chart2.resize();
+            chart3.resize();
+            chart4.resize();
+            chart5.resize();
+            chart6.resize();
+        });
+    </script>
+</body>
+</html>

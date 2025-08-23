@@ -15,7 +15,7 @@ Visit the interactive guide: **[https://michaelgermini.github.io/Complete-EChart
 
 ✨ **Features available online:**
 - 📚 All 20 comprehensive chapters with interactive examples
-- 🏗️ 10 real-world dashboard projects
+ - 🏗️ 26 real-world dashboard projects
 - 💻 Live code editors for hands-on practice
 - 📱 Fully responsive design for all devices
 - ⚡ Fast loading with CDN optimization
@@ -128,6 +128,28 @@ Apply your knowledge with these production-ready dashboard implementations:
 - **Responsive Design** - Perfect on desktop, tablet, and mobile
 - **Professional Styling** - Modern, clean interfaces
 - **Performance Optimized** - Smooth animations and fast loading
+
+### 🚀 Advanced Dashboards
+- **[⚡ Streamlit Energy Dashboard](projects/streamlit-energy-dashboard.html)** - Modern energy monitoring with sidebar navigation
+- **[🤖 AI/ML Monitoring Dashboard](projects/ai-ml-dashboard.html)** - Machine learning model surveillance and performance tracking
+- **[₿ Crypto Trading Dashboard](projects/crypto-trading-dashboard.html)** - Cryptocurrency market analysis with real-time price tracking
+- **[🏥 Healthcare Analytics](projects/healthcare-analytics.html)** - Medical data visualization and patient monitoring
+- **[💰 Financial Analytics](projects/financial-analytics.html)** - Portfolio management and financial data analysis
+- **[🎓 Education Analytics](projects/education-analytics.html)** - Student performance tracking and academic insights
+
+### 🌍 Cultural Dashboards
+- **[🇯🇵 Japanese Culture](projects/japanese-culture-dashboard.html)** - Traditional aesthetics and seasonal themes
+- **[🇨🇳 Chinese Culture](projects/chinese-culture-dashboard.html)** - Ancient wisdom and harmony principles
+- **[🇧🇷 Brazilian Culture](projects/brazilian-culture-dashboard.html)** - Vibrant rhythms and carnival spirit
+- **[🇿🇦 South African Culture](projects/south-african-culture-dashboard.html)** - Rainbow Nation's diverse heritage
+
+### 🎨 Color Theme Dashboards
+- **[🤖 Cyberpunk Theme](projects/cyberpunk-dashboard.html)** - Neon-powered futuristic analytics
+- **[🌅 Sunset Theme](projects/sunset-theme-dashboard.html)** - Warm gradients and golden hour insights
+- **[🌊 Ocean Theme](projects/ocean-theme-dashboard.html)** - Deep blue aquatic data visualization
+- **[🌲 Forest Theme](projects/forest-theme-dashboard.html)** - Natural green organic analytics
+- **[🏜️ Desert Theme](projects/desert-theme-dashboard.html)** - Warm earth tones and arid insights
+- **[🌌 Aurora Theme](projects/aurora-theme-dashboard.html)** - Cosmic northern lights visualization
 
 ---
 
@@ -455,7 +477,7 @@ If you find this guide helpful, please consider giving it a ⭐ on GitHub! Your 
 ## 📈 Project Statistics
 
 - **📚 7 Comprehensive Chapters** - From basics to advanced techniques
-- **🏗️ 6 Real-World Projects** - Production-ready dashboard implementations
+- **🏗️ 13 Real-World Projects** - Production-ready dashboard implementations
 - **📊 10+ Chart Types** - Complete coverage of ECharts capabilities
 - **🎯 50+ Interactive Examples** - Hands-on learning opportunities
 - **⚡ 100% Browser-Based** - No installation required

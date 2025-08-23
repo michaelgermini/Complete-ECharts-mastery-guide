@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brazilian Culture Dashboard - ECharts Mastery Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <link rel="stylesheet" href="../assets/css/navigation.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #009c3b 0%, #ffdf00 50%, #002776 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="3" fill="rgba(255,255,255,0.2)"/><circle cx="75" cy="75" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="50" cy="50" r="1.5" fill="rgba(255,255,255,0.2)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 156, 59, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #009c3b, #ffdf00, #002776);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: #009c3b;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 156, 59, 0.2);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #009c3b, #ffdf00, #002776);
+        }
+
+        .chart-container:hover {
+            transform: translateY(-3px);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chart-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #009c3b, #ffdf00);
+        }
+
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+
+        .culture-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 156, 59, 0.2);
+        }
+
+        .culture-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .culture-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #495057;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇧🇷 Brazilian Culture Dashboard</h1>
+            <p>Vibrant rhythms and colorful traditions</p>
+        </div>
+
+        <div class="culture-section">
+            <h2 class="culture-title">Brazilian Cultural Elements</h2>
+            <p class="culture-description">
+                This dashboard celebrates Brazilian culture with its vibrant colors inspired by Carnival, 
+                the green of the Amazon rainforest, the yellow of the sun, and the blue of the ocean. 
+                The design reflects the country's diverse cultural heritage, from samba rhythms to capoeira movements.
+            </p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="carnivalVisitors">2.5M</div>
+                <div class="metric-label">Carnival Visitors</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="sambaSchools">156</div>
+                <div class="metric-label">Samba Schools</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="capoeiraGroups">2,847</div>
+                <div class="metric-label">Capoeira Groups</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="culturalFestivals">89</div>
+                <div class="metric-label">Cultural Festivals</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Regional Cultural Diversity</h3>
+                <div id="regionalChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Music Genre Distribution</h3>
+                <div id="musicChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Carnival Tourism Trends</h3>
+                <div id="carnivalChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Traditional Dance Forms</h3>
+                <div id="danceChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Cultural Tourism Growth</h3>
+                <div id="tourismChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Festival Participation</h3>
+                <div id="festivalChart" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/add-menu.js"></script>
+    <script>
+        // Initialize charts
+        const regionalChart = echarts.init(document.getElementById('regionalChart'));
+        const musicChart = echarts.init(document.getElementById('musicChart'));
+        const carnivalChart = echarts.init(document.getElementById('carnivalChart'));
+        const danceChart = echarts.init(document.getElementById('danceChart'));
+        const tourismChart = echarts.init(document.getElementById('tourismChart'));
+        const festivalChart = echarts.init(document.getElementById('festivalChart'));
+
+        // Regional Cultural Diversity
+        const regionalOption = {
+            title: {
+                text: 'Regional Cultural Diversity',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#009c3b',
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['São Paulo', 'Rio de Janeiro', 'Bahia', 'Minas Gerais', 'Pernambuco', 'Amazonas', 'Ceará', 'Paraná'],
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50', rotate: 45 }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Cultural Events',
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Cultural Events',
+                    type: 'bar',
+                    data: [45, 38, 32, 28, 25, 20, 18, 15],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#009c3b' },
+                            { offset: 1, color: '#ffdf00' }
+                        ])
+                    }
+                }
+            ]
+        };
+
+        // Music Genre Distribution
+        const musicOption = {
+            title: {
+                text: 'Music Genre Distribution',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#009c3b',
+                textStyle: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Music Genres',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['50%', '60%'],
+                    data: [
+                        { value: 35, name: 'Samba', itemStyle: { color: '#009c3b' } },
+                        { value: 25, name: 'Bossa Nova', itemStyle: { color: '#ffdf00' } },
+                        { value: 20, name: 'Forró', itemStyle: { color: '#002776' } },
+                        { value: 15, name: 'MPB', itemStyle: { color: '#ff6b35' } },
+                        { value: 5, name: 'Other Genres', itemStyle: { color: '#6c757d' } }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Carnival Tourism Trends
+        const carnivalOption = {
+            title: {
+                text: 'Carnival Tourism Trends',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#009c3b',
+                textStyle: { color: '#2c3e50' }
+            },
+            legend: {
+                data: ['Rio Carnival', 'Salvador Carnival', 'Recife Carnival', 'São Paulo Carnival'],
+                bottom: 10,
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['2019', '2020', '2021', '2022', '2023'],
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Visitors (thousands)',
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Rio Carnival',
+                    type: 'line',
+                    data: [2500, 1800, 2100, 2400, 2600],
+                    smooth: true,
+                    lineStyle: { color: '#009c3b', width: 3 },
+                    itemStyle: { color: '#009c3b' }
+                },
+                {
+                    name: 'Salvador Carnival',
+                    type: 'line',
+                    data: [800, 600, 700, 750, 850],
+                    smooth: true,
+                    lineStyle: { color: '#ffdf00', width: 3 },
+                    itemStyle: { color: '#ffdf00' }
+                },
+                {
+                    name: 'Recife Carnival',
+                    type: 'line',
+                    data: [600, 450, 500, 550, 600],
+                    smooth: true,
+                    lineStyle: { color: '#002776', width: 3 },
+                    itemStyle: { color: '#002776' }
+                },
+                {
+                    name: 'São Paulo Carnival',
+                    type: 'line',
+                    data: [400, 300, 350, 380, 420],
+                    smooth: true,
+                    lineStyle: { color: '#ff6b35', width: 3 },
+                    itemStyle: { color: '#ff6b35' }
+                }
+            ]
+        };
+
+        // Traditional Dance Forms
+        const danceOption = {
+            title: {
+                text: 'Traditional Dance Forms',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#009c3b',
+                textStyle: { color: '#2c3e50' }
+            },
+            radar: {
+                indicator: [
+                    { name: 'Samba', max: 100 },
+                    { name: 'Capoeira', max: 100 },
+                    { name: 'Forró', max: 100 },
+                    { name: 'Frevo', max: 100 },
+                    { name: 'Maracatu', max: 100 },
+                    { name: 'Bumba-meu-boi', max: 100 }
+                ],
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(0, 156, 59, 0.1)', 'rgba(0, 156, 59, 0.05)']
+                    }
+                },
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                splitLine: { lineStyle: { color: '#009c3b' } },
+                name: { textStyle: { color: '#2c3e50' } }
+            },
+            series: [
+                {
+                    name: 'Popularity',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [95, 85, 80, 75, 70, 65],
+                            name: 'Cultural Popularity',
+                            itemStyle: { color: '#009c3b' },
+                            areaStyle: { color: 'rgba(0, 156, 59, 0.3)' }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Cultural Tourism Growth
+        const tourismOption = {
+            title: {
+                text: 'Cultural Tourism Growth',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#009c3b',
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Tourists (thousands)',
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Cultural Tourism',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [120, 2500, 180, 150, 140, 160, 170, 190, 200, 220, 240, 280],
+                    itemStyle: { color: '#009c3b' }
+                },
+                {
+                    name: 'Heritage Tourism',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300],
+                    itemStyle: { color: '#ffdf00' }
+                },
+                {
+                    name: 'Festival Tourism',
+                    type: 'bar',
+                    stack: 'total',
+                    data: [60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280],
+                    itemStyle: { color: '#002776' }
+                }
+            ]
+        };
+
+        // Festival Participation
+        const festivalOption = {
+            title: {
+                text: 'Festival Participation',
+                left: 'center',
+                textStyle: {
+                    color: '#2c3e50',
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#009c3b',
+                textStyle: { color: '#2c3e50' }
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Cultural Significance',
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Participation Rate (%)',
+                axisLine: { lineStyle: { color: '#009c3b' } },
+                axisLabel: { color: '#2c3e50' }
+            },
+            series: [
+                {
+                    name: 'Cultural Festivals',
+                    type: 'scatter',
+                    data: [
+                        [95, 85, 'Carnival'],
+                        [90, 90, 'Festa Junina'],
+                        [85, 75, 'Bumba-meu-boi'],
+                        [80, 70, 'Círio de Nazaré'],
+                        [75, 65, 'Festa do Divino'],
+                        [70, 60, 'Congada']
+                    ],
+                    symbolSize: function (data) {
+                        return data[1] / 10;
+                    },
+                    itemStyle: {
+                        color: '#009c3b',
+                        opacity: 0.8
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: function (param) {
+                            return param.data[2];
+                        },
+                        color: '#2c3e50'
+                    }
+                }
+            ]
+        };
+
+        // Set chart options
+        regionalChart.setOption(regionalOption);
+        musicChart.setOption(musicOption);
+        carnivalChart.setOption(carnivalOption);
+        danceChart.setOption(danceOption);
+        tourismChart.setOption(tourismOption);
+        festivalChart.setOption(festivalOption);
+
+        // Real-time updates
+        function updateMetrics() {
+            const carnivalVisitors = document.getElementById('carnivalVisitors');
+            const sambaSchools = document.getElementById('sambaSchools');
+            const capoeiraGroups = document.getElementById('capoeiraGroups');
+            const culturalFestivals = document.getElementById('culturalFestivals');
+
+            setInterval(() => {
+                const newCarnival = (Math.random() * 0.5 + 2.3).toFixed(1);
+                const newSamba = Math.floor(Math.random() * 20) + 150;
+                const newCapoeira = Math.floor(Math.random() * 200) + 2800;
+                const newFestivals = Math.floor(Math.random() * 10) + 85;
+
+                carnivalVisitors.textContent = newCarnival + 'M';
+                sambaSchools.textContent = newSamba;
+                capoeiraGroups.textContent = newCapoeira.toLocaleString();
+                culturalFestivals.textContent = newFestivals;
+            }, 4000);
+        }
+
+        updateMetrics();
+
+        // Responsive charts
+        window.addEventListener('resize', function() {
+            regionalChart.resize();
+            musicChart.resize();
+            carnivalChart.resize();
+            danceChart.resize();
+            tourismChart.resize();
+            festivalChart.resize();
+        });
+    </script>
+</body>
+</html>

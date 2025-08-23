@@ -62,12 +62,28 @@ function addEChartsMenu() {
                                <a href="${basePath}projects/ecommerce-analytics.html">E-Commerce Analytics</a>
                                <a href="${basePath}projects/social-media-analytics.html">Social Media Analytics</a>
                                <a href="${basePath}projects/weather-analytics.html">Weather Analytics</a>
-                               <a href="${basePath}projects/logistics-analytics.html">Logistics Analytics</a>
-                           </div>
-                </li>
-                <li><a href="${basePath}README.md">Documentation</a></li>
-                <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
-            </ul>
+                                                       <a href="${basePath}projects/logistics-analytics.html">Logistics Analytics</a>
+                                                        <a href="${basePath}projects/streamlit-energy-dashboard.html">Streamlit Energy Dashboard</a>
+                                <a href="${basePath}projects/ai-ml-dashboard.html">AI/ML Monitoring Dashboard</a>
+                                <a href="${basePath}projects/crypto-trading-dashboard.html">Crypto Trading Dashboard</a>
+                                                                <a href="${basePath}projects/healthcare-analytics.html">Healthcare Analytics</a>
+                                <a href="${basePath}projects/financial-analytics.html">Financial Analytics</a>
+                                <a href="${basePath}projects/education-analytics.html">Education Analytics</a>
+                                                                 <a href="${basePath}projects/japanese-culture-dashboard.html">Japanese Culture</a>
+                                 <a href="${basePath}projects/chinese-culture-dashboard.html">Chinese Culture</a>
+                                 <a href="${basePath}projects/brazilian-culture-dashboard.html">Brazilian Culture</a>
+                                 <a href="${basePath}projects/south-african-culture-dashboard.html">South African Culture</a>
+                                                                     <a href="${basePath}projects/cyberpunk-dashboard.html">Cyberpunk Theme</a>
+                                    <a href="${basePath}projects/sunset-theme-dashboard.html">Sunset Theme</a>
+                                    <a href="${basePath}projects/ocean-theme-dashboard.html">Ocean Theme</a>
+                                    <a href="${basePath}projects/forest-theme-dashboard.html">Forest Theme</a>
+                                    <a href="${basePath}projects/desert-theme-dashboard.html">Desert Theme</a>
+                                    <a href="${basePath}projects/aurora-theme-dashboard.html">Aurora Theme</a>
+                             </div>
+                         </li>
+                         <li><a href="${basePath}README.md">Documentation</a></li>
+                 <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
+             </ul>
             <button class="echarts-mobile-menu-toggle">☰</button>
         </div>
     </nav>
@@ -105,8 +121,24 @@ function addEChartsMenu() {
                    <li><a href="${basePath}projects/ecommerce-analytics.html">E-Commerce Analytics</a></li>
                    <li><a href="${basePath}projects/social-media-analytics.html">Social Media Analytics</a></li>
                    <li><a href="${basePath}projects/weather-analytics.html">Weather Analytics</a></li>
-                   <li><a href="${basePath}projects/logistics-analytics.html">Logistics Analytics</a></li>
-            <li><a href="${basePath}README.md">Documentation</a></li>
+                                   <li><a href="${basePath}projects/logistics-analytics.html">Logistics Analytics</a></li>
+                                    <li><a href="${basePath}projects/streamlit-energy-dashboard.html">Streamlit Energy Dashboard</a></li>
+                    <li><a href="${basePath}projects/ai-ml-dashboard.html">AI/ML Monitoring Dashboard</a></li>
+                    <li><a href="${basePath}projects/crypto-trading-dashboard.html">Crypto Trading Dashboard</a></li>
+                                            <li><a href="${basePath}projects/healthcare-analytics.html">Healthcare Analytics</a></li>
+                        <li><a href="${basePath}projects/financial-analytics.html">Financial Analytics</a></li>
+                        <li><a href="${basePath}projects/education-analytics.html">Education Analytics</a></li>
+                        <li><a href="${basePath}projects/japanese-culture-dashboard.html">Japanese Culture</a></li>
+                        <li><a href="${basePath}projects/chinese-culture-dashboard.html">Chinese Culture</a></li>
+                        <li><a href="${basePath}projects/brazilian-culture-dashboard.html">Brazilian Culture</a></li>
+                        <li><a href="${basePath}projects/south-african-culture-dashboard.html">South African Culture</a></li>
+                                                    <li><a href="${basePath}projects/cyberpunk-dashboard.html">Cyberpunk Theme</a></li>
+                            <li><a href="${basePath}projects/sunset-theme-dashboard.html">Sunset Theme</a></li>
+                            <li><a href="${basePath}projects/ocean-theme-dashboard.html">Ocean Theme</a></li>
+                            <li><a href="${basePath}projects/forest-theme-dashboard.html">Forest Theme</a></li>
+                            <li><a href="${basePath}projects/desert-theme-dashboard.html">Desert Theme</a></li>
+                            <li><a href="${basePath}projects/aurora-theme-dashboard.html">Aurora Theme</a></li>
+                        <li><a href="${basePath}README.md">Documentation</a></li>
             <li><a href="https://github.com/michaelgermini/Complete-ECharts-mastery-guide" target="_blank">GitHub</a></li>
         </ul>
     </div>
